@@ -33,6 +33,8 @@ class Main {
         CalculatorExample calculatorExample = new CalculatorExample();
         int value = calculatorExample.sum(3, 5);
 
+
+
         if (LOGGER.isLoggable(Level.INFO)) {
             LOGGER.log(Level.INFO, String.valueOf(value));
         }
