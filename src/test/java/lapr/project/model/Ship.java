@@ -1,8 +1,9 @@
 package lapr.project.model;
 
 import java.util.Date;
+import java.util.Objects;
 
-public class Ship {
+public class Ship implements Comparable<Ship>{
 
     private final int mmsi;
     private final String name;
@@ -156,4 +157,59 @@ public class Ship {
     public void setTransceiver_class(String transceiver_class) {
         this.transceiver_class = transceiver_class;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Ship ship = (Ship) o;
+        return mmsi == ship.mmsi && imo == ship.imo && call_sign == ship.call_sign;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mmsi, imo, call_sign);
+    }
+
+    @Override
+    public String toString() {
+        return "Ship{" +
+                "mmsi=" + mmsi +
+                ", name='" + name + '\'' +
+                ", imo=" + imo +
+                ", energy_generators=" + energy_generators +
+                ", power_output=" + power_output +
+                ", call_sign=" + call_sign +
+                ", vessel=" + vessel +
+                ", width=" + width +
+                ", length=" + length +
+                ", capacity=" + capacity +
+                ", draft=" + draft +
+                ", date_time=" + date_time +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", sog=" + sog +
+                ", cog=" + cog +
+                ", heading=" + heading +
+                ", code=" + code +
+                ", transceiver_class='" + transceiver_class + '\'' +
+                '}';
+    }
+
+    @Override
+    public int compareTo(Ship o) {
+
+        /* TODO: Pensar no ponto de chegada. A BST irá estar
+                 ligada através de nodes que contêm ships,
+                 portanto é importante pensar com
+                 Este método, dentro de si, terá uma determinada
+                 regra de comparação (suspeito que será a localização)
+                 em que, deverá devolver três números possíveis:
+                        0 -> a mesma loc..
+                        1 -> o objeto que chamou o CompareTo ter uma loc. mais próxima.
+                        -1 -> o objeto que chamou o CompareTo ter uma loc. menos próxima do ponto final.
+         */
+        return 0;
+    }
+
 }

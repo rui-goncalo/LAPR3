@@ -41,4 +41,6 @@ public class Port {
     public double getLongitude() {
         return longitude;
     }
+
+    // TODO: Implementar o Hashcode(?) ; método Equals() ; toString().
 }
