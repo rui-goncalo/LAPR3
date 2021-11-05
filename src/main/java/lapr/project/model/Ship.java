@@ -1,101 +1,124 @@
 package lapr.project.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
 
-public class Ship implements Comparable<Ship>{
+public class Ship {
 
     private final int mmsi;
     private final String name;
     private final int imo;
-    private final int energy_generators;
-    private final double power_output;
-    private final int call_sign;
+    private final int generatorCount;
+    private final double generatorOutput;
+    private final int callSign;
     private final int vessel;
     private final double width;
     private final double length;
     private final double capacity;
     private final double draft;
-
-    private Date date_time;
     private double latitude;
     private double longitude;
     private double sog;
     private double cog;
     private double heading;
     private int code;
-    private String transceiver_class;
+    private String transceiverClass;
+    //private ArrayList<Ship> arrayShip;
 
-
-    public Ship(int mmsi, String name, int imo, int energy_generators, double power_output, int call_sign, int vessel, double width, double length, double capacity, double draft) {
+    public Ship(int mmsi, String name, int imo, int generatorCount, double generatorOutput, int callSign,
+                int vessel, double width, double length, double capacity, double draft, double latitude,
+                double longitude, double sog, double cog, double heading, int code, String transceiverClass) {
         this.mmsi = mmsi;
         this.name = name;
         this.imo = imo;
-        this.energy_generators = energy_generators;
-        this.power_output = power_output;
-        this.call_sign = call_sign;
+        this.generatorCount = generatorCount;
+        this.generatorOutput = generatorOutput;
+        this.callSign = callSign;
         this.vessel = vessel;
         this.width = width;
         this.length = length;
         this.capacity = capacity;
         this.draft = draft;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.sog = sog;
+        this.cog = cog;
+        this.heading = heading;
+        this.code = code;
+        this.transceiverClass = transceiverClass;
     }
 
-
     public int getMmsi() {
-        return mmsi;
+        return this.mmsi;
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public int getImo() {
-        return imo;
+        return this.imo;
     }
 
-    public int getEnergy_generators() {
-        return energy_generators;
+    public int getGeneratorCount() {
+        return this.generatorCount;
     }
 
-    public double getPower_output() {
-        return power_output;
+    public double getGeneratorOutput() {
+        return this.generatorOutput;
     }
 
-    public int getCall_sign() {
-        return call_sign;
+    public int getCallSign() {
+        return this.callSign;
     }
 
     public int getVessel() {
-        return vessel;
+        return this.vessel;
     }
 
     public double getWidth() {
-        return width;
+        return this.width;
     }
 
     public double getLength() {
-        return length;
+        return this.length;
     }
 
     public double getCapacity() {
-        return capacity;
+        return this.capacity;
     }
 
     public double getDraft() {
-        return draft;
-    }
-
-    public Date getDate_time() {
-        return date_time;
-    }
-
-    public void setDate_time(Date date_time) {
-        this.date_time = date_time;
+        return this.draft;
     }
 
     public double getLatitude() {
         return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public double getSog() {
+        return sog;
+    }
+
+    public double getCog() {
+        return cog;
+    }
+
+    public double getHeading() {
+        return heading;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public String getTransceiverClass() {
+        return transceiverClass;
     }
 
     public void setLatitude(double latitude) {
@@ -104,26 +127,14 @@ public class Ship implements Comparable<Ship>{
         }
     }
 
-    public double getLongitude() {
-        return longitude;
-    }
-
     public void setLongitude(double longitude) {
         if (longitude <= 180 && longitude >= -180 ) {
             this.longitude = longitude;
         }
     }
 
-    public double getSog() {
-        return sog;
-    }
-
     public void setSog(double sog) {
         this.sog = sog;
-    }
-
-    public double getCog() {
-        return cog;
     }
 
     public void setCog(double cog) {
@@ -132,32 +143,27 @@ public class Ship implements Comparable<Ship>{
         }
     }
 
-    public double getHeading() {
-        return heading;
-    }
-
     public void setHeading(double heading) {
         if( heading >= 0 && heading <= 359) {
             this.heading = heading;
         }
     }
 
-    public int getCode() {
-        return code;
-    }
-
     public void setCode(int code) {
         this.code = code;
     }
 
-    public String getTransceiver_class() {
-        return transceiver_class;
+    public void setTransceiverClass(String transceiverClass) {
+        this.transceiverClass = transceiverClass;
     }
 
-    public void setTransceiver_class(String transceiver_class) {
-        this.transceiver_class = transceiver_class;
+    /*
+    void addShipDynamic(ShipDynamic shipDynamic) {
+        this.arrayDynamic.add(shipDynamic);
     }
+*/
 
+/*
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -165,41 +171,12 @@ public class Ship implements Comparable<Ship>{
         Ship ship = (Ship) o;
         return mmsi == ship.mmsi && imo == ship.imo && call_sign == ship.call_sign;
     }
+*/
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(mmsi, imo, call_sign);
-    }
-
-    @Override
-    public String toString() {
-        return "Ship{" +
-                "mmsi=" + mmsi +
-                ", name='" + name + '\'' +
-                ", imo=" + imo +
-                ", energy_generators=" + energy_generators +
-                ", power_output=" + power_output +
-                ", call_sign=" + call_sign +
-                ", vessel=" + vessel +
-                ", width=" + width +
-                ", length=" + length +
-                ", capacity=" + capacity +
-                ", draft=" + draft +
-                ", date_time=" + date_time +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", sog=" + sog +
-                ", cog=" + cog +
-                ", heading=" + heading +
-                ", code=" + code +
-                ", transceiver_class='" + transceiver_class + '\'' +
-                '}';
-    }
-
-    @Override
+    /*@Override
     public int compareTo(Ship o) {
 
-        /* TODO: Pensar no ponto de chegada. A BST irá estar
+        *//* TODO: Pensar no ponto de chegada. A BST irá estar
                  ligada através de nodes que contêm ships,
                  portanto é importante pensar com
                  Este método, dentro de si, terá uma determinada
@@ -208,8 +185,8 @@ public class Ship implements Comparable<Ship>{
                         0 -> a mesma loc..
                         1 -> o objeto que chamou o CompareTo ter uma loc. mais próxima.
                         -1 -> o objeto que chamou o CompareTo ter uma loc. menos próxima do ponto final.
-         */
+         *//*
         return 0;
-    }
+    }*/
 
 }

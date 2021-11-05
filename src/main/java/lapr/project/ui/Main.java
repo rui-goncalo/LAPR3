@@ -1,43 +1,51 @@
 package lapr.project.ui;
+import lapr.project.model.CSVReader;
+import lapr.project.model.Ship;
+import lapr.project.model.ShipData;
 
-import lapr.project.model.CalculatorExample;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Scanner;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-/**
- * @author Nuno Bettencourt <nmb@isep.ipp.pt> on 24/05/16.
- */
 class Main {
+    public static void main(String[] args) throws Exception {
 
-    /**
-     * Logger class.
-     */
-    private static final Logger LOGGER = Logger.getLogger("MainLog");
+//        Ship ship = new Ship(210950000, "Navio 1", 123, 3, 380.0,
+//                4, 2, 2.5, 4.2, 50, 20.0, 97.5, 56.4,
+//                21.5, 26.6, 20.0, 15, "Transceiver");
+//
+//        System.out.println(ship.getLatitude());
+//        System.out.println(ship.getLongitude());
+//        System.out.println(ship.getSog());
+//        System.out.println(ship.getCog());
+//        System.out.println(ship.getHeading());
+//
+//        ArrayList<String> lista = new ArrayList<>();
+//        File file = new File("src/data/test.csv");
+//        Scanner scanner = new Scanner(file);
+//        while (scanner.hasNextLine()) {
+//            lista.add(scanner.nextLine());
+//        }
+//
+//        System.out.println(lista.get(0));
+//        String[] linha1 = lista.get(0).split(",");
+//        System.out.println(linha1[7]);
+//        ship.setLatitude(Double.parseDouble(linha1[2]));
+//        ship.setLongitude(Double.parseDouble(linha1[3]));
+//        ship.setSog(Double.parseDouble(linha1[4]));
+//        ship.setCog(Double.parseDouble(linha1[5]));
+//        ship.setHeading(Double.parseDouble(linha1[6]));
+//        ship.setTransceiverClass(linha1[15]);
 
-    /**
-     * Private constructor to hide implicit public one.
-     */
-    private Main() {
+        ArrayList<ArrayList<ShipData>> shipDataList = CSVReader.readCSV();
+        for (int i = 0; i < shipDataList.get(0).size(); i++) {
+            //for (int j = 0; j < shipDataList.get(i).size(); j++) {
+                System.out.println(shipDataList.get(0).get(i).getLatitude());
+            //}
+        }
 
-    }
-
-    /**
-     * Application main method.
-     *
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) throws IOException, SQLException {
-        CalculatorExample calculatorExample = new CalculatorExample();
-        int value = calculatorExample.sum(3, 5);
-
-
-
-        if (LOGGER.isLoggable(Level.INFO)) {
-            LOGGER.log(Level.INFO, String.valueOf(value));
         }
     }
-}
+
 
