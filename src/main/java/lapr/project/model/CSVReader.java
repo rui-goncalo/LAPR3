@@ -10,7 +10,7 @@ import java.util.Date;
 
 public class CSVReader {
 
-    private static String path = "src/data/sships.csv";
+    private static String path = "src/data/bships.csv";
     private static String line = "";
 
     public static ArrayList<ArrayList<ShipData>> readCSV() {

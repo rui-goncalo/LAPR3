@@ -3,7 +3,7 @@ package lapr.project.model;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class ShipData {
+public class ShipData<E extends Comparable<E>> {
 
     private final int mmsi;
     private final Date dateTime;
