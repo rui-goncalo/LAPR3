@@ -48,7 +48,9 @@ public class CSVReader {
 
                 int index = verifyShip(Integer.parseInt(values[0]), shipArray);
                 if (index == -1) { // se o barco não existir
-                    int imo = cutImo(values[8]);
+                    int imo = newImo(values[8]);
+                    int cargo = newCargo(values[14]);
+
                     Ship ship = new Ship(
                             Integer.parseInt(values[0]), // mmsi
                             values[7], // name
@@ -57,8 +59,8 @@ public class CSVReader {
                             Integer.parseInt(values[10]), // vessel
                             Double.parseDouble(values[11]), // length
                             Double.parseDouble(values[12]), // width
-                            Double.parseDouble(values[13]));// draft)
-
+                            Double.parseDouble(values[13]),// draft)
+                            cargo);// cargo
                     ship.addDynamicShip(sd);
                     shipArray.add(ship);
 
@@ -72,9 +74,15 @@ public class CSVReader {
 
         return shipArray;
     }
-    private static int cutImo(String imo) {
+    private static int newImo(String imo) {
         String temp = imo.substring(3, imo.length());
         return Integer.parseInt(temp);
+    }
+    private static int newCargo(String value) {
+        if(value.equals("NA")){
+            return 0;
+        }
+        return Integer.parseInt(value);
     }
 
 }

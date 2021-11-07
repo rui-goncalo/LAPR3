@@ -13,6 +13,7 @@ public class Ship {
     private final double length;
     private final double width;
     private final double draft;
+    private final double cargo;
 
     // private final double capacity;
     // private int code;
@@ -20,7 +21,7 @@ public class Ship {
     // private final double generatorOutput;
 
 
-    public Ship(int mmsi, String name, int imo, String callSign, int vessel, double length, double width, double draft) {
+    public Ship(int mmsi, String name, int imo, String callSign, int vessel, double length, double width, double draft, double cargo) {
         this.mmsi = mmsi;
         this.dynamicShip = new ArrayList<>();
         this.name = name;
@@ -30,6 +31,7 @@ public class Ship {
         this.length = length;
         this.width = width;
         this.draft = draft;
+        this.cargo = cargo;
     }
 
     public int getMmsi() {
