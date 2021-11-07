@@ -342,6 +342,26 @@ public class BST<E extends Comparable<E>> implements BSTInterface<E> {
             sb.append(root.getElement()+"\n");
         toStringRec(root.getLeft(), level+1, sb);
     }
+
+    public void PrintLevels() {
+        List<Node<E>> list = new LinkedList<>();
+
+        list.add(root);
+
+        System.out.println("=====CONTEUDO DA ARVORE=====");
+
+        while (!list.isEmpty()) {
+            Node<E> node = list.remove(0);
+            System.out.println(node.getElement());
+            if (node.getLeft() != null) {
+                list.add(node.getLeft());
+            }
+
+            if (node.getRight() != null) {
+                list.add(node.getRight());
+            }
+        }
+    }
   
 } //----------- end of BST class -----------
 
