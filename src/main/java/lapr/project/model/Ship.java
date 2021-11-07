@@ -7,7 +7,7 @@ public class Ship {
     private final int mmsi;
     private ArrayList<ShipData> dynamicShip;
     private final String name;
-    private final String imo;
+    private final int imo;
     private final String callSign;
     private final int vessel;
     private final double length;
@@ -20,7 +20,7 @@ public class Ship {
     // private final double generatorOutput;
 
 
-    public Ship(int mmsi, String name, String imo, String callSign, int vessel, double length, double width, double draft) {
+    public Ship(int mmsi, String name, int imo, String callSign, int vessel, double length, double width, double draft) {
         this.mmsi = mmsi;
         this.dynamicShip = new ArrayList<>();
         this.name = name;
