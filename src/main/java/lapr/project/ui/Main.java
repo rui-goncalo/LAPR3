@@ -14,9 +14,6 @@ class Main {
 
         for (Ship ship : shipArray) {
             System.out.println(ship.getMmsi());
-            for (ShipData data : ship.getDynamicShip()) {
-                System.out.println(data.getDateTime());
-            }
         }
 
     }
