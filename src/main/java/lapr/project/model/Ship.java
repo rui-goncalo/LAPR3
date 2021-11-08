@@ -2,7 +2,7 @@ package lapr.project.model;
 
 import java.util.ArrayList;
 
-public class Ship {
+public class Ship implements Comparable<Ship> {
 
     private final int mmsi;
     private ArrayList<ShipData> dynamicShip;
@@ -35,7 +35,15 @@ public class Ship {
     }
 
     public int getMmsi() {
-        return mmsi;
+        return this.mmsi;
+    }
+
+    public int getImo() {
+        return this.imo;
+    }
+
+    public String getCallSign() {
+        return this.callSign;
     }
 
     public ArrayList<ShipData> getDynamicShip() {
@@ -44,5 +52,24 @@ public class Ship {
 
     public void addDynamicShip(ShipData data) {
         this.dynamicShip.add(data);
+    }
+
+    @Override
+    public int compareTo(Ship o) {
+        if (this.getMmsi() > o.getMmsi()) {
+            return 1;
+        } else if (this.getMmsi() < o.getMmsi()) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+
+    public boolean compareImo(int imo) {
+        return this.imo == imo;
+    }
+
+    public boolean compareCallSign(String callSign) {
+        return this.callSign.equals(callSign);
     }
 }

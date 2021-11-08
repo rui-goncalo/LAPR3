@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import lapr.project.tree.BST;
+import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -130,12 +130,12 @@ public class BSTest {
          */
         @Test
         public void testSmallestElement() {
-            System.out.println("smallestElement");
-            assertEquals(new Integer(7), instance.smallestElement());
+
+            Assert.assertEquals(new Integer(7), instance.smallestElement());
             instance.remove(7);
-            assertEquals(new Integer(8), instance.smallestElement());
+            Assert.assertEquals(new Integer(8), instance.smallestElement());
             instance.remove(8);
-            assertEquals(new Integer(10), instance.smallestElement());
+            Assert.assertEquals(new Integer(10), instance.smallestElement());
         }
         /**
          * Test of processBstByLevel method, of class TREE.
@@ -153,7 +153,7 @@ public class BSTest {
             Map<Integer,List<Integer>> result = instance.nodesByLevel();
 
             for(Map.Entry<Integer,List<Integer>> e : result.entrySet())
-                assertEquals(expResult.get(e.getKey()), e.getValue());
+                Assert.assertEquals(expResult.get(e.getKey()), e.getValue());
         }
 
 
@@ -164,7 +164,7 @@ public class BSTest {
         public void testInOrder() {
             System.out.println("inOrder");
             List<Integer> lExpected = Arrays.asList(inorderT);
-            assertEquals("inOrder should be "+lExpected.toString(), lExpected, instance.inOrder());
+            Assert.assertEquals("inOrder should be "+lExpected.toString(), lExpected, instance.inOrder());
         }
         /**
          * Test of preOrder method, of class BST.
@@ -173,7 +173,7 @@ public class BSTest {
         public void testpreOrder() {
             System.out.println("preOrder");
             List<Integer> lExpected = Arrays.asList(preorderT);
-            assertEquals("preOrder should be "+lExpected.toString(), lExpected, instance.preOrder());
+            Assert.assertEquals("preOrder should be "+lExpected.toString(), lExpected, instance.preOrder());
         }
         /**
          * Test of posOrder method, of class BST.
@@ -182,7 +182,7 @@ public class BSTest {
         public void testposOrder() {
             System.out.println("posOrder");
             List<Integer> lExpected = Arrays.asList(posorderT);
-            assertEquals("posOrder should be "+lExpected.toString(), lExpected, instance.posOrder());
+            Assert.assertEquals("posOrder should be "+lExpected.toString(), lExpected, instance.posOrder());
         }
     }
 

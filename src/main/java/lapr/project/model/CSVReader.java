@@ -1,6 +1,6 @@
 package lapr.project.model;
 
-import lapr.project.tree.BST;
+import lapr.project.utils.BST;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -25,6 +25,14 @@ public class CSVReader {
     private static int newImo(String imo) {
         String temp = imo.substring(3, imo.length());
         return Integer.parseInt(temp);
+    }
+
+
+    private static int newCargo(String value) {
+        if (value.equals("NA")) {
+            return 0;
+        }
+        return Integer.parseInt(value);
     }
 
 
@@ -83,18 +91,30 @@ public class CSVReader {
         return shipArray;
     }
 
-    BST<Ship> shipBST = new BST<>();
+    private ArrayList<Ship> sortArrayList (ArrayList<ShipData> array) {
 
-    for (Ship ship :shipArray) {
-        shipBST.insert(ship);
-    }
+        //String[] values = line.split(",");
 
+        if(!array.isEmpty()) {
+            int hour = array.get(0).getDateTime().getHour();
+            int minute = array.get(0).getDateTime().getMinute();
+            for (int i = 0; i < array.size(); i++) {
+                int newHour = array.get(i).getDateTime().getHour();
+                int newMinute = array.get(i).getDateTime().getMinute();
+                if (newHour == hour) {
+                    if(newMinute >= minute) {
+                        // hora é maior
+                    }
 
-    private static int newCargo(String value) {
-        if (value.equals("NA")) {
-            return 0;
+                }
+
+                if (array.get(i).getDateTime().getHour())
+            }
+
+            return array;
         }
-        return Integer.parseInt(value);
 
+        return null;
     }
+
 }
