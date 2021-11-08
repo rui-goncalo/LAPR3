@@ -1,5 +1,7 @@
 package lapr.project.model;
 
+import lapr.project.tree.BST;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.time.LocalDateTime;
@@ -20,6 +22,12 @@ public class CSVReader {
         return -1;
     }
 
+    private static int newImo(String imo) {
+        String temp = imo.substring(3, imo.length());
+        return Integer.parseInt(temp);
+    }
+
+
     public static ArrayList<Ship> readCSV() throws Exception {
 
         String path = "src/data/test.csv";
@@ -28,7 +36,7 @@ public class CSVReader {
 
         ArrayList<Ship> shipArray = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(path))){
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
 
             //BufferedReader br = new BufferedReader(new FileReader(path));
 
@@ -55,7 +63,7 @@ public class CSVReader {
                             Integer.parseInt(values[0]), // mmsi
                             values[7], // name
                             imo, // imo
-                            values[9], // callsign - - TODO REVER
+                            values[9], // callsign
                             Integer.parseInt(values[10]), // vessel
                             Double.parseDouble(values[11]), // length
                             Double.parseDouble(values[12]), // width
@@ -74,15 +82,19 @@ public class CSVReader {
 
         return shipArray;
     }
-    private static int newImo(String imo) {
-        String temp = imo.substring(3, imo.length());
-        return Integer.parseInt(temp);
+
+    BST<Ship> shipBST = new BST<>();
+
+    for (Ship ship :shipArray) {
+        shipBST.insert(ship);
     }
+
+
     private static int newCargo(String value) {
-        if(value.equals("NA")){
+        if (value.equals("NA")) {
             return 0;
         }
         return Integer.parseInt(value);
-    }
 
+    }
 }
