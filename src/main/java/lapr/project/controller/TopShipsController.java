@@ -3,12 +3,13 @@ package lapr.project.controller;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import lapr.project.model.*;
-import lapr.project.utils.BST;
+import lapr.project.utils.*;
 
 
 public class TopShipsController {
     
-    protected static class ShipByDistance implements Comparable<ShipByDistance>{
+    //deixar nested ou passar pra pair?
+    protected class ShipByDistance implements Comparable<ShipByDistance>{
         
         private Ship ship;
         private int traveledDistance;
@@ -18,15 +19,32 @@ public class TopShipsController {
           this.traveledDistance = traveledDistance;
         }
         
-        //rever travelled distance int?
+        // accessor methods
+        public Ship getShip() { return ship; }
+        public int getTraveledDistance() { return traveledDistance; }
+        
+        //rever traveled distance int?
         public int compareTo(ShipByDistance ship){
             return traveledDistance - ship.traveledDistance;
         }
       }
     
-    public static ArrayList<Ship> getNTopShips(int n, LocalDateTime start, LocalDateTime end, BST<Ship> shipTree){
+    //rever: metodo static?
+    public ArrayList<Ship> getNTopShips(int n, LocalDateTime start, LocalDateTime end, BST<Ship> shipTree){
         ArrayList<Ship> topShips = new ArrayList<>(); //list de return
         ArrayList<ShipByDistance> shipsToSort= new ArrayList<>();
+        
+        //TODO falta filtrar as entradas em dynamicShip por datas
+        //metodo quebra aqui por static (ShipByDistance não o é)
+        for(Ship ship: shipTree.posOrder()){
+            shipsToSort.add(new ShipByDistance(ship, Calculator.totalDistance(ship.getDynamicShip())));
+        }
+        
+        shipsToSort.sort(null);
+        //depois de shipsToSort estar sorted é so retornar pelo topShips
+        for(int i = 0; i<n ; i++){
+            topShips.add(shipsToSort.get(i).getShip());
+        } 
         return topShips;
     }
 }
