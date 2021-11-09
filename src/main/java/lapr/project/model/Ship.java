@@ -56,7 +56,8 @@ public class Ship implements Comparable<Ship> {
 
     public int getVessel() {
         return vessel;
-
+    }
+    
     public void setDynamicShip(ArrayList<ShipData> data) {
         this.dynamicShip = data;
     }
