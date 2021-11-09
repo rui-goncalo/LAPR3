@@ -3,7 +3,7 @@ package lapr.project.model;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 
-public class Ship implements Comparable<Ship> {
+public class Ship {
 
     private final int mmsi;
     private ArrayList<ShipData> dynamicShip;
@@ -35,6 +35,22 @@ public class Ship implements Comparable<Ship> {
         this.cargo = cargo;
     }
 
+    public double getLength() {
+        return length;
+    }
+
+    public double getWidth() {
+        return width;
+    }
+
+    public double getDraft() {
+        return draft;
+    }
+
+    public double getCargo() {
+        return cargo;
+    }
+
     public int getMmsi() {
         return this.mmsi;
     }
@@ -52,7 +68,7 @@ public class Ship implements Comparable<Ship> {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public int getVessel() {
@@ -81,23 +97,6 @@ public class Ship implements Comparable<Ship> {
 
         return filteredShipData;
     }
-    
-    @Override
-    public int compareTo(Ship o) {
-        if (this.getMmsi() > o.getMmsi()) {
-            return 1;
-        } else if (this.getMmsi() < o.getMmsi()) {
-            return -1;
-        } else {
-            return 0;
-        }
     }
 
-    public boolean compareTo(int imo) {
-        return this.imo == imo;
-    }
-
-    public boolean compareTo(String callSign) {
-        return this.callSign.equals(callSign);
-    }
 }
