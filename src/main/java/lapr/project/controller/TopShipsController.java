@@ -29,7 +29,7 @@ public class TopShipsController {
         public int compareTo(ShipByDistance ship){
             if(traveledDistance < ship.traveledDistance){return -1;}
             if(traveledDistance > ship.traveledDistance){return 1;}
-            return 0
+            return 0;
         }
       }
     
