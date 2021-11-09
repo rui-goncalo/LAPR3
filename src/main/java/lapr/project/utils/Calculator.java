@@ -20,6 +20,7 @@ public class Calculator {
         return (rad * 180.0 / Math.PI);
     }
     
+    //TODO add catch from totaldistance for wrong values on lat/lon
     public static double distanceBetween(double lat1, double lon1, double lat2, double lon2){
         double theta = lon1 - lon2;
         double dist = Math.sin(degToRad(lat1)) * Math.sin(degToRad(lat2)) + Math.cos(degToRad(lat1)) * Math.cos(degToRad(lat2)) * Math.cos(degToRad(theta));
