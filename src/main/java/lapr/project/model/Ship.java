@@ -71,7 +71,10 @@ public class Ship implements Comparable<Ship> {
         ArrayList<ShipData> filteredShipData = new ArrayList<>();
         
         for(ShipData shipData : dynamicShip){
-            if( (shipData.getDateTime().isAfter(start)) && (shipData.getDateTime().isBefore(end)) ){
+            if(shipData.getDateTime().isAfter(end)){
+                break;
+            }
+            if(shipData.getDateTime().isAfter(start)){
                 filteredShipData.add(shipData);
             }
         }

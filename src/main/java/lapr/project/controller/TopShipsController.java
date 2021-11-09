@@ -37,15 +37,15 @@ public class TopShipsController {
     public ArrayList<Ship> getNTopShips(int n, LocalDateTime start, LocalDateTime end, BST<Ship> shipTree){
         ArrayList<Ship> topShips = new ArrayList<>(); //list de return
         ArrayList<ShipByDistance> shipsToSort= new ArrayList<>();
-        ArrayList<ShipData> shipData;
+        ArrayList<ShipData> dynamicShip;
         
-        //TODO falta filtrar as entradas em dynamicShip por datas
-        //     neste momento calcula totaldistance
+        //TODO tests and catch empty dynamicShip's
+        //     
         
         //metodo quebra aqui por static (ShipByDistance não o é)
         for(Ship ship: shipTree.posOrder()){
-            shipData = ship.filterShipData(start, end);
-            shipsToSort.add(new ShipByDistance(ship, Calculator.totalDistance(shipData)));
+            dynamicShip = ship.filterShipData(start, end);
+            shipsToSort.add(new ShipByDistance(ship, Calculator.totalDistance(dynamicShip)));
         }
         
         shipsToSort.sort(null);
