@@ -345,6 +345,7 @@ public class BST<E extends Comparable<E>> implements BSTInterface<E> {
         toStringRec(root.getLeft(), level+1, sb);
     }
 
+
     public void printTree(String prefix) {
         this.printTree(this.root(), prefix);
     }
@@ -358,52 +359,31 @@ public class BST<E extends Comparable<E>> implements BSTInterface<E> {
         }
     }
 
-    public Ship findImo(int imo) {
-        int count = 0;
+    public Ship findCallSignOrIMO(String search, boolean isCallSign) {
+        int count = 1;
         Node<E> node = this.root();
-        while(count < this.height() - 1) {
+        int imo = 0;
+        String callSign = "";
+        if (isCallSign) {
+            callSign = search;
+        } else {
+            imo = Integer.parseInt(search);
+        }
+        while(count <= this.height()) {
             Ship right = (Ship) node.getElement();
-            if (right.compareImo(imo)) {
-                break;
+            if(isCallSign) {
+                if (right.compareTo(callSign)) {
+                    break;
+                }
+            } else {
+                if (right.compareTo(imo)) {
+                    break;
+                }
             }
             node = node.getRight();
             count++;
         }
-        return (Ship) node.getElement();
-    }
-
-    public Ship findCallSign(String callSign) {
-        int count = 0;
-        Node<E> node = this.root();
-        while(count < this.height() - 1) {
-            Ship right = (Ship) node.getElement();
-            if (right.compareCallSign(callSign)) {
-                break;
-            }
-            node = node.getRight();
-            count++;
-        }
-        return (Ship) node.getElement();
-    }
-
-    public void PrintLevels() {
-        List<Node<E>> list = new LinkedList<>();
-
-        list.add(root);
-
-        System.out.println("=====CONTEUDO DA ARVORE=====");
-
-        while (!list.isEmpty()) {
-            Node<E> node = list.remove(0);
-            System.out.println(node.getElement());
-            if (node.getLeft() != null) {
-                list.add(node.getLeft());
-            }
-
-            if (node.getRight() != null) {
-                list.add(node.getRight());
-            }
-        }
+        return (node != null) ? (Ship) node.getElement() : null;
     }
 
 } //----------- end of BST class -----------

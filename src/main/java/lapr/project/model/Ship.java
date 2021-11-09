@@ -50,6 +50,10 @@ public class Ship implements Comparable<Ship> {
         return dynamicShip;
     }
 
+    public void setDynamicShip(ArrayList<ShipData> data) {
+        this.dynamicShip = data;
+    }
+
     public void addDynamicShip(ShipData data) {
         this.dynamicShip.add(data);
     }
@@ -65,11 +69,11 @@ public class Ship implements Comparable<Ship> {
         }
     }
 
-    public boolean compareImo(int imo) {
+    public boolean compareTo(int imo) {
         return this.imo == imo;
     }
 
-    public boolean compareCallSign(String callSign) {
+    public boolean compareTo(String callSign) {
         return this.callSign.equals(callSign);
     }
 }

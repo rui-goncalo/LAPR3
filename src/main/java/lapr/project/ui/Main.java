@@ -1,15 +1,18 @@
 package lapr.project.ui;
 import lapr.project.model.CSVReader;
 import lapr.project.model.Ship;
-import lapr.project.utils.BST;
+
+import lapr.project.tree.BST;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
 class Main {
     public static void main(String[] args) throws Exception {
 
 
-        ArrayList<Ship> shipArray = CSVReader.readCSV();
+        ArrayList<Ship> shipArray = CSVReader.sortByDate();
 
         BST<Ship> shipTree = new BST<>();
 
@@ -19,13 +22,17 @@ class Main {
             shipTree.insert(ship);
 //            System.out.println(shipTree);
         }
-        shipTree.printTree("");
+//        shipTree.printTree("");
+//
+        System.out.println(shipArray.get(0).getDynamicShip().get(0).getDateTime());
+        Ship ship = shipTree.findCallSignOrIMO("9192387", false); // false quando é o imo, true quando é o callsign
+        if (ship != null) {
+            System.out.println(ship.getMmsi());
+            System.out.println(ship.getImo());
+            System.out.println(ship.getCallSign());
+            System.out.println(ship.getDynamicShip().get(0).getDateTime());
+        }
 
-        Ship ship = shipTree.findImo(9192387);
-        //System.out.println(ship.getMmsi());
-        //System.out.println(ship.getImo());
-        //System.out.println(ship.getCallSign());
-        //System.out.println(ship.getDynamicShip().get(2).getDateTime());
 
 
         //size, comparar dynamic
