@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.Before;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class BSTest {
@@ -28,7 +28,7 @@ public class BSTest {
         public BSTTest() {
         }
 
-        @Before
+        @BeforeEach
         public void setUp(){
             instance = new BST();
             for(int i :arr)
@@ -99,7 +99,7 @@ public class BSTest {
         public void testIsEmpty() {
             System.out.println("isempty");
 
-            assertFalse("the BST should be NOT empty", instance.isEmpty());
+            assertFalse(instance.isEmpty(), "the BST should be NOT empty");
             instance = new BST();
             assertTrue("the BST should be empty",instance.isEmpty());
 
@@ -131,6 +131,8 @@ public class BSTest {
         @Test
         public void testSmallestElement() {
 
+            assertEquals("Expected qqq", new Integer(7),instance.smallestElement());
+            System.out.println("Expected qqq");
             Assert.assertEquals(new Integer(7), instance.smallestElement());
             instance.remove(7);
             Assert.assertEquals(new Integer(8), instance.smallestElement());

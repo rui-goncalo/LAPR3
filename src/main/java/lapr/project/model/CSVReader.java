@@ -91,7 +91,7 @@ public class CSVReader {
         return shipArray;
     }
 
-    private ArrayList<Ship> sortArrayList (ArrayList<ShipData> array) {
+    /*private ArrayList<Ship> sortArrayList (ArrayList<ShipData> array) {
 
         //String[] values = line.split(",");
 
@@ -115,6 +115,6 @@ public class CSVReader {
         }
 
         return null;
-    }
+    }*/
 
 }

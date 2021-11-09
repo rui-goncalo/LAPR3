@@ -22,9 +22,12 @@ class Main {
         shipTree.printTree("");
 
         Ship ship = shipTree.findImo(9192387);
-        System.out.println(ship.getMmsi());
-        System.out.println(ship.getImo());
-        System.out.println(ship.getCallSign());
-        System.out.println(ship.getDynamicShip().get(2).getDateTime());
+        //System.out.println(ship.getMmsi());
+        //System.out.println(ship.getImo());
+        //System.out.println(ship.getCallSign());
+        //System.out.println(ship.getDynamicShip().get(2).getDateTime());
+
+
+        //size, comparar dynamic
     }
 }
