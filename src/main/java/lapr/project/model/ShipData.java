@@ -26,4 +26,20 @@ public class ShipData {
     public LocalDateTime getDateTime() {
         return dateTime;
     }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public double getSog() {
+        return sog;
+    }
+
+    public double getCog() {
+        return cog;
+    }
 }

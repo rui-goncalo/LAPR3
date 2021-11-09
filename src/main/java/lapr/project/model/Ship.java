@@ -50,6 +50,14 @@ public class Ship implements Comparable<Ship> {
         return dynamicShip;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public int getVessel() {
+        return vessel;
+    }
+
     public void addDynamicShip(ShipData data) {
         this.dynamicShip.add(data);
     }
