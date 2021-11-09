@@ -1,6 +1,7 @@
 package lapr.project.model;
 
 import java.util.ArrayList;
+import java.time.LocalDateTime;
 
 public class Ship implements Comparable<Ship> {
 
@@ -66,6 +67,18 @@ public class Ship implements Comparable<Ship> {
         this.dynamicShip.add(data);
     }
 
+    public ArrayList<ShipData> filterShipData(LocalDateTime start, LocalDateTime end){
+        ArrayList<ShipData> filteredShipData = new ArrayList<>();
+        
+        for(ShipData shipData : dynamicShip){
+            if( (shipData.getDateTime().isAfter(start)) && (shipData.getDateTime().isBefore(end)) ){
+                filteredShipData.add(shipData);
+            }
+        }
+
+        return filteredShipData;
+    }
+    
     @Override
     public int compareTo(Ship o) {
         if (this.getMmsi() > o.getMmsi()) {
