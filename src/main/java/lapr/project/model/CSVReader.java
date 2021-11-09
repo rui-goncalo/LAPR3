@@ -1,12 +1,12 @@
 package lapr.project.model;
 
-import lapr.project.utils.BST;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
 public class CSVReader {
 
@@ -91,30 +91,19 @@ public class CSVReader {
         return shipArray;
     }
 
-    /*private ArrayList<Ship> sortArrayList (ArrayList<ShipData> array) {
+    public static ArrayList<Ship> sortByDate() throws Exception {
 
-        //String[] values = line.split(",");
+        ArrayList<Ship> shipArray = readCSV();
 
-        if(!array.isEmpty()) {
-            int hour = array.get(0).getDateTime().getHour();
-            int minute = array.get(0).getDateTime().getMinute();
-            for (int i = 0; i < array.size(); i++) {
-                int newHour = array.get(i).getDateTime().getHour();
-                int newMinute = array.get(i).getDateTime().getMinute();
-                if (newHour == hour) {
-                    if(newMinute >= minute) {
-                        // hora é maior
-                    }
+        for (int i = 0; i < shipArray.size(); i++) {
+            ArrayList<ShipData> sortedArray = (ArrayList<ShipData>) shipArray.get(i).getDynamicShip().stream()
+                    .sorted(Comparator.comparing(ShipData :: getDateTime).reversed())
+                    .collect(Collectors.toList());
 
-                }
-
-                if (array.get(i).getDateTime().getHour())
-            }
-
-            return array;
+            shipArray.get(i).setDynamicShip(sortedArray);
         }
 
-        return null;
-    }*/
+        return shipArray;
+    }
 
 }

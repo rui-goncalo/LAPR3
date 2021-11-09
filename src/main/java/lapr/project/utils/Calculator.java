@@ -1,6 +1,7 @@
 package lapr.project.utils;
 
-import lapr.project.model.*;
+import lapr.project.model.ShipData;
+
 import java.util.ArrayList;
 
 public class Calculator {
