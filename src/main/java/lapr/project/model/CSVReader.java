@@ -38,7 +38,7 @@ public class CSVReader {
 
     public static ArrayList<Ship> readCSV() throws Exception {
 
-        String path = "src/data/test.csv";
+        String path = "src/data/sships.csv";
 
         DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
