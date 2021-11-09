@@ -37,8 +37,8 @@ public class Sumary {
                     nMoves++;
                 }
 
-//                inicialTime
-//                totalTime = LocalDateTime.toLocalDate();
+                inicialTime
+                totalTime = Calculator.convertToLocalDateViaInstant();
 
                 sumary.add(inicialTime); // BDT Inicial
                 sumary.add(finalTime); // BDT Final

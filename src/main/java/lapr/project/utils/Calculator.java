@@ -34,10 +34,10 @@ public class Calculator {
         return 0;
     }
 
-    public LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
-        return dateToConvert.toInstant()
+    public Date convertToDateViaInstant(LocalDate dateToConvert) {
+        return java.util.Date.from(dateToConvert.atStartOfDay()
                 .atZone(ZoneId.systemDefault())
-                .toLocalDate();
+                .toInstant());
     }
 
 }
