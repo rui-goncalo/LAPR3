@@ -36,6 +36,8 @@ public class Sumary {
                     meanCog += sd.getCog();
                     nMoves++;
                 }
+
+//                inicialTime
 //                totalTime = LocalDateTime.toLocalDate();
 
                 sumary.add(inicialTime); // BDT Inicial

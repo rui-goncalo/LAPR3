@@ -2,7 +2,10 @@ package lapr.project.utils;
 
 import lapr.project.model.ShipData;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Calculator {
     //1Degree of latitude to Km   
@@ -30,5 +33,11 @@ public class Calculator {
     public static int totalDistance(ArrayList<ShipData> shipData){
         return 0;
     }
-    
+
+    public LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
+        return dateToConvert.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+    }
+
 }
