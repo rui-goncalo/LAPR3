@@ -3,6 +3,7 @@ package lapr.project.utils;
 import lapr.project.model.Ship;
 import lapr.project.model.ShipData;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -37,8 +38,7 @@ public class Sumary {
                     nMoves++;
                 }
 
-                inicialTime
-                totalTime = Calculator.convertToLocalDateViaInstant();
+//                Calculator.convertToDateViaInstant(inicialTime);
 
                 sumary.add(inicialTime); // BDT Inicial
                 sumary.add(finalTime); // BDT Final
