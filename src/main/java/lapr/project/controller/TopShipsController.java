@@ -35,6 +35,8 @@ public class TopShipsController {
         ArrayList<ShipByDistance> shipsToSort= new ArrayList<>();
         
         //TODO falta filtrar as entradas em dynamicShip por datas
+        //     neste momento calcula totaldistance
+        
         //metodo quebra aqui por static (ShipByDistance não o é)
         for(Ship ship: shipTree.posOrder()){
             shipsToSort.add(new ShipByDistance(ship, Calculator.totalDistance(ship.getDynamicShip())));
