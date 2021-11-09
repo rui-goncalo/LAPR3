@@ -353,10 +353,14 @@ public class BST<E extends Comparable<E>> implements BSTInterface<E> {
     public void printTree(Node<E> node, String prefix) {
         if (node != null) {
             Ship ship = (Ship) node.getElement();
-            System.out.println(prefix + "MMSI: " + ship.getMmsi());
+            System.out.println(prefix + "IMO: " + ship.getImo());
             printTree(node.getLeft(), "left ");
             printTree(node.getRight(), "right ");
         }
+    }
+
+    public E findElements(E element) {
+        return this.findElements(this.root(), element);
     }
 
     private E findElements (Node<E> node, E element) {

@@ -14,16 +14,19 @@ class Main {
     public static void main(String[] args) throws Exception {
 
 
-        ArrayList<Ship> shipArray = CSVReader.sortByDate();
+        CSVReader reader = new CSVReader();
+        ArrayList<Ship> shipArray = reader.readCSV();
 
         BST<ShipIMO> shipIMOBST = new BST<>();
 
 
         for(Ship ship : shipArray) {
 
-            shipIMOBST.insert(new ShipIMO((ship)));
+            shipIMOBST.insert(new ShipIMO(ship));
 
         }
+
+        shipIMOBST.printTree("");
 
 
 

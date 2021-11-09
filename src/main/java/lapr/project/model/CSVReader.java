@@ -10,6 +10,10 @@ import java.util.stream.Collectors;
 
 public class CSVReader {
 
+    public CSVReader() {
+
+    }
+
     // verificar se um barco existe - através do mmsi/imo/callsign
     private static int verifyShip(int mmsi, ArrayList<Ship> shipArray) {
 
