@@ -2,6 +2,7 @@ package lapr.project.ui;
 import lapr.project.model.CSVReader;
 import lapr.project.model.Ship;
 
+import lapr.project.model.ShipIMO;
 import lapr.project.tree.BST;
 import lapr.project.utils.Sumary;
 
@@ -14,7 +15,19 @@ class Main {
 
 
         ArrayList<Ship> shipArray = CSVReader.sortByDate();
-        ArrayList<Object> sumary = null;
+
+        BST<ShipIMO> shipIMOBST = new BST<>();
+
+
+        for(Ship ship : shipArray) {
+
+            shipIMOBST.insert(new ShipIMO((ship)));
+
+        }
+
+
+
+       /* ArrayList<Object> sumary = null;
         Ship s = null;
 
         BST<Ship> shipTree = new BST<>();
@@ -32,7 +45,7 @@ class Main {
 
         for (Object o : sumary) {
             System.out.println(o.toString());
-        }
+        }*/
 
 
 //        shipTree.printTree("");

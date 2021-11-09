@@ -359,32 +359,18 @@ public class BST<E extends Comparable<E>> implements BSTInterface<E> {
         }
     }
 
-    public Ship findCallSignOrIMO(String search, boolean isCallSign) {
-        int count = 1;
-        Node<E> node = this.root();
-        int imo = 0;
-        String callSign = "";
-        if (isCallSign) {
-            callSign = search;
-        } else {
-            imo = Integer.parseInt(search);
+    private E findElements (Node<E> node, E element) {
+
+        if (node == null || element.compareTo(node.getElement()) == 0){
+            return node.getElement();
         }
-        while(count <= this.height()) {
-            Ship right = (Ship) node.getElement();
-            if(isCallSign) {
-                if (right.compareTo(callSign)) {
-                    break;
-                }
-            } else {
-                if (right.compareTo(imo)) {
-                    break;
-                }
-            }
-            node = node.getRight();
-            count++;
+        if (element.compareTo(node.getElement()) > 0) {
+            return findElements(node.getLeft(),element);
         }
-        return (node != null) ? (Ship) node.getElement() : null;
+
+        return findElements(node.getRight(), element);
     }
+
 
 } //----------- end of BST class -----------
 
