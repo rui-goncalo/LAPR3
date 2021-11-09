@@ -15,8 +15,8 @@ public class CSVReaderTest {
     int day = 31;
     int month = 12;
     int year = 2020;
-    int hour = 17;
-    int minute = 20;
+    int hour = 18;
+    int minute = 31;
 
     @Test
     public void testRead() throws Exception {
