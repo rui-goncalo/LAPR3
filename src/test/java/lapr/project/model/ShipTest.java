@@ -162,7 +162,7 @@ public class ShipTest {
 
         //ExpRes
         ArrayList<ShipData> filteredData = new ArrayList<>();
-        filteredData.add(shipd2);
+        filteredData.add(shipd1);
 
         ArrayList<ShipData> shipArray = new ArrayList<>();
         shipArray.add(shipd1);
