@@ -43,9 +43,15 @@ public class TopShipsControllerTest {
     @Test
     public void testGetNTopShips() {
         System.out.println("getNTopShips");
-        int n = 0;
-        LocalDateTime start = null;
-        LocalDateTime end = null;
+        int n = 5;
+        
+        //SHIP1
+        
+        
+        //TIME
+        LocalDateTime start = LocalDateTime.of(2000, 1, 1, 1, 1);
+        LocalDateTime end = LocalDateTime.of(2022, 1, 1, 1, 1);
+        
         BST<Ship> shipTree = null;
         TopShipsController instance = new TopShipsController();
         ArrayList<Ship> expResult = null;
