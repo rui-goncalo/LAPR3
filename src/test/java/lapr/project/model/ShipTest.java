@@ -3,6 +3,8 @@ package lapr.project.model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ShipTest {
@@ -16,8 +18,9 @@ public class ShipTest {
     @Test
     public void testGetMmsi() {
         System.out.println("getMmsi()");
+        ArrayList<ShipData> shipArray = new ArrayList<>();
 
-        Ship ship = new Ship(123456789, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
+        Ship ship = new Ship(123456789, shipArray, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
         int expRes = 123456789;
 
         assertEquals(expRes, ship.getMmsi(), "Should be equal");
@@ -26,8 +29,9 @@ public class ShipTest {
     @Test
     public void testGetLength() {
         System.out.println("getLength()");
+        ArrayList<ShipData> shipArray = new ArrayList<>();
 
-        Ship ship = new Ship(123456789, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
+        Ship ship = new Ship(123456789, shipArray, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
         double expRes = 294.13;
 
         assertEquals(expRes, ship.getLength(), "Should be equal");
@@ -36,8 +40,9 @@ public class ShipTest {
     @Test
     public void testGetWidth() {
         System.out.println("getWidth()");
+        ArrayList<ShipData> shipArray = new ArrayList<>();
 
-        Ship ship = new Ship(123456789, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
+        Ship ship = new Ship(123456789, shipArray, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
         double expRes = 32.31;
 
         assertEquals(expRes, ship.getWidth(), "Should be equal");
@@ -46,8 +51,9 @@ public class ShipTest {
     @Test
     public void testGetDraft() {
         System.out.println("getDraft()");
+        ArrayList<ShipData> shipArray = new ArrayList<>();
 
-        Ship ship = new Ship(123456789, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
+        Ship ship = new Ship(123456789, shipArray, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
         double expRes = 11.89;
 
         assertEquals(expRes, ship.getDraft(), "Should be equal");
@@ -56,8 +62,9 @@ public class ShipTest {
     @Test
     public void testGetCargo() {
         System.out.println("getCargo()");
+        ArrayList<ShipData> shipArray = new ArrayList<>();
 
-        Ship ship = new Ship(123456789, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
+        Ship ship = new Ship(123456789, shipArray, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
         double expRes = 10.0;
 
         assertEquals(expRes, ship.getCargo(), "Should be equal");
@@ -66,8 +73,9 @@ public class ShipTest {
     @Test
     public void testGetImo() {
         System.out.println("getImo()");
+        ArrayList<ShipData> shipArray = new ArrayList<>();
 
-        Ship ship = new Ship(123456789, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
+        Ship ship = new Ship(123456789, shipArray, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
         int expRes = 1234567;
 
         assertEquals(expRes, ship.getImo(), "Should be equal");
@@ -76,8 +84,9 @@ public class ShipTest {
     @Test
     public void testGetCallSign() {
         System.out.println("getCallSign()");
+        ArrayList<ShipData> shipArray = new ArrayList<>();
 
-        Ship ship = new Ship(123456789, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
+        Ship ship = new Ship(123456789, shipArray, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
         String expRes = "callsign";
 
         assertEquals(expRes, ship.getCallSign(), "Should be equal");
@@ -86,8 +95,9 @@ public class ShipTest {
     @Test
     public void testGetName() {
         System.out.println("getName()");
+        ArrayList<ShipData> shipArray = new ArrayList<>();
 
-        Ship ship = new Ship(123456789, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
+        Ship ship = new Ship(123456789, shipArray, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
         String expRes = "Primeiro";
 
         assertEquals(expRes, ship.getName(), "Should be equal");
@@ -96,8 +106,9 @@ public class ShipTest {
     @Test
     public void testGetVessel() {
         System.out.println("getVessel()");
+        ArrayList<ShipData> shipArray = new ArrayList<>();
 
-        Ship ship = new Ship(123456789, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
+        Ship ship = new Ship(123456789, shipArray, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
         int expRes = 1;
 
         assertEquals(expRes, ship.getVessel(), "Should be equal");
