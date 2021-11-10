@@ -95,7 +95,7 @@ public class ShipTest {
 
     @Test
     public void testGetVessel() {
-        System.out.println("getCallSign()");
+        System.out.println("getVessel()");
 
         Ship ship = new Ship(123456789, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
         int expRes = 1;
