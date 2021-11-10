@@ -24,22 +24,40 @@ public class ShipData {
     }
 
     public LocalDateTime getDateTime() {
-        return dateTime;
+        return this.dateTime;
     }
 
     public double getLatitude() {
-        return latitude;
+        return this.latitude;
     }
 
     public double getLongitude() {
-        return longitude;
+        return this.longitude;
     }
 
     public double getSog() {
-        return sog;
+        return this.sog;
     }
 
     public double getCog() {
-        return cog;
+        return this.cog;
+    }
+
+    public double getHeading() {
+        return this.heading;
+    }
+
+    public char getTransceiver() {
+        return this.transceiverClass;
+    }
+
+    public String toString() {
+        return "Date: " + this.getDateTime() +
+                ", Latitude: " + this.getLatitude() +
+                ", Longitude: " + this.getLongitude() +
+                ", SOG: " + this.getSog() +
+                ", COG: " + this.getCog() +
+                ", Heading: " + this.getHeading() +
+                ", Transceiver: " + this.getTransceiver();
     }
 }

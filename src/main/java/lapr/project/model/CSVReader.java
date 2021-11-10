@@ -10,11 +10,18 @@ import java.util.stream.Collectors;
 
 public class CSVReader {
 
+    public CSVReader() {
+
+    }
+
     // verificar se um barco existe - através do mmsi/imo/callsign
-    private static int verifyShip(int mmsi, ArrayList<Ship> shipArray) {
+    private static int verifyShip(String value, ArrayList<Ship> shipArray) {
 
         for (int i = 0; i < shipArray.size(); i++) {
-            if (shipArray.get(i).getMmsi() == mmsi) {
+            Ship ship = shipArray.get(i);
+            if ((ship.getMmsi() == Integer.parseInt(value)
+                    || ship.getImo() == Integer.parseInt(value)
+                    || ship.getCallSign().equals(value))) {
                 return i;
             }
         }
@@ -36,9 +43,7 @@ public class CSVReader {
     }
 
 
-    public static ArrayList<Ship> readCSV() throws Exception {
-
-        String path = "src/data/sships.csv";
+    public static ArrayList<Ship> readCSV(String path) throws Exception {
 
         DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
@@ -62,13 +67,14 @@ public class CSVReader {
                         Double.parseDouble(values[6]),
                         values[15].charAt(0));
 
-                int index = verifyShip(Integer.parseInt(values[0]), shipArray);
+                int index = verifyShip(values[0], shipArray);
                 if (index == -1) { // se o barco não existir
                     int imo = newImo(values[8]);
                     int cargo = newCargo(values[14]);
 
                     Ship ship = new Ship(
                             Integer.parseInt(values[0]), // mmsi
+                            null, // dynamic ship data
                             values[7], // name
                             imo, // imo
                             values[9], // callsign
@@ -77,8 +83,10 @@ public class CSVReader {
                             Double.parseDouble(values[12]), // width
                             Double.parseDouble(values[13]),// draft)
                             cargo);// cargo
+                    ship.initializeDynamicData();
                     ship.addDynamicShip(sd);
                     shipArray.add(ship);
+                    //System.out.println(ship.getDynamicShip().get(0).getDateTime());
 
                 } else { // se o barco existir
 
@@ -91,13 +99,11 @@ public class CSVReader {
         return shipArray;
     }
 
-    public static ArrayList<Ship> sortByDate() throws Exception {
-
-        ArrayList<Ship> shipArray = readCSV();
+    public static ArrayList<Ship> sortByDate(ArrayList<Ship> shipArray) throws Exception {
 
         for (int i = 0; i < shipArray.size(); i++) {
             ArrayList<ShipData> sortedArray = (ArrayList<ShipData>) shipArray.get(i).getDynamicShip().stream()
-                    .sorted(Comparator.comparing(ShipData :: getDateTime).reversed())
+                    .sorted(Comparator.comparing(ShipData::getDateTime).reversed())
                     .collect(Collectors.toList());
 
             shipArray.get(i).setDynamicShip(sortedArray);

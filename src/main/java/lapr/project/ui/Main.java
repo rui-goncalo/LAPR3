@@ -1,20 +1,29 @@
 package lapr.project.ui;
-import lapr.project.model.CSVReader;
-import lapr.project.model.Ship;
-
-import lapr.project.tree.BST;
-import lapr.project.utils.Sumary;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.stream.Collectors;
 
 class Main {
     public static void main(String[] args) throws Exception {
 
+        Menu menu = new Menu();
+        menu.runMenu();
 
-        ArrayList<Ship> shipArray = CSVReader.sortByDate();
-        ArrayList<Object> sumary = null;
+
+     /*   CSVReader reader = new CSVReader();
+        ArrayList<Ship> shipArray = reader.readCSV();
+
+        BST<ShipIMO> shipIMOBST = new BST<>();
+
+
+        for(Ship ship : shipArray) {
+
+            shipIMOBST.insert(new ShipIMO(ship));
+
+        }
+
+        shipIMOBST.printTree("");
+
+*/
+
+       /* ArrayList<Object> sumary = null;
         Ship s = null;
 
         BST<Ship> shipTree = new BST<>();
@@ -32,7 +41,7 @@ class Main {
 
         for (Object o : sumary) {
             System.out.println(o.toString());
-        }
+        }*/
 
 
 //        shipTree.printTree("");

@@ -3,7 +3,7 @@ package lapr.project.model;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 
-public class Ship implements Comparable<Ship> {
+public class Ship {
 
     private final int mmsi;
     private ArrayList<ShipData> dynamicShip;
@@ -22,9 +22,9 @@ public class Ship implements Comparable<Ship> {
     // private final double generatorOutput;
 
 
-    public Ship(int mmsi, String name, int imo, String callSign, int vessel, double length, double width, double draft, double cargo) {
+    public Ship(int mmsi, ArrayList<ShipData> dynamicShip, String name, int imo, String callSign, int vessel, double length, double width, double draft, double cargo) {
         this.mmsi = mmsi;
-        this.dynamicShip = new ArrayList<>();
+        this.dynamicShip = dynamicShip;
         this.name = name;
         this.imo = imo;
         this.callSign = callSign;
@@ -33,6 +33,23 @@ public class Ship implements Comparable<Ship> {
         this.width = width;
         this.draft = draft;
         this.cargo = cargo;
+//        this.dynamicShip = new ArrayList<>();
+    }
+
+    public double getLength() {
+        return length;
+    }
+
+    public double getWidth() {
+        return width;
+    }
+
+    public double getDraft() {
+        return draft;
+    }
+
+    public double getCargo() {
+        return cargo;
     }
 
     public int getMmsi() {
@@ -52,13 +69,13 @@ public class Ship implements Comparable<Ship> {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public int getVessel() {
         return vessel;
     }
-    
+
     public void setDynamicShip(ArrayList<ShipData> data) {
         this.dynamicShip = data;
     }
@@ -69,7 +86,7 @@ public class Ship implements Comparable<Ship> {
 
     public ArrayList<ShipData> filterShipData(LocalDateTime start, LocalDateTime end){
         ArrayList<ShipData> filteredShipData = new ArrayList<>();
-        
+
         for(ShipData shipData : dynamicShip){
             if(shipData.getDateTime().isAfter(end)){
                 break;
@@ -81,23 +98,30 @@ public class Ship implements Comparable<Ship> {
 
         return filteredShipData;
     }
-    
-    @Override
-    public int compareTo(Ship o) {
-        if (this.getMmsi() > o.getMmsi()) {
-            return 1;
-        } else if (this.getMmsi() < o.getMmsi()) {
-            return -1;
-        } else {
-            return 0;
+
+    public void printShip() {
+        System.out.println("MMSI: " + this.getMmsi());
+        for (ShipData data : this.dynamicShip) {
+            data.toString();
         }
     }
 
-    public boolean compareTo(int imo) {
-        return this.imo == imo;
+    public void initializeDynamicData() {
+        this.dynamicShip = new ArrayList<>();
     }
 
-    public boolean compareTo(String callSign) {
-        return this.callSign.equals(callSign);
+    public String toString() {
+        return "Ship{" +
+                "mmsi=" + mmsi +
+                ", dynamicShip=" + dynamicShip +
+                ", name='" + name + '\'' +
+                ", imo=" + imo +
+                ", callSign='" + callSign + '\'' +
+                ", vessel=" + vessel +
+                ", length=" + length +
+                ", width=" + width +
+                ", draft=" + draft +
+                ", cargo=" + cargo +
+                '}';
     }
 }
