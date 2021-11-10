@@ -1,4 +1,7 @@
-package lapr.project.model;
+package lapr.project.utils;
+
+import lapr.project.model.Ship;
+import lapr.project.model.ShipData;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -51,8 +54,6 @@ public class CSVReader {
 
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
 
-            //BufferedReader br = new BufferedReader(new FileReader(path));
-
             String line = br.readLine();
 
             while ((line = br.readLine()) != null) {
@@ -68,7 +69,7 @@ public class CSVReader {
                         values[15].charAt(0));
 
                 int index = verifyShip(values[0], shipArray);
-                if (index == -1) { // se o barco não existir
+                if (index == -1) { // if there's ship
                     int imo = newImo(values[8]);
                     int cargo = newCargo(values[14]);
 
@@ -81,7 +82,7 @@ public class CSVReader {
                             Integer.parseInt(values[10]), // vessel
                             Double.parseDouble(values[11]), // length
                             Double.parseDouble(values[12]), // width
-                            Double.parseDouble(values[13]),// draft)
+                            Double.parseDouble(values[13]),// draft
                             cargo);// cargo
                     ship.initializeDynamicData();
                     ship.addDynamicShip(sd);

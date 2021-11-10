@@ -1,6 +1,5 @@
 package lapr.project.utils;
 
-import lapr.project.model.CSVReader;
 import lapr.project.model.Ship;
 import lapr.project.model.ShipData;
 import org.junit.Test;
@@ -8,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 

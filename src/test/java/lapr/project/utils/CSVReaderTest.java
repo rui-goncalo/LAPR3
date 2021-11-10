@@ -1,14 +1,6 @@
 package lapr.project.utils;
 
-import java.util.*;
-
-import lapr.project.model.CSVReader;
-import lapr.project.model.Ship;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class CSVReaderTest {
     int mmsi = 210950000;

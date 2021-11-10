@@ -2,6 +2,7 @@ package lapr.project.ui;
 
 import lapr.project.model.*;
 import lapr.project.tree.BST;
+import lapr.project.utils.CSVReader;
 
 import java.util.ArrayList;
 import java.util.Scanner;
