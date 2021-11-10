@@ -51,13 +51,13 @@ public class ShipData {
         return this.transceiverClass;
     }
 
-    public void printData() {
-        System.out.println("Date: " + this.getDateTime() +
+    public String toString() {
+        return "Date: " + this.getDateTime() +
                 ", Latitude: " + this.getLatitude() +
                 ", Longitude: " + this.getLongitude() +
                 ", SOG: " + this.getSog() +
                 ", COG: " + this.getCog() +
                 ", Heading: " + this.getHeading() +
-                ", Transceiver: " + this.getTransceiver());
+                ", Transceiver: " + this.getTransceiver();
     }
 }

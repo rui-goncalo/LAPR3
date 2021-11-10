@@ -54,4 +54,20 @@ public class ShipDataTest {
 
         assertEquals(expRes, ship.getCog(), "Should be equal");
     }
+
+    @Test
+    public void testPrintData() {
+        System.out.println("printData()");
+
+        ShipData ship = new ShipData(LocalDateTime.now(), 123.45, 321.54, 15.4, 45.0, 42.0, 'B');
+        String expRes = "Date: " + ship.getDateTime() +
+                ", Latitude: " + ship.getLatitude() +
+                ", Longitude: " + ship.getLongitude() +
+                ", SOG: " + ship.getSog() +
+                ", COG: " + ship.getCog() +
+                ", Heading: " + ship.getHeading() +
+                ", Transceiver: " + ship.getTransceiver();
+
+        assertEquals(expRes, ship.toString());
+    }
 }

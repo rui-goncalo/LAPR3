@@ -102,7 +102,7 @@ public class Ship {
     public void printShip() {
         System.out.println("MMSI: " + this.getMmsi());
         for (ShipData data : this.dynamicShip) {
-            data.printData();
+            data.toString();
         }
     }
 
