@@ -34,7 +34,7 @@ public class TopShipsController {
       }
     
     //rever: metodo static?
-/*    public ArrayList<Ship> getNTopShips(int n, LocalDateTime start, LocalDateTime end, BST<Ship> shipTree){
+    public ArrayList<Ship> getNTopShips(int n, LocalDateTime start, LocalDateTime end, BST<ShipIMO> shipTree){
         ArrayList<Ship> topShips = new ArrayList<>(); //list de return
         ArrayList<ShipByDistance> shipsToSort= new ArrayList<>();
         ArrayList<ShipData> dynamicShip;
@@ -54,5 +54,5 @@ public class TopShipsController {
             topShips.add(shipsToSort.get(i).getShip());
         } 
         return topShips;
-    }*/
+    }
 }
