@@ -54,9 +54,10 @@ CREATE TABLE Ship_Port (
 CREATE TABLE Location (
     id  INTEGER CONSTRAINT pkIdLocation PRIMARY KEY,
     name VARCHAR(30),
-    latitude    DECIMAL(7,5),
-    longitude   DECIMAL(7,5),
-    CountryId   INTEGER
+    latitude    DECIMAL(5,2) DEFAULT 91.00,
+    longitude   DECIMAL(5,2) DEFAULT 181.00,
+    CountryId   INTEGER,
+    CONSTRAINT ck_Location CHECK (latitude >= -90.00 AND latitude <= 90.00 AND longitude >= -180.00 AND longitude <= 180.00)
 );
 
 CREATE TABLE Country(
