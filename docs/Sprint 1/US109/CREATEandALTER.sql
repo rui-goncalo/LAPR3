@@ -1,7 +1,9 @@
 -- DROP Tables --
 DROP TABLE Ship CASCADE CONSTRAINTS PURGE;
+DROP TABLE Ship_Port CASCADE CONSTRAINTS PURGE;
 DROP TABLE Container CASCADE CONSTRAINTS PURGE;
 DROP TABLE Truck CASCADE CONSTRAINTS PURGE;
+DROP TABLE Truck_Warehouse CASCADE CONSTRAINTS PURGE;
 DROP TABLE Message CASCADE CONSTRAINTS PURGE;
 DROP TABLE Cargo_Manifest CASCADE CONSTRAINTS PURGE;
 DROP TABLE Container_Cargo_Manifest CASCADE CONSTRAINTS PURGE;
@@ -14,15 +16,16 @@ DROP TABLE Country CASCADE CONSTRAINTS PURGE;
 DROP TABLE Continent CASCADE CONSTRAINTS PURGE;
 DROP TABLE Employee CASCADE CONSTRAINTS PURGE;
 DROP TABLE Type_Employee CASCADE CONSTRAINTS PURGE;
+DROP TABLE Arrival CASCADE CONSTRAINTS PURGE;
 
 -- CREATE Tables --
 CREATE TABLE Ship (
     mmsi    INTEGER     CONSTRAINT pkMMSIShip PRIMARY KEY,
     name  VARCHAR(30),
-    imo     INTEGER,
+    imo     INTEGER UNIQUE,
     number_energy_gen   INTEGER,
     gen_power_output    DECIMAL(5,2),
-    callsign    INTEGER,
+    callsign    VARCHAR(10) UNIQUE,
     vessel_type INTEGER,
     length    DECIMAL(5,2),
     Width   DECIMAL(5,2),
@@ -70,7 +73,6 @@ CREATE TABLE Continent (
 CREATE TABLE Truck (
     registration_plate  VARCHAR(8) CONSTRAINT pkRegTruck PRIMARY KEY,
     driver_id   INTEGER,
-    WarehouseId INTEGER,
     EmployeeId_employee INTEGER
 );
 
@@ -122,7 +124,8 @@ CREATE TABLE Container (
     refrigerated INTEGER,
     temperature INTEGER,
     Shipmmsi INTEGER,
-    TruckRegistration_plate VARCHAR(8)
+    TruckRegistration_plate VARCHAR(8),
+    Pos_ContainerId INTEGER
 );
 
 CREATE TABLE Cargo_Manifest (
@@ -134,8 +137,7 @@ CREATE TABLE Cargo_Manifest (
     Shipmmsi INTEGER,
     Truckregistration_plate VARCHAR(8),
     PortId INTEGER,
-    WarehouseId INTEGER,
-    Pos_ContainerId INTEGER
+    WarehouseId INTEGER
 );
 
 CREATE TABLE Container_Cargo_Manifest (
@@ -155,6 +157,12 @@ CREATE TABLE Pos_Container (
 CREATE TABLE Type_Cargo_Manifest (
     id INTEGER CONSTRAINT pkIdType_Cargo_Manifest PRIMARY KEY,
     designation VARCHAR(30)
+);
+
+CREATE TABLE Arrival (
+    Cargo_ManifestId INTEGER CONSTRAINT pkArrival PRIMARY KEY,
+    PortId INTEGER,
+    WarehouseId INTEGER
 );
 
 -- ALTER Tables --
@@ -177,10 +185,6 @@ REFERENCES Continent(id);
 ALTER TABLE Warehouse ADD CONSTRAINT
 fkLocationId_Warehouse FOREIGN KEY (LocationId)
 REFERENCES Location(id);
-
-ALTER TABLE Truck ADD CONSTRAINT
-fkWarehouseId_Truck FOREIGN KEY (WarehouseId)
-REFERENCES Warehouse(id);
 
 ALTER TABLE Truck ADD CONSTRAINT
 fkEmployeeId_Truck FOREIGN KEY (EmployeeId_employee)
@@ -238,8 +242,8 @@ ALTER TABLE Cargo_Manifest ADD CONSTRAINT
 fkWarehouseId_Cargo_Manifest FOREIGN KEY (WarehouseId)
 REFERENCES Warehouse(id);
 
-ALTER TABLE Cargo_Manifest ADD CONSTRAINT
-fkPos_ContainerId_Cargo_Manifest FOREIGN KEY (Pos_ContainerId)
+ALTER TABLE Container ADD CONSTRAINT
+fkPos_ContainerId_Container FOREIGN KEY (Pos_ContainerId)
 REFERENCES Pos_Container(id);
 
 ALTER TABLE Container_Cargo_Manifest ADD CONSTRAINT
@@ -264,4 +268,16 @@ REFERENCES Truck(registration_plate);
 
 ALTER TABLE Truck_Warehouse ADD CONSTRAINT
 fkWarehouseId_Truck_Warehouse FOREIGN KEY (WarehouseId_warehouse)
+REFERENCES Warehouse(id);
+
+ALTER TABLE Arrival ADD CONSTRAINT
+fkCargo_ManifestId_Arrival FOREIGN KEY (Cargo_ManifestId)
+REFERENCES Cargo_Manifest(id);
+
+ALTER TABLE Arrival ADD CONSTRAINT
+fkPortId_Arrival FOREIGN KEY (PortId)
+REFERENCES Port(id);
+
+ALTER TABLE Arrival ADD CONSTRAINT
+fkWarehouseId_Arrival FOREIGN KEY (WarehouseId)
 REFERENCES Warehouse(id);
