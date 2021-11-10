@@ -109,4 +109,19 @@ public class Ship {
     public void initializeDynamicData() {
         this.dynamicShip = new ArrayList<>();
     }
+
+    public String toString() {
+        return "Ship{" +
+                "mmsi=" + mmsi +
+                ", dynamicShip=" + dynamicShip +
+                ", name='" + name + '\'' +
+                ", imo=" + imo +
+                ", callSign='" + callSign + '\'' +
+                ", vessel=" + vessel +
+                ", length=" + length +
+                ", width=" + width +
+                ", draft=" + draft +
+                ", cargo=" + cargo +
+                '}';
+    }
 }

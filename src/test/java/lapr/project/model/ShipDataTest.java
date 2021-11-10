@@ -56,8 +56,8 @@ public class ShipDataTest {
     }
 
     @Test
-    public void testPrintData() {
-        System.out.println("printData()");
+    public void testToString() {
+        System.out.println("toString()");
 
         ShipData ship = new ShipData(LocalDateTime.now(), 123.45, 321.54, 15.4, 45.0, 42.0, 'B');
         String expRes = "Date: " + ship.getDateTime() +
