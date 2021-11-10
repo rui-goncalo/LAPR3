@@ -42,7 +42,7 @@ public class TopShipsControllerTest {
     /**
      * Test of getNTopShips method, of class TopShipsController.
      */
-    @org.junit.Test
+    /* @org.junit.Test
     public void testGetNTopShips() {
         System.out.println("getNTopShips");
         int n = 5;
@@ -99,6 +99,6 @@ public class TopShipsControllerTest {
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
-    }
-    
+    } */
+
 }
