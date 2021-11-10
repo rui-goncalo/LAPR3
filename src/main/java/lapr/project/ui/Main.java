@@ -1,5 +1,6 @@
 package lapr.project.ui;
 import lapr.project.model.CSVReader;
+import lapr.project.model.Menu;
 import lapr.project.model.Ship;
 
 import lapr.project.model.ShipIMO;
@@ -13,8 +14,11 @@ import java.util.stream.Collectors;
 class Main {
     public static void main(String[] args) throws Exception {
 
+        Menu menu = new Menu();
+        menu.runMenu();
 
-        CSVReader reader = new CSVReader();
+
+     /*   CSVReader reader = new CSVReader();
         ArrayList<Ship> shipArray = reader.readCSV();
 
         BST<ShipIMO> shipIMOBST = new BST<>();
@@ -28,7 +32,7 @@ class Main {
 
         shipIMOBST.printTree("");
 
-
+*/
 
        /* ArrayList<Object> sumary = null;
         Ship s = null;
