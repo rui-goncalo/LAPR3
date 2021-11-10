@@ -1,15 +1,4 @@
 package lapr.project.ui;
-import lapr.project.model.CSVReader;
-import lapr.project.model.Menu;
-import lapr.project.model.Ship;
-
-import lapr.project.model.ShipIMO;
-import lapr.project.tree.BST;
-import lapr.project.utils.Sumary;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.stream.Collectors;
 
 class Main {
     public static void main(String[] args) throws Exception {

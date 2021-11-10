@@ -1,4 +1,4 @@
-package lapr.project.model;
+package lapr.project.ui;
 
 import java.util.Scanner;
 
