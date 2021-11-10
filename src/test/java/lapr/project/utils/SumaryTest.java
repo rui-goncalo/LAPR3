@@ -14,8 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SumaryTest {
 
-    Ship ship = new Ship(229961000, "ARABELLA", 9700122, "9HA3752", 70,
-            199, 32, 14.4, 0);
+    ArrayList<ShipData> dynamicShip = new ArrayList<>();
 
     LocalDateTime time1 = LocalDateTime.of(2020,12,31,23,28,00);
     LocalDateTime time2 = LocalDateTime.of(2020, 12, 31, 23, 31, 00);
@@ -25,9 +24,11 @@ public class SumaryTest {
     ShipData shipData2 = new ShipData(time2, 54.23184,
             -130.33702, 0.1, 34.6,0, 'A');
 
+    Ship ship = new Ship(229961000, dynamicShip, "ARABELLA", 9700122, "9HA3752", 70,
+            199, 32, 14.4, 0);
+
     @BeforeEach
     public void setUp() throws Exception {
-        CSVReader.readCSV();
     }
 
     @Test
