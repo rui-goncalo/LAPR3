@@ -4,6 +4,7 @@ public class ShipIMO extends Ship implements Comparable<ShipIMO> {
 
     public ShipIMO(Ship ship) {
         super(ship.getMmsi(),
+                ship.getDynamicShip(),
                 ship.getName(),
                 ship.getImo(),
                 ship.getCallSign(),
@@ -15,7 +16,7 @@ public class ShipIMO extends Ship implements Comparable<ShipIMO> {
     }
 
     public ShipIMO(int imo) {
-        super(0, null, imo, null, 0, 0, 0, 0, 0);
+        super(0, null, null, imo, null, 0, 0, 0, 0, 0);
     }
 
     @Override

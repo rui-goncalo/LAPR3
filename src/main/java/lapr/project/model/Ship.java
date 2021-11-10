@@ -22,9 +22,9 @@ public class Ship {
     // private final double generatorOutput;
 
 
-    public Ship(int mmsi, String name, int imo, String callSign, int vessel, double length, double width, double draft, double cargo) {
+    public Ship(int mmsi, ArrayList<ShipData> dynamicShip, String name, int imo, String callSign, int vessel, double length, double width, double draft, double cargo) {
         this.mmsi = mmsi;
-        this.dynamicShip = new ArrayList<>();
+        this.dynamicShip = dynamicShip;
         this.name = name;
         this.imo = imo;
         this.callSign = callSign;
@@ -33,6 +33,7 @@ public class Ship {
         this.width = width;
         this.draft = draft;
         this.cargo = cargo;
+//        this.dynamicShip = new ArrayList<>();
     }
 
     public double getLength() {
@@ -74,7 +75,7 @@ public class Ship {
     public int getVessel() {
         return vessel;
     }
-    
+
     public void setDynamicShip(ArrayList<ShipData> data) {
         this.dynamicShip = data;
     }
@@ -85,7 +86,7 @@ public class Ship {
 
     public ArrayList<ShipData> filterShipData(LocalDateTime start, LocalDateTime end){
         ArrayList<ShipData> filteredShipData = new ArrayList<>();
-        
+
         for(ShipData shipData : dynamicShip){
             if(shipData.getDateTime().isAfter(end)){
                 break;
@@ -96,5 +97,31 @@ public class Ship {
         }
 
         return filteredShipData;
+    }
+
+    public void printShip() {
+        System.out.println("MMSI: " + this.getMmsi());
+        for (ShipData data : this.dynamicShip) {
+            data.toString();
+        }
+    }
+
+    public void initializeDynamicData() {
+        this.dynamicShip = new ArrayList<>();
+    }
+
+    public String toString() {
+        return "Ship{" +
+                "mmsi=" + mmsi +
+                ", dynamicShip=" + dynamicShip +
+                ", name='" + name + '\'' +
+                ", imo=" + imo +
+                ", callSign='" + callSign + '\'' +
+                ", vessel=" + vessel +
+                ", length=" + length +
+                ", width=" + width +
+                ", draft=" + draft +
+                ", cargo=" + cargo +
+                '}';
     }
 }

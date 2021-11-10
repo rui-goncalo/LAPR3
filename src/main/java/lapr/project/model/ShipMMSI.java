@@ -5,6 +5,7 @@ public class ShipMMSI extends Ship implements Comparable<ShipMMSI> {
 
     public ShipMMSI(Ship ship) {
         super(ship.getMmsi(),
+                ship.getDynamicShip(),
                 ship.getName(),
                 ship.getImo(),
                 ship.getCallSign(),
@@ -16,7 +17,7 @@ public class ShipMMSI extends Ship implements Comparable<ShipMMSI> {
     }
 
     public ShipMMSI(int mmsi) {
-        super(mmsi, null, 0, null, 0, 0, 0, 0, 0);
+        super(mmsi, null, null, 0, null, 0, 0, 0, 0, 0);
     }
 
     @Override
