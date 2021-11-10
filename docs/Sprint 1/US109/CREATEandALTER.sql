@@ -109,11 +109,12 @@ CREATE TABLE Message (
     id  INTEGER CONSTRAINT pkIdMessage PRIMARY KEY,
     sog INTEGER,
     cog INTEGER,
-    heading INTEGER,
+    heading INTEGER DEFAULT 511,
     distance DECIMAL(5,2),
     date_t VARCHAR(10),
     LocationId INTEGER,
-    Shipmmsi INTEGER
+    Shipmmsi INTEGER,
+    CONSTRAINT ck_Message CHECK (heading >= 0 AND heading <= 359 AND cog >= 0 AND cog <= 359)
 );
 
 CREATE TABLE Container (
