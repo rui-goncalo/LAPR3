@@ -171,4 +171,24 @@ public class ShipTest {
         //Inicio: 1 de Janeiro 2020 - FIM: 1 de Fevereiro 2020
         assertEquals(filteredData, ship.filterShipData(LocalDateTime.of(2020, 1, 1, 01, 25), LocalDateTime.of(2020, 2, 1, 01, 25)), "Should be equal");
     }
+
+    @Test
+    public void testSetDynamicShipAndAddDynamicShip() {
+        System.out.println("setDynamicShip");
+        ArrayList<ShipData> shipArray = new ArrayList<>();
+        Ship ship = new Ship(123456789, shipArray, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
+
+        ArrayList<ShipData> shipArrayChanged = new ArrayList<>();
+        LocalDateTime date1 = LocalDateTime.of(2020, 1, 31, 01, 25);
+        ShipData shipd1 = new ShipData(date1, 123.45, 321.04, 15.4, 90.0, 40.0, 'B');
+        shipArrayChanged.add(shipd1);
+
+        LocalDateTime date2 = LocalDateTime.of(2020, 5, 31, 16, 15);
+        ShipData shipd2 = new ShipData(date2, 132.45, 322.88, 10.4, 51.0, 42.0, 'A');
+        ship.addDynamicShip(shipd2);
+
+        ship.setDynamicShip(shipArrayChanged);
+        System.out.println(shipArrayChanged.toString());
+        assertEquals(shipArrayChanged, ship.getDynamicShip(), "Should be equal");
+    }
 }
