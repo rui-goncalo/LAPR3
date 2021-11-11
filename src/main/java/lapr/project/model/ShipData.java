@@ -52,7 +52,8 @@ public class ShipData {
     }
 
     public String toString() {
-        return "Date: " + this.getDateTime() +
+        String[] date = this.getDateTime().toString().split("T");
+        return "Date: " + date[0] + ", Time: " + date[1] +
                 ", Latitude: " + this.getLatitude() +
                 ", Longitude: " + this.getLongitude() +
                 ", SOG: " + this.getSog() +

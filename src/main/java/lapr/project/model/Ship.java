@@ -100,9 +100,9 @@ public class Ship {
     }
 
     public void printShip() {
-        System.out.println("MMSI: " + this.getMmsi());
+        System.out.println("Ship MMSI: " + this.getMmsi());
         for (ShipData data : this.dynamicShip) {
-            data.toString();
+            System.out.println(data.toString());
         }
     }
 

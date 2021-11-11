@@ -22,42 +22,27 @@ public class Menu {
         while (true) {
             this.printMenu();
             int choice = getInput(2);
-            this.runChoice(choice);
+            switch (choice) {
+                case 0:
+                    this.exit();
+                    break;
+                case 1:
+                    this.printImport();
+                    break;
+            }
         }
     }
 
-    private void runChoice(int choice) {
-        switch (choice) {
-            case 0:
-                this.exit();
-                break;
-            case 1:
-                this.printImport();
-                int newChoice = getInput(3);
-                this.runImport(newChoice);
-                break;
-        }
-    }
-
-    private void runImport(int choice) {
-        switch (choice) {
-            case 0:
-                this.exit();
-                break;
-            case 1:
-                printImportList();
-                break;
-            case 2:
-                System.out.println("Please insert file path:");
-                Scanner scan = new Scanner(System.in);
-                String path = scan.nextLine();
-                try {
-                    this.shipArray = CSVReader.readCSV(path);
-                    this.insertShips();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
+    private void retrieveFilePath() {
+        System.out.println("Please insert file path:");
+        Scanner scan = new Scanner(System.in);
+        String path = scan.nextLine();
+        try {
+            this.shipArray = CSVReader.readCSV(path);
+            this.insertShips();
+        } catch (Exception e) {
+            System.out.println("Invalid path, please try again.");
+            this.retrieveFilePath();
         }
     }
 
@@ -76,7 +61,8 @@ public class Menu {
                     this.shipArray = CSVReader.readCSV(SMALL_SHIP_FILE);
                     this.insertShips();
                 } catch (Exception e) {
-                    e.printStackTrace();                }
+                    e.printStackTrace();
+                }
                 break;
             case 2:
                 try {
@@ -125,6 +111,39 @@ public class Menu {
         System.out.println("0) Exit");
         int choice = this.getInput(4);
         System.out.println(choice);
+        Scanner scan = new Scanner(System.in);
+        switch (choice) {
+            case 0:
+                this.exit();
+                break;
+            case 1:
+                System.out.println("Please insert ship CallSign to search:");
+                String callSign = scan.nextLine();
+                ShipCallSign shipCallSign = csBST.find(new ShipCallSign(callSign));
+                this.shipMenu();
+                break;
+            case 2:
+                System.out.println("Please insert ship IMO to search:");
+                String imo = scan.nextLine();
+                ShipIMO shipIMO = imoBST.find(new ShipIMO(Integer.parseInt(imo)));
+                this.shipMenu();
+                break;
+            case 3:
+                System.out.println("Please insert ship MMSI to search:");
+                String mmsi = scan.nextLine();
+                ShipMMSI shipMMSI = mmsiBST.find(new ShipMMSI(Integer.parseInt(mmsi)));
+                this.shipMenu();
+                break;
+        }
+    }
+
+    private void shipMenu() {
+        System.out.println("Please make a selection: ");
+        System.out.println("2) Show all ship movements");
+        System.out.println("1) Show ship information");
+        System.out.println("0) Exit");
+        int choice = getInput(3);
+
     }
 
     private void printImport() {
@@ -132,12 +151,24 @@ public class Menu {
         System.out.println("2) Import From File");
         System.out.println("1) Import From List");
         System.out.println("0) Exit");
+        int choice = getInput(3);
+        switch (choice) {
+            case 0:
+                this.exit();
+                break;
+            case 1:
+                printImportList();
+                break;
+            case 2:
+                this.retrieveFilePath();
+                break;
+        }
     }
 
     private void printHeader() {
         System.out.println("+-----------------------------+");
-        System.out.println("|         Welcome to our       ");
-        System.out.println("|        Menu Application      ");
+        System.out.println("|         Welcome to our      |");
+        System.out.println("|        Menu Application     |");
         System.out.println("+-----------------------------+");
     }
 
@@ -150,13 +181,12 @@ public class Menu {
     private int getInput(int optionCount) {
         Scanner scan = new Scanner(System.in);
         int choice = -1;
-        while (choice < 1 || choice > optionCount ) {
+        while (choice < 1 || choice > optionCount) {
             try {
                 System.out.println("\nEnter your choice: ");
                 choice = Integer.parseInt(scan.nextLine());
                 break;
-            }
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 System.out.println("Invalid selection. Please try again.");
             }
         }

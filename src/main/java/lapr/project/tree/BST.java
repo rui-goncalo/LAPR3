@@ -218,6 +218,10 @@ public class BST<E extends Comparable<E>> implements BSTInterface<E> {
         return find(node.getRight(), element);
     }
 
+    public E find(E element) {
+        return this.find(this.root(), element).getElement();
+    }
+
     /*
      * Returns an iterable collection of elements of the tree, reported in in-order.
      * @return iterable collection of the tree's elements reported in in-order
@@ -372,21 +376,6 @@ public class BST<E extends Comparable<E>> implements BSTInterface<E> {
         }
     }
 
-    public E findElements(E element) {
-        return this.findElements(this.root(), element);
-    }
-
-    private E findElements (Node<E> node, E element) {
-
-        if (node == null || element.compareTo(node.getElement()) == 0){
-            return node.getElement();
-        }
-        if (element.compareTo(node.getElement()) > 0) {
-            return findElements(node.getLeft(),element);
-        }
-
-        return findElements(node.getRight(), element);
-    }
 
 
 } //----------- end of BST class -----------
