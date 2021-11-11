@@ -8,9 +8,8 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Calculator {
-    //1Degree of latitude to Km   
-    private static final double DEGREE_TO_KM= 111;
-    // REVER: assumindo distances como ints
+    //EARTH RADIUS   
+    private static final double R= 6371e3; // metres
     
     private static double degToRad(double deg) {
         return (deg * Math.PI / 180.0);
@@ -20,15 +19,17 @@ public class Calculator {
         return (rad * 180.0 / Math.PI);
     }
     
-    //TODO add catch from totaldistance for wrong values on lat/lon
-    public static double distanceBetween(double lat1, double lon1, double lat2, double lon2){
-        double theta = lon1 - lon2;
-        double dist = Math.sin(degToRad(lat1)) * Math.sin(degToRad(lat2)) + Math.cos(degToRad(lat1)) * Math.cos(degToRad(lat2)) * Math.cos(degToRad(theta));
-        dist = Math.acos(dist);
-        dist = radToDeg(dist);
-        dist = dist * DEGREE_TO_KM;
-        return dist;
+     public static double distanceBetween(double lat1, double lon1, double lat2, double lon2){
+        double lat1Rad = degToRad(lat1);
+        double lat2Rad = degToRad(lat2);
+        double Δlat = degToRad(lat2-lat1);
+        double Δlon = degToRad(lon2-lon1);
+        double a = Math.sin(Δlat/2) * Math.sin(Δlat/2) + Math.cos(lat1Rad) * Math.cos(lat2Rad) * Math.sin(Δlon/2) * Math.sin(Δlon/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        
+        return (R * c); // in metres      
     }
+
     
     //handle shipData before
     //also works for deltaDistance
