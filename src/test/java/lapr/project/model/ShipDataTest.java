@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoField;
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -60,7 +62,8 @@ public class ShipDataTest {
         System.out.println("toString()");
 
         ShipData ship = new ShipData(LocalDateTime.now(), 123.45, 321.54, 15.4, 45.0, 42.0, 'B');
-        String expRes = "Date: " + ship.getDateTime() +
+        String expRes = "Date: " + ship.getDateTime().toLocalDate() +
+                ", Time: " + ship.getDateTime().toLocalTime() +
                 ", Latitude: " + ship.getLatitude() +
                 ", Longitude: " + ship.getLongitude() +
                 ", SOG: " + ship.getSog() +
