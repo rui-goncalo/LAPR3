@@ -41,10 +41,17 @@ public class ShipMMSITest {
         System.out.println("compareTo()");
         ArrayList<ShipData> shipArray = new ArrayList<>();
         Ship ship = new Ship(123456789, shipArray, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
+        Ship ship1 = new Ship(123456788, shipArray, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
 
-        ShipMMSI o = new ShipMMSI(ship);
+        ShipMMSI o1 = new ShipMMSI(ship);
         ShipMMSI o2 = new ShipMMSI(ship);
+        assertEquals(0, o1.compareTo(o2), "should be equal");
 
-        assertEquals(0, o.compareTo(o2));
+        ShipMMSI o3 = new ShipMMSI(ship);
+        ShipMMSI o4 = new ShipMMSI(ship1);
+        assertEquals(1, o3.compareTo(o4), "should be 1");
+        assertEquals(-1, o4.compareTo(o3), "should be -1");
+
+
     }
 }

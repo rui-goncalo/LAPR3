@@ -113,7 +113,6 @@ public class Ship {
     public String toString() {
         return "Ship{" +
                 "mmsi=" + mmsi +
-                ", dynamicShip=" + dynamicShip +
                 ", name='" + name + '\'' +
                 ", imo=" + imo +
                 ", callSign='" + callSign + '\'' +
