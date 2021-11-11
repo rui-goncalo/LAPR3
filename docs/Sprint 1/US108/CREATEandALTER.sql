@@ -133,13 +133,9 @@ CREATE TABLE Container (
 CREATE TABLE Cargo_Manifest (
     id INTEGER CONSTRAINT pkIdCargo_Manifest PRIMARY KEY,
     gross_weight DECIMAL(5,2),
-    source INTEGER,
-    destination INTEGER,
     Type_Cargo_ManifestId INTEGER,
     Shipmmsi INTEGER,
-    Truckregistration_plate VARCHAR(8),
-    PortId INTEGER,
-    WarehouseId INTEGER
+    Truckregistration_plate VARCHAR(8)
 );
 
 CREATE TABLE Container_Cargo_Manifest (
@@ -235,14 +231,6 @@ REFERENCES Ship(mmsi);
 ALTER TABLE Cargo_Manifest ADD CONSTRAINT
 fkTruckReg_Cargo_Manifest FOREIGN KEY (Truckregistration_plate)
 REFERENCES Truck(registration_plate);
-
-ALTER TABLE Cargo_Manifest ADD CONSTRAINT
-fkPortId_Cargo_Manifest FOREIGN KEY (PortId)
-REFERENCES Port(id);
-
-ALTER TABLE Cargo_Manifest ADD CONSTRAINT
-fkWarehouseId_Cargo_Manifest FOREIGN KEY (WarehouseId)
-REFERENCES Warehouse(id);
 
 ALTER TABLE Container ADD CONSTRAINT
 fkPos_ContainerId_Container FOREIGN KEY (Pos_ContainerId)
