@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
-public class CSVReader {
+public class CSVReaderUtils {
 
-    public CSVReader() {
+    public CSVReaderUtils() {
 
     }
 

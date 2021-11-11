@@ -2,7 +2,7 @@ package lapr.project.utils;
 
 import org.junit.jupiter.api.Test;
 
-public class CSVReaderTest {
+public class CSVReaderUtilsTest {
     int mmsi = 210950000;
     int day = 31;
     int month = 12;
