@@ -123,7 +123,6 @@ public class ShipTest {
         Ship ship = new Ship(123456789, shipArray, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
         String expRes = "Ship{" +
                 "mmsi=" + ship.getMmsi() +
-                ", dynamicShip=" + ship.getDynamicShip() +
                 ", name='" + ship.getName() + '\'' +
                 ", imo=" + ship.getImo() +
                 ", callSign='" + ship.getCallSign() + '\'' +
