@@ -163,7 +163,7 @@ public class Menu {
                     for (ShipData data : Menu.currentShip.getDynamicShip()) {
                         System.out.println(data.toString());
                     }
-                    menuFilterRecordsByDate();
+                    //menuFilterRecordsByDate();
                     break;
                 case 1:
                     System.out.println(Menu.currentShip.toString());
