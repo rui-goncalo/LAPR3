@@ -13,103 +13,65 @@ import java.util.stream.Collectors;
 
 public final class CSVReaderUtils {
 
-
     private CSVReaderUtils() {
-        super();
-    }
 
-    // verificar se um barco existe - através do mmsi/imo/callsign
-    public static int verifyShip(String value, ArrayList<Ship> shipArray) {
-
-        for (int i = 0; i < shipArray.size(); i++) {
-            Ship ship = shipArray.get(i);
-            if ((ship.getMmsi() == Integer.parseInt(value)
-                    || ship.getImo() == Integer.parseInt(value)
-                    || ship.getCallSign().equals(value))) {
-                return i;
-            }
-        }
-
-        return -1;
-    }
-
-    private static int newImo(String imo) {
-        String temp = imo.substring(3, imo.length());
-        return Integer.parseInt(temp);
-    }
-
-    private static int newCargo(String value) {
-        if (value.equals("NA")) {
-            return 0;
-        }
-        return Integer.parseInt(value);
     }
 
     public static ArrayList<Ship> readCSV(String path) throws Exception {
-
-        DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-
         ArrayList<Ship> shipArray = new ArrayList<>();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-
             String line = br.readLine();
-
             while ((line = br.readLine()) != null) {
-
                 String[] values = line.split(",");
+                int index = shipExists(shipArray, Integer.parseInt(values[0]));
 
-                ShipData sd = new ShipData(LocalDateTime.parse(values[1], formatDate),
-                        Double.parseDouble(values[2]),
-                        Double.parseDouble(values[3]),
-                        Double.parseDouble(values[4]),
-                        Double.parseDouble(values[5]),
-                        Double.parseDouble(values[6]),
-                        values[15].charAt(0));
+                ShipData newDynamic = new ShipData(LocalDateTime.parse(values[1], format),  //baseDateTime
+                        Float.parseFloat(values[2]),  //lat
+                        Float.parseFloat(values[3]),  //lon
+                        Float.parseFloat(values[4]),  //sog
+                        Float.parseFloat(values[5]),  //cog
+                        Integer.parseInt(values[6]),  //heading
+                        values[15].charAt(0));        //transceiverClass
 
-                int index = verifyShip(values[0], shipArray);
-                if (index == -1) { // if there's ship
-                    int imo = newImo(values[8]);
-                    int cargo = newCargo(values[14]);
+                if (index != -1) {
+                    shipArray.get(index).addDynamicShip(newDynamic);
+                } else {
+                    Ship newShip = new Ship(Integer.parseInt(values[0]),  // mmsi
+                            new ArrayList<>(),                              // dynamic data
+                            values[7],                                    // shipName
+                            Integer.parseInt(values[8].substring(3)),     // imoCode
+                            values[9],                                    // callSign
+                            Integer.parseInt(values[10]),                 // vesselType
+                            Float.parseFloat(values[11]),                 // length
+                            Float.parseFloat(values[12]),                 // width
+                            Float.parseFloat(values[13]),                 // draft
+                            cargoParser(values[14]));                     // cargo
 
-                    Ship ship = new Ship(
-                            Integer.parseInt(values[0]), // mmsi
-                            null, // dynamic ship data
-                            values[7], // name
-                            imo, // imo
-                            values[9], // callsign
-                            Integer.parseInt(values[10]), // vessel
-                            Double.parseDouble(values[11]), // length
-                            Double.parseDouble(values[12]), // width
-                            Double.parseDouble(values[13]),// draft
-                            cargo);// cargo
-                    ship.initializeDynamicData();
-                    ship.addDynamicShip(sd);
-                    shipArray.add(ship);
-                    //System.out.println(ship.getDynamicShip().get(0).getDateTime());
-
-                } else { // se o barco existir
-
-                    shipArray.get(index).addDynamicShip(sd);
-
+                    newShip.addDynamicShip(newDynamic);
+                    shipArray.add(newShip);
                 }
             }
+            return shipArray;
         }
-
-        return shipArray;
     }
 
-    public static ArrayList<Ship> sortByDate(ArrayList<Ship> shipArray) throws Exception {
-
+    private static int shipExists(ArrayList<Ship> shipArray, int mmsi) {
         for (int i = 0; i < shipArray.size(); i++) {
-            ArrayList<ShipData> sortedArray = (ArrayList<ShipData>) shipArray.get(i).getDynamicShip().stream()
-                    .sorted(Comparator.comparing(ShipData::getDateTime).reversed())
-                    .collect(Collectors.toList());
-
-            shipArray.get(i).setDynamicShip(sortedArray);
+            if (shipArray.get(i).getMmsi() == mmsi) {
+                return i;
+            }
         }
-
-        return shipArray;
+        return -1;
     }
+
+    private static int cargoParser(String value) {
+        if (value.equals("NA"))
+            return 0;
+        else
+            return Integer.parseInt(value);
+    }
+
 
 }
