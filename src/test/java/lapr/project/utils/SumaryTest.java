@@ -35,32 +35,16 @@ public class SumaryTest {
         ship.addDynamicShip(shipData2);
         ArrayList<Object> sumary = Sumary.createSumary(ship,"MMSI");
         ArrayList<Object> expectRes = new ArrayList<>();
-        double maxSog = 0.0;
-        double maxCog = 0.0;
-        double departLat = 0.0;
-        double departLong = 0.0;
-        double arrLat = 0.0;
-        double arrLong = 0.0;
-
-        for (ShipData sd : ship.getDynamicShip()) {
-            if (maxSog < sd.getSog()) {
-                maxSog = sd.getSog();
-            }
-            if (maxCog < sd.getCog()) {
-                maxCog = sd.getCog();
-            }
-        }
-
-        expectRes.add(ship.getMmsi());
-        expectRes.add(ship.getName());
-        expectRes.add(ship.getVessel());
+        expectRes.add(229961000);
+        expectRes.add("ARABELLA");
+        expectRes.add(70);
         expectRes.add(time1);
         expectRes.add(time2);
         expectRes.add(1);
         expectRes.add(2);
-        expectRes.add(maxSog);
         expectRes.add(0.1);
-        expectRes.add(maxCog);
+        expectRes.add(0.1);
+        expectRes.add(82.8);
         expectRes.add(58.7);
         expectRes.add(54.23188);
         expectRes.add(-130.33667);
