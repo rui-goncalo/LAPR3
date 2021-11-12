@@ -18,9 +18,9 @@ public class SumaryTest {
     LocalDateTime time2 = LocalDateTime.of(2020, 12, 31, 23, 31, 00);
 
     ShipData shipData1 = new ShipData(time1, 54.23188,
-            -130.33667, 0.1, 82.8,0, 'A');
+            -130.33667, 1.0, 82.8,0, 'A');
     ShipData shipData2 = new ShipData(time2, 54.23184,
-            -130.33702, 0.1, 34.6,0, 'A');
+            -130.33702, 0.5, 34.6,0, 'A');
 
     Ship ship = new Ship(229961000, dynamicShip, "ARABELLA", 9700122, "9HA3752", 70,
             199, 32, 14.4, 0);
@@ -42,8 +42,8 @@ public class SumaryTest {
         expectRes.add(time2);
         expectRes.add(1);
         expectRes.add(2);
-        expectRes.add(0.1);
-        expectRes.add(0.1);
+        expectRes.add(1.0);
+        expectRes.add(0.75);
         expectRes.add(82.8);
         expectRes.add(58.7);
         expectRes.add(54.23188);

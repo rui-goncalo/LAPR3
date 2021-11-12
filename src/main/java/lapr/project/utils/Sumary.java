@@ -24,6 +24,8 @@ public class Sumary {
         double arrLat = 0.0;
         double arrLong = 0.0;
 
+
+
         for (ShipData sd : ship.getDynamicShip()) {
             if (nMoves == 0) {
                 inicialTime = sd.getDateTime();
