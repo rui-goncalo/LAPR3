@@ -13,9 +13,7 @@ import java.util.stream.Collectors;
 
 public final class CSVReaderUtils {
 
-
     private CSVReaderUtils() {
-        super();
     }
 
     // verificar se um barco existe - através do mmsi/imo/callsign

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class CSVReaderTest {
 
     @Test
-    public void testCARALHO() throws Exception {
+    public void testReadCSV() throws Exception {
 
         ArrayList<Ship> arrayship = CSVReaderUtils.readCSV("src/data/sships.csv");
         assertEquals(22, arrayship.size());

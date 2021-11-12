@@ -133,7 +133,7 @@ public class Menu {
                     }
                     break;
                 case 3:
-                    System.out.println(" > Please insert ship's CallSign:");
+                    System.out.print(" > Please insert ship's CallSign:");
                     String callSign = scan.nextLine();
                     if (csBST.find(new ShipCallSign(callSign)) != null) {
                         Menu.currentShip = csBST.find(new ShipCallSign(callSign));
