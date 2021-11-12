@@ -113,6 +113,8 @@ public class ShipTest {
         int expRes = 1;
 
         assertEquals(expRes, ship.getVessel(), "Should be equal");
+
+        ship.printShip();
     }
 
     @Test
@@ -135,6 +137,7 @@ public class ShipTest {
 
         assertEquals(expRes, ship.toString(), "should be equal");
     }
+
 
     @Test
     public void testfilterShipData() {
