@@ -33,7 +33,7 @@ public final class CSVReaderUtilsTest {
         assertEquals(355, shipArray.get(0).getDynamicShip().get(0).getHeading());
         assertEquals('B', shipArray.get(0).getDynamicShip().get(0).getTransceiver());
     }
-    
+
     @Test
     public void testVerifyShip() throws Exception{
         ArrayList<Ship> shipArrayList = CSVReaderUtils.readCSV("src/data/sships.csv");

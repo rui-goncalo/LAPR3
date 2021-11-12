@@ -23,9 +23,7 @@ public final class CSVReaderUtils {
 
         for (int i = 0; i < shipArray.size(); i++) {
             Ship ship = shipArray.get(i);
-            if ((ship.getMmsi() == Integer.parseInt(value)
-                    || ship.getImo() == Integer.parseInt(value)
-                    || ship.getCallSign().equals(value))) {
+            if (ship.getMmsi() == Integer.parseInt(value)) {
                 return i;
             }
         }
