@@ -20,6 +20,12 @@ public class Calculator {
     }
     
      public static double distanceBetween(double lat1, double lon1, double lat2, double lon2){
+        //if latitude/longitude aren't available
+         if((lat1 < -90)  || (lat1 > 90)  || (lat2 < -90)  || (lat2 > 90) || 
+           (lon1 < -180) || (lon1 > 180) || (lon2 < -180) || (lon2 > 180)  ){
+            return 0;
+        }
+        
         double lat1Rad = degToRad(lat1);
         double lat2Rad = degToRad(lat2);
         double Δlat = degToRad(lat2-lat1);
@@ -34,6 +40,8 @@ public class Calculator {
     //handle shipData before
     //also works for deltaDistance
     public static double totalDistance(ArrayList<ShipData> shipData){
+        if(shipData.isEmpty()) { return 0;}
+        
         double totalDistance = -1;
         double lat1 = 91;
         double lat2 = 91;
