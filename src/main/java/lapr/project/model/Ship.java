@@ -110,6 +110,7 @@ public class Ship {
         this.dynamicShip = new ArrayList<>();
     }
 
+    @Override
     public String toString() {
         return "Ship{" +
                 "mmsi=" + mmsi +

@@ -11,10 +11,20 @@ public class Sumary {
 
     public static ArrayList createSumary(Ship ship, String code) {
         ArrayList<Object> sumary = new ArrayList<>();
-        LocalDateTime inicialTime = null, finalTime = null;
-        Integer nMoves = 0, totalTime;
-        Double maxSog = 0.0, meanSog = 0.0, maxCog = 0.0, meanCog = 0.0;
-        Double departLat = 0.0, departLong = 0.0, arrLat = 0.0, arrLong = 0.0;
+        LocalDateTime inicialTime = null;
+        LocalDateTime finalTime = null;
+        int nMoves = 0;
+        int totalTime;
+        double maxSog = 0.0;
+        double meanSog = 0.0;
+        double maxCog = 0.0;
+        double meanCog = 0.0;
+        double departLat = 0.0;
+        double departLong = 0.0;
+        double arrLat = 0.0;
+        double arrLong = 0.0;
+
+
 
         for (ShipData sd : ship.getDynamicShip()) {
             if (nMoves == 0) {

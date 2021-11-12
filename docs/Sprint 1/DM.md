@@ -33,6 +33,24 @@ float capacity;
 float draft;
 }
 
+class ShipCallSign {
+
+}
+
+class ShipIMO {}
+
+class ShipMMSI {}
+
+class ShipData {
+LocalDateTime dateTime;
+double latitude;
+double longitude;
+double sog;
+double cog;
+double heading;
+char transceiverClass;
+}
+
 class Truck {
 int registration_plate;
 }
@@ -70,4 +88,7 @@ Truck "*" -- "*" Warehouse: receives <
 Truck "1" -- "*" Cargo_Manifest: have >
 Port "1" -- "*" Employee: has >
 Warehouse "1" -- "*" Employee: has >
+Ship "1" <|-- "1" ShipIMO
+Ship "1" <|-- "1" ShipCallSign
+Ship "1" <|-- "1" ShipMMSI
 @enduml

@@ -1,31 +1,37 @@
 package lapr.project.utils;
 
+import lapr.project.model.Ship;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.ArrayList;
+
+
 public class CSVReaderTest {
-    int mmsi = 210950000;
-    int day = 31;
-    int month = 12;
-    int year = 2020;
-    int hour = 18;
-    int minute = 31;
 
     @Test
-    public void testRead() throws Exception {
-//        ArrayList<Ship> shipTest = CSVReader.readCSV();
-//        assertEquals(mmsi, shipTest.get(0).getMmsi());
+    public void testReadCSV() throws Exception {
+
+        ArrayList<Ship> arrayship = CSVReaderUtils.readCSV("src/data/sships.csv");
+        assertEquals(22, arrayship.size());
+        assertEquals(210950000, arrayship.get(0).getMmsi());
+        assertEquals("VARAMO", arrayship.get(0).getName());
+        assertEquals(9395044, arrayship.get(0).getImo());
+        assertEquals("C4SQ2", arrayship.get(0).getCallSign());
+        assertEquals(70, arrayship.get(0).getVessel());
+        assertEquals(166, arrayship.get(0).getLength());
+        assertEquals(25, arrayship.get(0).getWidth());
+        assertEquals(9.5, arrayship.get(0).getDraft());
+        assertEquals(0, arrayship.get(0).getCargo());
+
+        assertEquals(25, arrayship.get(0).getDynamicShip().size());
+        assertEquals("2020-12-31T18:31", arrayship.get(0).getDynamicShip().get(0).getDateTime().toString());
+        assertEquals(43.22513, arrayship.get(0).getDynamicShip().get(0).getLatitude());
+        assertEquals(-66.96725, arrayship.get(0).getDynamicShip().get(0).getLongitude());
+        assertEquals(11.7, arrayship.get(0).getDynamicShip().get(0).getSog());
+        assertEquals(5.5, arrayship.get(0).getDynamicShip().get(0).getCog());
+        assertEquals(355, arrayship.get(0).getDynamicShip().get(0).getHeading());
+        assertEquals('B', arrayship.get(0).getDynamicShip().get(0).getTransceiver());
     }
-
-    @Test
-    public void testSort() throws Exception{
-//        ArrayList<Ship> shipTest = CSVReader.sortByDate();
-//        System.out.println(shipTest.get(0).getDynamicShip().get(0).getDateTime());
-//        assertEquals(this.day, shipTest.get(0).getDynamicShip().get(0).getDateTime().getDayOfMonth());
-//        assertEquals(this.month, shipTest.get(0).getDynamicShip().get(0).getDateTime().getMonthValue());
-//        assertEquals(this.year, shipTest.get(0).getDynamicShip().get(0).getDateTime().getYear());
-//        assertEquals(this.hour, shipTest.get(0).getDynamicShip().get(0).getDateTime().getHour());
-//        assertEquals(this.minute, shipTest.get(0).getDynamicShip().get(0).getDateTime().getMinute());
-
-    }
-
 }

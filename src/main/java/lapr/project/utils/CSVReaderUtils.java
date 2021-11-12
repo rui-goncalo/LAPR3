@@ -11,20 +11,17 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
-public class CSVReader {
+public final class CSVReaderUtils {
 
-    public CSVReader() {
-
+    private CSVReaderUtils() {
     }
 
     // verificar se um barco existe - através do mmsi/imo/callsign
-    private static int verifyShip(String value, ArrayList<Ship> shipArray) {
+    public static int verifyShip(String value, ArrayList<Ship> shipArray) {
 
         for (int i = 0; i < shipArray.size(); i++) {
             Ship ship = shipArray.get(i);
-            if ((ship.getMmsi() == Integer.parseInt(value)
-                    || ship.getImo() == Integer.parseInt(value)
-                    || ship.getCallSign().equals(value))) {
+            if (ship.getMmsi() == Integer.parseInt(value)) {
                 return i;
             }
         }
@@ -37,14 +34,12 @@ public class CSVReader {
         return Integer.parseInt(temp);
     }
 
-
     private static int newCargo(String value) {
         if (value.equals("NA")) {
             return 0;
         }
         return Integer.parseInt(value);
     }
-
 
     public static ArrayList<Ship> readCSV(String path) throws Exception {
 
@@ -97,7 +92,7 @@ public class CSVReader {
             }
         }
 
-        return shipArray;
+        return sortByDate(shipArray);
     }
 
     public static ArrayList<Ship> sortByDate(ArrayList<Ship> shipArray) throws Exception {
