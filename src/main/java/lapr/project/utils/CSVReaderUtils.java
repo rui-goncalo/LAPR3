@@ -19,7 +19,7 @@ public final class CSVReaderUtils {
     }
 
     // verificar se um barco existe - através do mmsi/imo/callsign
-    private static int verifyShip(String value, ArrayList<Ship> shipArray) {
+    public static int verifyShip(String value, ArrayList<Ship> shipArray) {
 
         for (int i = 0; i < shipArray.size(); i++) {
             Ship ship = shipArray.get(i);
