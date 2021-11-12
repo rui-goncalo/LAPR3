@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
-public class CSVReaderUtils {
+public final class CSVReaderUtils {
 
     // verificar se um barco existe - através do mmsi/imo/callsign
     private static int verifyShip(String value, ArrayList<Ship> shipArray) {
