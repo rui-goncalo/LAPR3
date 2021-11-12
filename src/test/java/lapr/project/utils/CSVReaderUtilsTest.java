@@ -25,16 +25,15 @@ public final class CSVReaderUtilsTest {
         assertEquals(0, shipArray.get(0).getCargo());
 
         assertEquals(25, shipArray.get(0).getDynamicShip().size());
-        assertEquals("2020-12-31T17:19", shipArray.get(0).getDynamicShip().get(0).getDateTime().toString());
-        assertEquals(42.97875, shipArray.get(0).getDynamicShip().get(0).getLatitude());
-        assertEquals(-66.97001, shipArray.get(0).getDynamicShip().get(0).getLongitude());
-        assertEquals(12.9, shipArray.get(0).getDynamicShip().get(0).getSog());
-        assertEquals(13.1, shipArray.get(0).getDynamicShip().get(0).getCog());
+        assertEquals("2020-12-31T18:31", shipArray.get(0).getDynamicShip().get(0).getDateTime().toString());
+        assertEquals(43.22513, shipArray.get(0).getDynamicShip().get(0).getLatitude());
+        assertEquals(-66.96725, shipArray.get(0).getDynamicShip().get(0).getLongitude());
+        assertEquals(11.7, shipArray.get(0).getDynamicShip().get(0).getSog());
+        assertEquals(5.5, shipArray.get(0).getDynamicShip().get(0).getCog());
         assertEquals(355, shipArray.get(0).getDynamicShip().get(0).getHeading());
         assertEquals('B', shipArray.get(0).getDynamicShip().get(0).getTransceiver());
     }
-
-
+    
     @Test
     public void testVerifyShip() throws Exception{
         ArrayList<Ship> shipArrayList = CSVReaderUtils.readCSV("src/data/sships.csv");
