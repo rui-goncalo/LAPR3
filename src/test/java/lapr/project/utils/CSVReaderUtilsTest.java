@@ -4,10 +4,9 @@ import lapr.project.model.Ship;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-
 import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public final class CSVReaderUtilsTest {
 
@@ -40,6 +39,7 @@ public final class CSVReaderUtilsTest {
     public void testVerifyShip() throws Exception{
         ArrayList<Ship> shipArrayList = CSVReaderUtils.readCSV("src/data/sships.csv");
         assertFalse(CSVReaderUtils.verifyShip("210950000", shipArrayList) == -1);
+        assertTrue(CSVReaderUtils.verifyShip("2109500001", shipArrayList) != 1);
 
 
     }
