@@ -3,7 +3,12 @@ package lapr.project.model;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 
+/**
+ * @author Rui Gonçalves - 1191831
+ */
+
 public class Ship {
+
 
     private final int mmsi;
     private ArrayList<ShipData> dynamicShip;

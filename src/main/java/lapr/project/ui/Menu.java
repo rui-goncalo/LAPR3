@@ -142,6 +142,65 @@ public class Menu {
                         System.out.println("Ship not found");
                     }
                     break;
+
+                case 4:
+                    ArrayList<Ship> ships = new ArrayList<>();
+                    for (Ship ship : mmsiBST.inOrder()) {
+                        ArrayList<ShipData> shipData = ship.getDynamicShip();
+
+                        double distance = CoordinatesUtils.distance(shipData.get(0).getLatitude(),
+                                shipData.get(0).getLongitude(),
+                                shipData.get(shipData.size() - 1).getLatitude(),
+                                shipData.get(shipData.size() - 1).getLongitude());
+
+                        if(distance > 10) {
+                            ships.add(ship);
+                            System.out.println("MMSI: " + ship.getMmsi());
+                            System.out.println(distance);
+                        }
+                    }
+
+                    ArrayList<ArrayList<Ship>> shipPairArrayList = new ArrayList<>();
+                    ArrayList<Ship> pairArrayList;
+                    for (int i = 0; i < ships.size(); i++) {
+                        for (int j = 1; j < ships.size(); j++) {
+                            Ship ship = ships.get(i);
+
+                            Ship newShip = ships.get(j);
+                            if (ship.getMmsi() != newShip.getMmsi()) {
+                                ArrayList<ShipData> oldData = ship.getDynamicShip();
+                                double initialOldLat = oldData.get(0).getLatitude();
+                                double initialOldLong = oldData.get(0).getLongitude();
+
+                                double finalOldLat = oldData.get(oldData.size() - 1).getLatitude();
+                                double finalOldLong = oldData.get(oldData.size() - 1).getLongitude();
+
+                                ArrayList<ShipData> shipData = newShip.getDynamicShip();
+                                double initialLat = shipData.get(0).getLatitude();
+                                double initialLong = shipData.get(0).getLongitude();
+
+                                double finalLat = shipData.get(shipData.size() - 1).getLatitude();
+                                double finalLong = shipData.get(shipData.size() - 1).getLongitude();
+
+                                double departureDistance = CoordinatesUtils.distance(initialOldLat,
+                                        initialOldLong, initialLat, initialLong);
+                                double arrivalDistance = CoordinatesUtils.distance(finalOldLat,
+                                        finalOldLong, finalLat, finalLong);
+                                if (departureDistance < 5 || arrivalDistance < 5) {
+                                    for (ArrayList<Ship> shipPairArray : shipPairArrayList) {
+                                        // Falta ver se par de ships já foi adicionado
+                                    }
+                                    pairArrayList = new ArrayList<>();
+                                    pairArrayList.add(ship);
+                                    pairArrayList.add(newShip);
+                                    shipPairArrayList.add(pairArrayList);
+                                    System.out.println(departureDistance);
+                                    System.out.println(arrivalDistance);
+                                    System.out.println();
+                                }
+                            }
+                        }
+                    }
             }
         } while (choice != 0);
     }

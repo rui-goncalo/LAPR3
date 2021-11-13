@@ -11,35 +11,25 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
+/**
+ * @author Rui Gonçalves - 1191831
+ */
+
 public final class CSVReaderUtils {
+
+    /**
+     * Private constructor of CSVReaderUtils.
+     */
 
     private CSVReaderUtils() {
     }
 
-    // verificar se um barco existe - através do mmsi/imo/callsign
-    public static int verifyShip(String value, ArrayList<Ship> shipArray) {
-
-        for (int i = 0; i < shipArray.size(); i++) {
-            Ship ship = shipArray.get(i);
-            if (ship.getMmsi() == Integer.parseInt(value)) {
-                return i;
-            }
-        }
-
-        return -1;
-    }
-
-    private static int newImo(String imo) {
-        String temp = imo.substring(3, imo.length());
-        return Integer.parseInt(temp);
-    }
-
-    private static int newCargo(String value) {
-        if (value.equals("NA")) {
-            return 0;
-        }
-        return Integer.parseInt(value);
-    }
+    /**
+     * Read a CSV file and creates an ArrayList of ships.
+     * @param path
+     * @return
+     * @throws Exception
+     */
 
     public static ArrayList<Ship> readCSV(String path) throws Exception {
 
@@ -82,17 +72,46 @@ public final class CSVReaderUtils {
                     ship.initializeDynamicData();
                     ship.addDynamicShip(sd);
                     shipArray.add(ship);
-                    //System.out.println(ship.getDynamicShip().get(0).getDateTime());
 
-                } else { // se o barco existir
-
+                } else {
                     shipArray.get(index).addDynamicShip(sd);
 
                 }
             }
         }
-
         return sortByDate(shipArray);
+    }
+
+    /**
+     * Read a CSV file and creates an ArrayList of ships.
+     * @param value
+     * @param shipArray
+     * @return
+     */
+
+    // verificar se um barco existe - através do mmsi/imo/callsign
+    public static int verifyShip(String value, ArrayList<Ship> shipArray) {
+
+        for (int i = 0; i < shipArray.size(); i++) {
+            Ship ship = shipArray.get(i);
+            if (ship.getMmsi() == Integer.parseInt(value)) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private static int newImo(String imo) {
+        String temp = imo.substring(3, imo.length());
+        return Integer.parseInt(temp);
+    }
+
+    private static int newCargo(String value) {
+        if (value.equals("NA")) {
+            return 0;
+        }
+        return Integer.parseInt(value);
     }
 
     public static ArrayList<Ship> sortByDate(ArrayList<Ship> shipArray) throws Exception {
