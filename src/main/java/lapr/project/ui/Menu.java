@@ -5,8 +5,10 @@ import lapr.project.tree.BST;
 import lapr.project.utils.CSVReaderUtils;
 import lapr.project.utils.CoordinatesUtils;
 
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Menu {
@@ -14,6 +16,8 @@ public class Menu {
     private static final String BIG_SHIP_FILE = "src/data/bships.csv";
     private static final String SMALL_SHIP_FILE = "src/data/sships.csv";
 
+    private static final int MAX_YEAR = 2022;
+    private static final int MIN_YEAR = 0;
     private static ArrayList<Ship> shipArray = new ArrayList<>();
     private static final BST<ShipMMSI> mmsiBST = new BST<>();
     private static final BST<ShipIMO> imoBST = new BST<>();
@@ -26,9 +30,9 @@ public class Menu {
 
         do {
 
-            String[] options = {"Exit", "Import Menu", "Manage Ships"};
+            String[] options = {"Exit", "Import Menu", "Manage Ships", "Get the top-N ships"};
             printMenu("Main Menu", options, true);
-            choice = getInput("Please make a selection", 2);
+            choice = getInput("Please make a selection", 3);
 
             switch (choice) {
                 case 0: break;
@@ -37,6 +41,9 @@ public class Menu {
                     break;
                 case 2:
                     menuManageShips();
+                    break;
+                case 3:
+                    menuTopShips();
                     break;
             }
 
@@ -329,5 +336,124 @@ public class Menu {
         }
         return;
     }*/
+    
+    private static void menuTopShips() {
+        int choice;
+        int n = 0;
+        Scanner scan = new Scanner(System.in);
+        int initialYear = -1;
+        int initialMonth = 13;
+        int initialDay = 35;
+        LocalDateTime initialDate = null;
+        int finalYear = -1;
+        int finalMonth = 13;
+        int finalDay = 35;
+        LocalDateTime finalDate = null;
+        boolean tryAgain = true;
+        
+        while (tryAgain == true) {
+            //Number of ships
+            System.out.println("How many ships?");
+            while (n == 0) {
+                System.out.println("Choose a value above 0.");
+                n = Integer.parseInt(scan.nextLine());
+            }
 
+            //Initial Date
+            System.out.println("Input initial date or press '0' for none.");
+            System.out.println("Which starting year?");
+            choice = Integer.parseInt(scan.nextLine());
+            while (choice != 0) {
+                while (choice < 0 || choice > 2022) {
+                    System.out.println("Choose a valid year.");
+                    choice = Integer.parseInt(scan.nextLine());
+                }
+                initialYear = choice;
+
+                System.out.println("Which starting month?");
+                choice = Integer.parseInt(scan.nextLine());
+                while (choice < 1 || choice > 12) {
+                    System.out.println("Choose a valid month.");
+                    choice = Integer.parseInt(scan.nextLine());
+                }
+                initialMonth = choice;
+                
+                System.out.println("Which starting day?");
+                choice = Integer.parseInt(scan.nextLine());
+                while (choice < 1 || choice > 31) {
+                    System.out.println("Choose a valid day.");
+                    choice = Integer.parseInt(scan.nextLine());
+                }
+                initialDay = choice;
+                try {
+                    initialDate = LocalDateTime.of(initialYear, initialMonth, initialDay, 0, 0);
+                } catch (DateTimeException e) {
+                    System.out.println("INVALID date please input the values again.");
+                    continue;
+                }
+                initialDate = LocalDateTime.of(initialYear, initialMonth, initialDay, 0, 0);
+                choice = 0;
+            }
+            
+            //Final Date
+            System.out.println("Input final date or press '0' for none.");
+            System.out.println("Which final year?");
+            choice = Integer.parseInt(scan.nextLine());
+            while (choice != 0) {
+                while (choice < 0 || choice > 2022) {
+                    System.out.println("Choose a valid year.");
+                    choice = Integer.parseInt(scan.nextLine());
+                }
+                finalYear = choice;
+
+                System.out.println("Which final month?");
+                choice = Integer.parseInt(scan.nextLine());
+                while (choice < 1 || choice > 12) {
+                    System.out.println("Choose a valid month.");
+                    choice = Integer.parseInt(scan.nextLine());
+                }
+                finalMonth = choice;
+                
+                System.out.println("Which final day?");
+                choice = Integer.parseInt(scan.nextLine());
+                while (choice < 1 || choice > 31) {
+                    System.out.println("Choose a valid day.");
+                    choice = Integer.parseInt(scan.nextLine());
+                }
+                finalDay = choice;
+                try {
+                    finalDate = LocalDateTime.of(finalYear, finalMonth, finalDay, 0, 0);
+                } catch (DateTimeException e) {
+                    System.out.println("INVALID date please input the values again.");
+                    continue;
+                }
+                finalDate = LocalDateTime.of(initialYear, initialMonth, initialDay, 0, 0);
+            }
+            
+            if (initialDate != null || finalDate != null) {
+                if (initialDate.isAfter(finalDate)) {
+                    System.out.println("INVALID dates please input the values again.");
+                    continue;
+                }
+            }
+            
+            System.out.printf("Number of Ships: %d%n", n);
+            if(initialDate==null){
+                System.out.println("Inital date: none");
+            }else{
+                System.out.printf("Initial date: %d%n", initialDate.toString());
+            }
+            if(finalDate==null){
+                System.out.println("Final date: none");
+            }else{
+                System.out.printf("Final date: %d%n", initialDate.toString());
+            }
+            System.out.println("Review your inputs, and press '1' to continue or '0' to restart:");
+            choice = Integer.parseInt(scan.nextLine());
+            
+            if(choice==1){
+                tryAgain = false;
+            }
+        }
+    }
 }

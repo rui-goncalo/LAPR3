@@ -43,12 +43,12 @@ public class Calculator {
         if(shipData.isEmpty()) { return 0;}
         
         double totalDistance = -1;
-        double lat1 = 91;
-        double lat2 = 91;
-        double lon1 = 181;
-        double lon2 = 181;
-        ShipData pos1 = null;
-        ShipData pos2 = null;
+        double lat1;
+        double lat2;
+        double lon1;
+        double lon2;
+        ShipData pos1;
+        ShipData pos2;
         
         for(int i = 0; i < shipData.size() - 1; i++) {
             pos1= shipData.get(i);

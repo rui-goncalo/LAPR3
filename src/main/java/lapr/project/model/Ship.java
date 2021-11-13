@@ -91,7 +91,34 @@ public class Ship {
 
     public ArrayList<ShipData> filterShipData(LocalDateTime start, LocalDateTime end){
         ArrayList<ShipData> filteredShipData = new ArrayList<>();
-
+        
+        //When there's no time period.
+        if (start==null && end==null) {
+            return dynamicShip;
+        }
+        
+        //When there's no initial date.
+        if (start == null) {
+            for (ShipData shipData : dynamicShip) {
+                if (shipData.getDateTime().isAfter(end)) {
+                    break;
+                }
+                filteredShipData.add(shipData);
+            }
+            return filteredShipData;
+        }
+        
+        //When there's final date.
+        if (end == null) {
+            for (ShipData shipData : dynamicShip) {
+                if (shipData.getDateTime().isAfter(start)) {
+                    filteredShipData.add(shipData);
+                }
+            }
+            return filteredShipData;
+        }
+        
+        //When there's a date period.
         for(ShipData shipData : dynamicShip){
             if(shipData.getDateTime().isAfter(end)){
                 break;
