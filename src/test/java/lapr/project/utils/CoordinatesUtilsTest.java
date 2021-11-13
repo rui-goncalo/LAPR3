@@ -16,9 +16,13 @@ public class CoordinatesUtilsTest {
 
         double distanceTravelled = CoordinatesUtils.distance(24.83657, -78.50441, 25.83611, -78.50481);
         double distanceTravelled1 = CoordinatesUtils.distance(25.83657, -78.50441, 25.83611, -78.50481);
+        double distanceTravelled2 = CoordinatesUtils.distance(25.83657, -78.50441, 25.83657, -78.50441);
+
+
 
         assertTrue(distanceTravelled > 10);
         assertFalse(distanceTravelled1 > 10);
+        assertTrue(distanceTravelled2 == 0);
 
     }
 
