@@ -28,6 +28,8 @@ public class SumaryTest {
         ship.addDynamicShip(shipData1);
         ship.addDynamicShip(shipData2);
         ArrayList<Object> sumary = Sumary.createSumary(ship,"MMSI");
+        ArrayList<Object> sumaryIMO = Sumary.createSumary(ship,"IMO");
+        ArrayList<Object> sumaryCallSign = Sumary.createSumary(ship,"CallSign");
         ArrayList<Object> expectRes = new ArrayList<>();
         expectRes.add(229961000);
         expectRes.add("ARABELLA");
