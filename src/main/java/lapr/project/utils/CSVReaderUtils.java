@@ -14,23 +14,20 @@ import java.util.stream.Collectors;
 /**
  * @author Rui Gonçalves - 1191831
  */
-
 public final class CSVReaderUtils {
 
     /**
      * Private constructor of CSVReaderUtils.
      */
-
     private CSVReaderUtils() {
     }
 
     /**
      * Read a CSV file and creates an ArrayList of ships.
-     * @param path
-     * @return
-     * @throws Exception
+     * @param path - CSV file.
+     * @return an ArrayList filled with ships and their dynamic data.
+     * @throws Exception if the file path doesn't exist.
      */
-
     public static ArrayList<Ship> readCSV(String path) throws Exception {
 
         DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
@@ -83,13 +80,11 @@ public final class CSVReaderUtils {
     }
 
     /**
-     * Read a CSV file and creates an ArrayList of ships.
-     * @param value
-     * @param shipArray
-     * @return
+     * Verify if ship exists inside an Arraylist - From mmsi.
+     * @param value is the variable to use during the search.
+     * @param shipArray an ArrayList of ships to search.
+     * @return the index if ship exists or -1 if doesn't exists.
      */
-
-    // verificar se um barco existe - através do mmsi/imo/callsign
     public static int verifyShip(String value, ArrayList<Ship> shipArray) {
 
         for (int i = 0; i < shipArray.size(); i++) {
@@ -102,6 +97,11 @@ public final class CSVReaderUtils {
         return -1;
     }
 
+    /**
+     * Given a string of imo value and converts it into an Integer.
+     * @param imo is the value
+     * @return
+     */
     private static int newImo(String imo) {
         String temp = imo.substring(3, imo.length());
         return Integer.parseInt(temp);
