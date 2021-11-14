@@ -21,7 +21,7 @@ DROP TABLE Arrival CASCADE CONSTRAINTS PURGE;
 -- CREATE Tables --
 CREATE TABLE Ship (
     mmsi    INTEGER     CONSTRAINT ship_pk PRIMARY KEY,
-    name  VARCHAR(30),
+    name  VARCHAR(30) CONSTRAINT ship_nn NOT NULL,
     imo     INTEGER UNIQUE,
     number_energy_gen   INTEGER,
     gen_power_output    DECIMAL(5,2),
@@ -39,7 +39,7 @@ CREATE TABLE Ship (
 
 CREATE TABLE Port (
     id  INTEGER     CONSTRAINT port_pk PRIMARY KEY,
-    name    VARCHAR(30),
+    name    VARCHAR(30) CONSTRAINT port_nn NOT NULL,
     capacity    INTEGER,
     LocationId INTEGER
 );
@@ -53,7 +53,7 @@ CREATE TABLE Ship_Port (
 
 CREATE TABLE Location (
     id  INTEGER CONSTRAINT location_pk PRIMARY KEY,
-    name VARCHAR(30),
+    name VARCHAR(30) CONSTRAINT location_nn NOT NULL,
     latitude    DECIMAL(5,2) DEFAULT 91.00,
     longitude   DECIMAL(5,2) DEFAULT 181.00,
     CountryId   INTEGER,
@@ -62,13 +62,13 @@ CREATE TABLE Location (
 
 CREATE TABLE Country(
     id  INTEGER CONSTRAINT country_pk PRIMARY KEY,
-    name VARCHAR(30),
+    name VARCHAR(30) CONSTRAINT country_nn NOT NULL,
     ContinentId INTEGER
 );
 
 CREATE TABLE Continent (
     id  INTEGER CONSTRAINT continent_pk PRIMARY KEY,
-    name VARCHAR(30)
+    name VARCHAR(30) CONSTRAINT continent_nn NOT NULL
 );
 
 CREATE TABLE Truck (
@@ -79,7 +79,7 @@ CREATE TABLE Truck (
 
 CREATE TABLE Warehouse (
     id  INTEGER     CONSTRAINT warehouse_pk PRIMARY KEY,
-    name    VARCHAR(30),
+    name    VARCHAR(30) CONSTRAINT warehouse_nn NOT NULL,
     capacity    INTEGER,
     LocationId INTEGER
 );
@@ -93,7 +93,7 @@ CREATE TABLE Truck_Warehouse (
 
 CREATE TABLE Employee (
     id  INTEGER CONSTRAINT employee_pk PRIMARY KEY,
-    name VARCHAR(30),
+    name VARCHAR(30) CONSTRAINT employee_nn NOT NULL,
     Type_Employeetype_id INTEGER,
     PortId INTEGER,
     WarehouseId INTEGER,
@@ -154,7 +154,7 @@ CREATE TABLE Pos_Container (
 
 CREATE TABLE Type_Cargo_Manifest (
     id INTEGER CONSTRAINT type_cargo_manifest_pk PRIMARY KEY,
-    designation VARCHAR(30)
+    designation VARCHAR(30) CONSTRAINT designation_nn NOT NULL
 );
 
 CREATE TABLE Arrival (
