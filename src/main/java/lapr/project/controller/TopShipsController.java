@@ -6,20 +6,42 @@ import lapr.project.model.*;
 import lapr.project.tree.BST;
 import lapr.project.utils.Calculator;
 
+/**
+ *
+ * @author 1180590
+ */
 public class TopShipsController {
     
+    /**
+     * Nested class for sorting the ships by traveled distance
+     */
     protected class ShipByDistance implements Comparable<ShipByDistance>{
         
         private final Ship ship;
         private final double traveledDistance;
         
+        /**
+         *
+         * @param ship ship to associate a traveled distance to
+         * @param traveledDistance traveled distance of a ship in a certain period of time
+         */
         public ShipByDistance(Ship ship, double traveledDistance) {
           this.ship = ship;
           this.traveledDistance = traveledDistance;
         }
         
         // accessor methods
+
+        /**
+         *
+         * @return ship
+         */
         public Ship getShip() { return ship; }
+
+        /**
+         *
+         * @return traveled distance
+         */
         public double getTraveledDistance() { return traveledDistance; }
         
         @Override
@@ -29,6 +51,11 @@ public class TopShipsController {
             return 0;
         }
         
+        /**
+         * Equals function to implement Comparable correctly
+         * @param ship to compare
+         * @return
+         */
         public boolean equals(ShipByDistance ship){
             return this.ship == ship.getShip();
         }
@@ -37,28 +64,56 @@ public class TopShipsController {
     private ArrayList<Ship> topShipList;
     private ArrayList<Double> meanSogList;
     
+    /**
+     * Constructor for the Menu class to recieve the sorted lists
+     */
     public TopShipsController(){
         topShipList = new ArrayList<>();
         meanSogList = new ArrayList<>();
     }
     
+    /**
+     * topShipList to add the Controller class
+     * Used to test the get methods correctly
+     * @param topShipList
+     */
     public void setTopShips(ArrayList<Ship> topShipList){
         this.topShipList = topShipList;
     }
     
+    /**
+     * meanSogList to add the Controller class
+     * Used to test the get methods correctly
+     * @param meanSogList
+     */
     public void setMeanSogs(ArrayList<Double> meanSogList){
         this.meanSogList = meanSogList;
     }
     
+    /**
+     *
+     * @return topShipList
+     */
     public  ArrayList<Ship> getTopShips(){
         return topShipList;
     }
     
+    /**
+     *
+     * @return meanSogList
+     */
     public  ArrayList<Double> getMeanSogs(){
         return meanSogList;
     }
     
-    //rever: metodo static?
+
+    /**
+     * Creates 2 sorted lists containing the Ships with the most traveled distance and their respective MeanSOG's
+     * @param n number of Ships to return
+     * @param start starting date (leave as null if none)
+     * @param end end date (leave as null if none)
+     * @param shipTree Tree containing all the ships
+     */
     public void getNTopShips(int n, LocalDateTime start, LocalDateTime end, BST<ShipIMO> shipTree){
         ArrayList<Ship> topShips = new ArrayList<>(); //list de return
         ArrayList<ShipByDistance> shipsToSort= new ArrayList<>();

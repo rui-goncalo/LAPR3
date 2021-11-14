@@ -164,9 +164,9 @@ public class Ship {
     }
 
     /**
-     *
-     * @param start
-     * @param end
+     * Filters the shipData by a Local Date Time period
+     * @param start null if no initial limit
+     * @param end null if no end limit
      * @return
      */
     public ArrayList<ShipData> filterShipData(LocalDateTime start, LocalDateTime end){
