@@ -5,14 +5,13 @@ import java.util.ArrayList;
 import lapr.project.model.*;
 import lapr.project.tree.BST;
 import lapr.project.utils.Calculator;
-import java.lang.Double;
 
 public class TopShipsController {
     
     protected class ShipByDistance implements Comparable<ShipByDistance>{
         
-        private Ship ship;
-        private double traveledDistance;
+        private final Ship ship;
+        private final double traveledDistance;
         
         public ShipByDistance(Ship ship, double traveledDistance) {
           this.ship = ship;
@@ -23,12 +22,15 @@ public class TopShipsController {
         public Ship getShip() { return ship; }
         public double getTraveledDistance() { return traveledDistance; }
         
-        //rever traveled distance int?
         @Override
         public int compareTo(ShipByDistance ship){
             if(traveledDistance < ship.traveledDistance){return -1;}
             if(traveledDistance > ship.traveledDistance){return 1;}
             return 0;
+        }
+        
+        public boolean equals(ShipByDistance ship){
+            return this.ship == ship.getShip();
         }
       }
     
@@ -53,12 +55,8 @@ public class TopShipsController {
         ArrayList<Ship> topShips = new ArrayList<>(); //list de return
         ArrayList<ShipByDistance> shipsToSort= new ArrayList<>();
         ArrayList<ShipData> dynamicShip;
-        Double meanSog = new Double(0);
+        Double meanSog = 0.0;
         
-        //TODO tests and catch empty dynamicShip's
-        //     
-        
-        //metodo quebra aqui por static (ShipByDistance não o é)
         for(Ship ship: shipTree.posOrder()){
             dynamicShip = ship.filterShipData(start, end);
             shipsToSort.add(new ShipByDistance(ship, Calculator.totalDistance(dynamicShip)));
@@ -74,7 +72,7 @@ public class TopShipsController {
         for (Ship ship : topShipList) {
             dynamicShip = ship.filterShipData(start, end);
             if (dynamicShip.isEmpty()) {
-                meanSogList.add(new Double(0));
+                meanSogList.add(0.0);
             } else {
                 for (ShipData shipData : dynamicShip) {
                     meanSog += shipData.getSog();

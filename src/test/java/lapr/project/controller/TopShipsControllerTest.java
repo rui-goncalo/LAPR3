@@ -6,12 +6,14 @@ import lapr.project.model.Ship;
 import lapr.project.model.ShipData;
 import lapr.project.model.ShipIMO;
 import lapr.project.tree.BST;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.BeforeAll;
 
 
 public class TopShipsControllerTest {
-    
+       
     /**
      * Test of getNTopShips method, of class TopShipsController.
      */
