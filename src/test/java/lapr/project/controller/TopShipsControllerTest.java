@@ -76,8 +76,9 @@ public class TopShipsControllerTest {
         }
         
         TopShipsController instance = new TopShipsController();
-        ArrayList<Ship> expResult = instance.getNTopShips(n, start, end, shipTree);
-        ArrayList<Ship> result = instance.getNTopShips(n, start, end, shipTree);
+        instance.getNTopShips(n, start, end, shipTree);
+        ArrayList<Ship> expResult = instance.getTopShips();
+        ArrayList<Ship> result = instance.getTopShips();
         assertEquals(expResult, result);
     } 
 

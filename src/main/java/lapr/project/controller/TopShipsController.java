@@ -5,11 +5,10 @@ import java.util.ArrayList;
 import lapr.project.model.*;
 import lapr.project.tree.BST;
 import lapr.project.utils.Calculator;
-
+import java.lang.Double;
 
 public class TopShipsController {
     
-    //deixar nested ou passar pra pair?
     protected class ShipByDistance implements Comparable<ShipByDistance>{
         
         private Ship ship;
@@ -33,11 +32,28 @@ public class TopShipsController {
         }
       }
     
+    private ArrayList<Ship> topShipList;
+    private ArrayList<Double> meanSogList;
+    
+    public TopShipsController(){
+        topShipList = new ArrayList<>();
+        meanSogList = new ArrayList<>();
+    }
+    
+    public  ArrayList<Ship> getTopShips(){
+        return topShipList;
+    }
+    
+    public  ArrayList<Double> getMeanSogs(){
+        return meanSogList;
+    }
+    
     //rever: metodo static?
-    public ArrayList<Ship> getNTopShips(int n, LocalDateTime start, LocalDateTime end, BST<ShipIMO> shipTree){
+    public void getNTopShips(int n, LocalDateTime start, LocalDateTime end, BST<ShipIMO> shipTree){
         ArrayList<Ship> topShips = new ArrayList<>(); //list de return
         ArrayList<ShipByDistance> shipsToSort= new ArrayList<>();
         ArrayList<ShipData> dynamicShip;
+        Double meanSog = new Double(0);
         
         //TODO tests and catch empty dynamicShip's
         //     
@@ -50,9 +66,22 @@ public class TopShipsController {
         
         shipsToSort.sort(null);
         //depois de shipsToSort estar sorted é so retornar pelo topShips
-        for(int i = 0; i<n ; i++){
+        for(int i = 0; i<n && i<shipsToSort.size(); i++){
             topShips.add(shipsToSort.get(i).getShip());
         } 
-        return topShips;
+        topShipList = topShips;
+        
+        for (Ship ship : topShipList) {
+            dynamicShip = ship.filterShipData(start, end);
+            if (dynamicShip.isEmpty()) {
+                meanSogList.add(new Double(0));
+            } else {
+                for (ShipData shipData : dynamicShip) {
+                    meanSog += shipData.getSog();
+                }
+                meanSog= meanSog / dynamicShip.size();
+                meanSogList.add(meanSog);
+            }
+        }
     }
 }

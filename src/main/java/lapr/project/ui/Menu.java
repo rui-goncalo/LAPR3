@@ -4,6 +4,7 @@ import lapr.project.model.*;
 import lapr.project.tree.BST;
 import lapr.project.utils.CSVReaderUtils;
 import lapr.project.utils.CoordinatesUtils;
+import lapr.project.controller.*;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
@@ -453,6 +454,26 @@ public class Menu {
             
             if(choice==1){
                 tryAgain = false;
+            }
+        }
+        TopShipsController controller = new TopShipsController();
+        controller.getNTopShips(n, initialDate, finalDate, imoBST);
+        ArrayList<Ship> shipList= controller.getTopShips();
+        ArrayList<Double> meanSogs = controller.getMeanSogs();
+        
+        System.out.println("-----------------The top-N ships with the most kilometres travelled-----------------");
+        
+        int vessel;
+        while (!shipList.isEmpty()) {
+            vessel=shipList.get(0).getVessel();
+            System.out.printf("---Vessel Type : %d\n", vessel);
+            for (int i = 0; i < shipList.size(); i++) {
+                if(vessel ==shipList.get(i).getVessel()) {
+                    System.out.printf("%20s %.2f\n", shipList.get(i).getName(), meanSogs.get(i));
+                    shipList.remove(i);
+                    meanSogs.remove(i);
+                    i--;
+                }
             }
         }
     }
