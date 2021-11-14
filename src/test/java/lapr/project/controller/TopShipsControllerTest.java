@@ -2,8 +2,6 @@ package lapr.project.controller;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 import lapr.project.model.Ship;
 import lapr.project.model.ShipData;
 import lapr.project.model.ShipIMO;
@@ -15,6 +13,14 @@ import org.junit.jupiter.api.BeforeAll;
 
 
 public class TopShipsControllerTest {
+
+    @BeforeAll
+    public static void setUpClass() throws Exception {
+    }
+
+    @AfterAll
+    public static void tearDownClass() throws Exception {
+    }
     
     /**
      * Test of getNTopShips method, of class TopShipsController.
@@ -117,6 +123,39 @@ public class TopShipsControllerTest {
         instance.setMeanSogs(meanSogs);
         
         ArrayList<Double> expResult = meanSogs;
+        ArrayList<Double> result = instance.getMeanSogs();
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of setTopShips method, of class TopShipsController.
+     */
+    @Test
+    public void testSetTopShips() {
+        System.out.println("setTopShips");
+        ArrayList<Ship> topShipList = new ArrayList<>();
+        TopShipsController instance = new TopShipsController();
+        ArrayList<ShipData> shipArray = new ArrayList<>();
+        Ship ship = new Ship(123456789, shipArray, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
+        topShipList.add(ship);
+        instance.setTopShips(topShipList);
+        
+        ArrayList<Ship> expResult = topShipList;
+        ArrayList<Ship> result = instance.getTopShips();
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of setMeanSogs method, of class TopShipsController.
+     */
+    @Test
+    public void testSetMeanSogs() {
+        System.out.println("setMeanSogs");
+        ArrayList<Double> meanSogList = new ArrayList<>();
+        meanSogList.add(1.1);
+        TopShipsController instance = new TopShipsController();
+        instance.setMeanSogs(meanSogList);
+        ArrayList<Double> expResult = meanSogList;
         ArrayList<Double> result = instance.getMeanSogs();
         assertEquals(expResult, result);
     }
