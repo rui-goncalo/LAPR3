@@ -26,3 +26,6 @@ INSERT INTO location VALUES (12, 'New Jersey', 34.91666667, 190, 2);
 
 -- Na execução da linha abaixo, deverá dar erro devido à inexistência da fk com o id=4.
 INSERT INTO country VALUES (11, 'UK', 4);
+
+-- Na execução da linha abaixo, deverá dar erro uma vez que um atributo NOT NULL está NULL.
+INSERT INTO continent VALUES (4, null);
