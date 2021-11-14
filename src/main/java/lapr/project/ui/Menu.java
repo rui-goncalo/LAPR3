@@ -12,6 +12,10 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Scanner;
 
+/**
+ * @author Rui Gonçalves - 1191831
+ * @author João Teixeira - 1180590
+ */
 public class Menu {
 
     private static final String BIG_SHIP_FILE = "src/data/bships.csv";
@@ -152,6 +156,7 @@ public class Menu {
                     break;
 
                 case 4:
+                    System.out.println(" > Not finished US107");
                     ArrayList<Ship> ships = new ArrayList<>();
                     for (Ship ship : mmsiBST.inOrder()) {
                         ArrayList<ShipData> shipData = ship.getDynamicShip();
@@ -327,16 +332,46 @@ public class Menu {
 
     }
 
-/*
-    private static ArrayList<ShipData> getTimePeriod(String date) {
+    private static ArrayList<Ship> getTimePeriod(String initialDate, String finalDate) {
+        String[] inDate = initialDate.split("-");
+        String[] finDate = finalDate.split("-");
 
-        for(ShipData data : currentShip.getDynamicShip()) {
-            if (data.getDateTime().equals(date)) {
-                System.out.println(data.toString());
+        ArrayList<Ship> ships = new ArrayList<>();
+        boolean isBetweenFirst = false;
+        boolean isBetweenSecond = false;
+
+        for(Ship ship : mmsiBST.inOrder()) {
+            for (ShipData data : ship.getDynamicShip()) {
+                if(data.getDateTime().getYear() == Integer.parseInt(inDate[0])) {
+                    if (data.getDateTime().getMonthValue() == Integer.parseInt(inDate[1])) {
+                        if (data.getDateTime().getDayOfMonth() >= Integer.parseInt(inDate[2])) {
+                            isBetweenFirst = true;
+                        }
+                    } else if (data.getDateTime().getMonthValue() > Integer.parseInt(inDate[1])) {
+                        isBetweenFirst = true;
+                    }
+                } else if(data.getDateTime().getYear() > Integer.parseInt(inDate[0])) {
+                    isBetweenFirst = true;
+                }
+
+                if(data.getDateTime().getYear() == Integer.parseInt(finDate[0])) {
+                    if(data.getDateTime().getMonthValue() == Integer.parseInt(finDate[1])) {
+                        if(data.getDateTime().getDayOfMonth() <= Integer.parseInt(finDate[2])) {
+                            isBetweenSecond = true;
+                        }
+                    } else if (data.getDateTime().getDayOfMonth() < Integer.parseInt(inDate[1])) {
+                        isBetweenSecond = true;
+                    }
+                } else if (data.getDateTime().getYear() < Integer.parseInt(finDate[0])) {
+                    isBetweenSecond = true;
+                }
+            }
+            if(isBetweenFirst && isBetweenSecond) {
+                ships.add(ship);
             }
         }
-        return;
-    }*/
+        return ships;
+    }
     
     private static void menuTopShips() {
         int choice;
