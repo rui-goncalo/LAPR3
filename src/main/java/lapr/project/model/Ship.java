@@ -12,7 +12,7 @@ public class Ship {
     /**
      * Instance variables of a Ship.
      * <b>Note:</b> We don't use the variables that are
-     *       commented out in this Sprint 1.
+     *              commented out in this Sprint 1.
      */
     private final int mmsi;
     private ArrayList<ShipData> dynamicShip;
@@ -33,6 +33,7 @@ public class Ship {
 
     /**
      * Creates Ship with the attributes below.
+     *
      * @param mmsi
      * @param dynamicShip
      * @param name
