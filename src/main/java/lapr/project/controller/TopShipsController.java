@@ -42,6 +42,14 @@ public class TopShipsController {
         meanSogList = new ArrayList<>();
     }
     
+    public void setTopShips(ArrayList<Ship> topShipList){
+        this.topShipList = topShipList;
+    }
+    
+    public void setMeanSogs(ArrayList<Double> meanSogList){
+        this.meanSogList = meanSogList;
+    }
+    
     public  ArrayList<Ship> getTopShips(){
         return topShipList;
     }

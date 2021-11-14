@@ -2,6 +2,8 @@ package lapr.project.controller;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import lapr.project.model.Ship;
 import lapr.project.model.ShipData;
 import lapr.project.model.ShipIMO;
@@ -13,7 +15,7 @@ import org.junit.jupiter.api.BeforeAll;
 
 
 public class TopShipsControllerTest {
-       
+    
     /**
      * Test of getNTopShips method, of class TopShipsController.
      */
@@ -83,5 +85,40 @@ public class TopShipsControllerTest {
         ArrayList<Ship> result = instance.getTopShips();
         assertEquals(expResult, result);
     } 
+
+    /**
+     * Test of getTopShips method, of class TopShipsController.
+     */
+    @Test
+    public void testGetTopShips() {
+        System.out.println("getTopShips");
+        TopShipsController instance = new TopShipsController();
+        ArrayList<ShipData> shipArray = new ArrayList<>();
+        Ship ship = new Ship(123456789, shipArray, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
+        ArrayList<Ship> topShipList = new ArrayList<>();
+        topShipList.add(ship);
+        instance.setTopShips(topShipList);
+        
+        ArrayList<Ship> expResult = topShipList;
+        ArrayList<Ship> result = instance.getTopShips();
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of getMeanSogs method, of class TopShipsController.
+     */
+    @Test
+    public void testGetMeanSogs() {
+        System.out.println("getMeanSogs");
+        TopShipsController instance = new TopShipsController();
+        ArrayList<Double> meanSogs= new ArrayList<>();
+        meanSogs.add(1.0);
+        meanSogs.add(2.0);
+        instance.setMeanSogs(meanSogs);
+        
+        ArrayList<Double> expResult = meanSogs;
+        ArrayList<Double> result = instance.getMeanSogs();
+        assertEquals(expResult, result);
+    }
 
 }
