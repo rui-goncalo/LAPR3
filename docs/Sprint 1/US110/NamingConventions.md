@@ -20,3 +20,6 @@ In case this last option is used, then they must be available in the dictionary:
 
 ###Check Constraint
 - In the representation of the Check Constraint we must name it as follows: `table_ck`.
+
+###Not Null:
+- In the representation of the Check Constraint we must name it as follows: `table_nn`.
