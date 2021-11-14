@@ -462,10 +462,11 @@ public class Menu {
                     System.out.println("INVALID date please input the values again.");
                     continue;
                 }
-                finalDate = LocalDateTime.of(initialYear, initialMonth, initialDay, 0, 0);
+                finalDate = LocalDateTime.of(finalYear, finalMonth, finalDay, 0, 0);
+                choice = 0;
             }
             
-            if (initialDate != null || finalDate != null) {
+            if (initialDate != null && finalDate != null) {
                 if (initialDate.isAfter(finalDate)) {
                     System.out.println("INVALID dates please input the values again.");
                     continue;
@@ -481,7 +482,7 @@ public class Menu {
             if(finalDate==null){
                 System.out.println("Final date: none");
             }else{
-                System.out.printf("Final date: %s%n", initialDate.toString());
+                System.out.printf("Final date: %s%n", finalDate.toString());
             }
             System.out.println("Review your inputs, and press '1' to continue or '0' to restart:");
             choice = Integer.parseInt(scan.nextLine());
@@ -495,7 +496,7 @@ public class Menu {
         ArrayList<Ship> shipList= controller.getTopShips();
         ArrayList<Double> meanSogs = controller.getMeanSogs();
         
-        System.out.println("-----------------The top-N ships with the most kilometres travelled-----------------");
+        System.out.println("-----------------The top-N ships with the most kilometres travelled-----------------\n");
         
         int vessel;
         while (!shipList.isEmpty()) {
