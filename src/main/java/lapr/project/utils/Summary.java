@@ -7,10 +7,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Sumary {
+public class Summary {
 
     public static ArrayList createSumary(Ship ship, String code) {
-        ArrayList<Object> sumary = new ArrayList<>();
+        ArrayList<Object> summary = new ArrayList<>();
         LocalDateTime inicialTime = null;
         LocalDateTime finalTime = null;
         int nMoves = 0;
@@ -60,30 +60,30 @@ public class Sumary {
 
         // Code
         if (code.equalsIgnoreCase("MMSI")) {
-            sumary.add(ship.getMmsi());
+            summary.add(ship.getMmsi());
         } else if (code.equalsIgnoreCase("IMO")) {
-            sumary.add(ship.getImo());
+            summary.add(ship.getImo());
         } else if (code.equalsIgnoreCase("CallSign")) {
-            sumary.add(ship.getCallSign());
+            summary.add(ship.getCallSign());
         }
-        sumary.add(ship.getName()); // Name
-        sumary.add(ship.getVessel()); // VasselType
-        sumary.add(inicialTime); // BDT Inicial
-        sumary.add(finalTime); // BDT Final
-        sumary.add(totalTime); // Tempo total dos movimentos
-        sumary.add(nMoves); // Numero total de movimentos
-        sumary.add(maxSog); // MaxSog
-        sumary.add(meanSog); // MeanSog
-        sumary.add(maxCog); // MaxCog
-        sumary.add(meanCog); // MeanCog
-        sumary.add(departLat); // DepartureLatitude
-        sumary.add(departLong); // DepartureLongitude
-        sumary.add(arrLat); // ArrivalLatitude
-        sumary.add(arrLong); // ArrivalLongitude
-        sumary.add(travelDistance); // TraveledDistance
-        sumary.add(deltaDistance); // DeltaDistance
+        summary.add(ship.getName()); // Name
+        summary.add(ship.getVessel()); // VasselType
+        summary.add(inicialTime); // BDT Inicial
+        summary.add(finalTime); // BDT Final
+        summary.add(totalTime); // Tempo total dos movimentos
+        summary.add(nMoves); // Numero total de movimentos
+        summary.add(maxSog); // MaxSog
+        summary.add(meanSog); // MeanSog
+        summary.add(maxCog); // MaxCog
+        summary.add(meanCog); // MeanCog
+        summary.add(departLat); // DepartureLatitude
+        summary.add(departLong); // DepartureLongitude
+        summary.add(arrLat); // ArrivalLatitude
+        summary.add(arrLong); // ArrivalLongitude
+        summary.add(travelDistance); // TraveledDistance
+        summary.add(deltaDistance); // DeltaDistance
 
-        return sumary;
+        return summary;
     }
 
 

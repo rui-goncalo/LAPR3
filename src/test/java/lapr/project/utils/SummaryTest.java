@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SumaryTest {
+public class SummaryTest {
 
     ArrayList<ShipData> dynamicShip = new ArrayList<>();
 
@@ -27,9 +27,9 @@ public class SumaryTest {
     public void createSumary() {
         ship.addDynamicShip(shipData1);
         ship.addDynamicShip(shipData2);
-        ArrayList<Object> sumary = Sumary.createSumary(ship,"MMSI");
-        ArrayList<Object> sumaryIMO = Sumary.createSumary(ship,"IMO");
-        ArrayList<Object> sumaryCallSign = Sumary.createSumary(ship,"CallSign");
+        ArrayList<Object> sumary = Summary.createSumary(ship,"MMSI");
+        ArrayList<Object> sumaryIMO = Summary.createSumary(ship,"IMO");
+        ArrayList<Object> sumaryCallSign = Summary.createSumary(ship,"CallSign");
         ArrayList<Object> expectRes = new ArrayList<>();
         expectRes.add(229961000);
         expectRes.add("ARABELLA");
