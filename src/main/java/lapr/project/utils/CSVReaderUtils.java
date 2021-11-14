@@ -24,6 +24,7 @@ public final class CSVReaderUtils {
 
     /**
      * Read a CSV file and creates an ArrayList of ships.
+     *
      * @param path - CSV file.
      * @return an ArrayList filled with ships and their dynamic data.
      * @throws Exception if the file path doesn't exist.
@@ -81,6 +82,7 @@ public final class CSVReaderUtils {
 
     /**
      * Verify if ship exists inside an Arraylist - From mmsi.
+     *
      * @param value is the variable to use during the search.
      * @param shipArray an ArrayList of ships to search.
      * @return the index if ship exists or -1 if doesn't exists.
@@ -99,6 +101,7 @@ public final class CSVReaderUtils {
 
     /**
      * Given a string of imo value and converts it into an Integer.
+     *
      * @param imo is the value to be parsed.
      * @return the imo converted into an Integer or return 0.
      */
@@ -109,6 +112,7 @@ public final class CSVReaderUtils {
 
     /**
      * Given a string of cargo value and converts it into an Integer.
+     *
      * @param value is the value to be parsed.
      * @return the String converted into an Integer or return 0.
      */
@@ -121,6 +125,7 @@ public final class CSVReaderUtils {
 
     /**
      * Given an ArrayList of ships arranges ships from the oldest
+     *
      * record to the most recent record.
      * @param shipArray the ArrayList that will be sort by date.
      * @return an ArrayList of Ships sorted by date.

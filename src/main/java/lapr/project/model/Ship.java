@@ -5,11 +5,15 @@ import java.time.LocalDateTime;
 
 /**
  * @author Rui Gonçalves - 1191831
+ * @author João Teixeira - 1180590
  */
-
 public class Ship {
 
-
+    /**
+     * Instance variables of a Ship.
+     * <b>Note:</b> We don't use the variables that are
+     *       commented out in this Sprint 1.
+     */
     private final int mmsi;
     private ArrayList<ShipData> dynamicShip;
     private final String name;
@@ -27,6 +31,19 @@ public class Ship {
     // private final double generatorOutput;
 
 
+    /**
+     * Creates Ship with the attributes below.
+     * @param mmsi
+     * @param dynamicShip
+     * @param name
+     * @param imo
+     * @param callSign
+     * @param vessel
+     * @param length
+     * @param width
+     * @param draft
+     * @param cargo
+     */
     public Ship(int mmsi, ArrayList<ShipData> dynamicShip, String name, int imo, String callSign, int vessel, double length, double width, double draft, double cargo) {
         this.mmsi = mmsi;
         this.dynamicShip = dynamicShip;
@@ -38,57 +55,119 @@ public class Ship {
         this.width = width;
         this.draft = draft;
         this.cargo = cargo;
-//        this.dynamicShip = new ArrayList<>();
     }
 
+    /**
+     *
+     * @return Ship length
+     */
     public double getLength() {
         return length;
     }
 
+    /**
+     *
+     * @return Ship width
+     */
     public double getWidth() {
         return width;
     }
 
+    /**
+     * Draft means a vertical distance between the waterline
+     * and the bottom of the ship's hull, in meters.
+     *
+     * @return Ship draft
+     */
     public double getDraft() {
         return draft;
     }
 
+    /**
+     *
+     * @return Ship Cargo
+     */
     public double getCargo() {
         return cargo;
     }
 
+    /**
+     * MMSI is an unique 9-digit ship identification code.
+     *
+     * @return Ship MMSI
+     */
     public int getMmsi() {
         return this.mmsi;
     }
 
+    /**
+     * IMO is an unique 7-digit international identification
+     * number, which remains unchanged after transferring the
+     * ship's registration to another country.
+     *
+     * @return Ship IMO
+     */
     public int getImo() {
         return this.imo;
     }
 
+    /**
+     * Is a ship's unique callsign.
+     *
+     * @return Ship Call Sign
+     */
     public String getCallSign() {
         return this.callSign;
     }
 
+    /**
+     * Dynamic data fields relating to a ship's positioning data.
+     *
+     * @return Ship dynamic data
+     */
     public ArrayList<ShipData> getDynamicShip() {
         return dynamicShip;
     }
 
+    /**
+     *
+     * @return Ship name
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     *
+     * @return Ship Vessel type
+     */
     public int getVessel() {
         return vessel;
     }
 
+    /**
+     *
+     * @param data ShipData to add the ArrayList
+     */
     public void setDynamicShip(ArrayList<ShipData> data) {
         this.dynamicShip = data;
     }
 
+    /**
+     * Adds a new ShipData to the ShipData Arraylist.
+     *
+     * @param data ShipData to add to the ArrayList
+     */
     public void addDynamicShip(ShipData data) {
         this.dynamicShip.add(data);
     }
 
+    /**
+     *
+     * @param start
+     * @param end
+     * @return
+     */
     public ArrayList<ShipData> filterShipData(LocalDateTime start, LocalDateTime end){
         ArrayList<ShipData> filteredShipData = new ArrayList<>();
         
@@ -131,6 +210,9 @@ public class Ship {
         return filteredShipData;
     }
 
+    /**
+     * Prints the records of a ShipData array organized by mmsi.
+     */
     public void printShip() {
         System.out.println("Ship MMSI: " + this.getMmsi());
         for (ShipData data : this.dynamicShip) {
@@ -138,6 +220,9 @@ public class Ship {
         }
     }
 
+    /**
+     * Creates an ArrayList of DynamicShip.
+     */
     public void initializeDynamicData() {
         this.dynamicShip = new ArrayList<>();
     }
