@@ -477,12 +477,12 @@ public class Menu {
             if(initialDate==null){
                 System.out.println("Inital date: none");
             }else{
-                System.out.printf("Initial date: %d%n", initialDate.toString());
+                System.out.printf("Initial date: %s%n", initialDate.toString());
             }
             if(finalDate==null){
                 System.out.println("Final date: none");
             }else{
-                System.out.printf("Final date: %d%n", initialDate.toString());
+                System.out.printf("Final date: %s%n", initialDate.toString());
             }
             System.out.println("Review your inputs, and press '1' to continue or '0' to restart:");
             choice = Integer.parseInt(scan.nextLine());
