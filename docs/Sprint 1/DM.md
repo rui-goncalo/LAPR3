@@ -1,24 +1,6 @@
 @startuml
 title Relationships - Class Diagram
 
-class Company
-
-class Container {
-int id;
-float payload;
-float tare;
-float gross;
-string iso_code;
-int refrigerated;
-float temperature;
-}
-
-class Cargo_Manifest {
-int id;
-float gross_weight;
-int pos_container;
-}
-
 class Ship {
 int MMSI;
 string name;
@@ -51,44 +33,9 @@ double heading;
 char transceiverClass;
 }
 
-class Truck {
-int registration_plate;
-}
+Ship <|-- ShipIMO
+Ship <|-- ShipCallSign
+Ship <|-- ShipMMSI
+Ship "1" -- "*" ShipData: contains >
 
-class Port {
-int id;
-string name;
-string continent;
-string country;
-string location;
-}
-
-class Warehouse {
-int id;
-string name;
-string continent;
-string country;
-string location;
-}
-
-class Employee {
-int id;
-string name;
-}
-
-Company "1" -- "*" Port: has >
-Company "1" -- "*" Warehouse: has >
-Port "1" -- "*" Cargo_Manifest: receives a >
-Warehouse "1" -- "*" Cargo_Manifest: receives a >
-Cargo_Manifest "*" -- "*" Container: has information about >
-Ship "1" -- "*" Container: have >
-Ship "1" -- "*" Cargo_Manifest: have >
-Ship "*" -- "*" Port: docks <
-Truck "*" -- "*" Warehouse: receives <
-Truck "1" -- "*" Cargo_Manifest: have >
-Port "1" -- "*" Employee: has >
-Warehouse "1" -- "*" Employee: has >
-Ship "1" <|-- "1" ShipIMO
-Ship "1" <|-- "1" ShipCallSign
-Ship "1" <|-- "1" ShipMMSI
 @enduml
