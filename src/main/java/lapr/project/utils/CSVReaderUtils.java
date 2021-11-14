@@ -99,14 +99,19 @@ public final class CSVReaderUtils {
 
     /**
      * Given a string of imo value and converts it into an Integer.
-     * @param imo is the value
-     * @return
+     * @param imo is the value to be parsed.
+     * @return the imo converted into an Integer or return 0.
      */
     private static int newImo(String imo) {
         String temp = imo.substring(3, imo.length());
         return Integer.parseInt(temp);
     }
 
+    /**
+     * Given a string of cargo value and converts it into an Integer.
+     * @param value is the value to be parsed.
+     * @return the String converted into an Integer or return 0.
+     */
     private static int newCargo(String value) {
         if (value.equals("NA")) {
             return 0;
@@ -114,7 +119,13 @@ public final class CSVReaderUtils {
         return Integer.parseInt(value);
     }
 
-    public static ArrayList<Ship> sortByDate(ArrayList<Ship> shipArray) throws Exception {
+    /**
+     * Given an ArrayList of ships arranges ships from the oldest
+     * record to the most recent record.
+     * @param shipArray the ArrayList that will be sort by date.
+     * @return an ArrayList of Ships sorted by date.
+     */
+    public static ArrayList<Ship> sortByDate(ArrayList<Ship> shipArray) {
 
         for (int i = 0; i < shipArray.size(); i++) {
             ArrayList<ShipData> sortedArray = (ArrayList<ShipData>) shipArray.get(i).getDynamicShip().stream()
