@@ -5,6 +5,7 @@ import lapr.project.model.ShipData;
 import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.Date;
 
 public class CalculatorTest {
     
@@ -74,16 +75,16 @@ public class CalculatorTest {
         assertEquals(expResult, result, 0);
     }
 
-//    /**
-//     * Test of convertToDateViaInstant method, of class Calculator.
-//     */
-//    @Test
-//    public void testConvertToDateViaInstant() {
-//        System.out.println("convertToDateViaInstant");
-//        LocalDateTime dateToConvert = null;
-//        Date expResult = null;
-//        Date result = Calculator.convertToDateViaInstant(dateToConvert);
-//        assertEquals(expResult, result);
-//    }
+    /**
+     * Test of convertToDateViaInstant method, of class Calculator.
+     */
+    @Test
+    public void testConvertToDateViaInstant() {
+        System.out.println("convertToDateViaInstant");
+        LocalDateTime dateToConvert = LocalDateTime.of(2021, 11, 14, 0, 0);
+        Date expResult = new Date(121,10,14);
+        Date result = Calculator.convertToDateViaInstant(dateToConvert);
+        assertEquals(expResult, result);
+    }
     
 }
