@@ -1,5 +1,6 @@
 package lapr.project.model;
 
+import lapr.project.utils.Summary;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -192,5 +193,47 @@ public class ShipTest {
         ship.setDynamicShip(shipArrayChanged);
         System.out.println(shipArrayChanged.toString());
         assertEquals(shipArrayChanged, ship.getDynamicShip(), "Should be equal");
+    }
+
+    @Test
+    public void testSetSummary() {
+        ShipData ship1 = new ShipData(LocalDateTime.of(2020, 12, 31, 13, 17, 0), 40.51396, -73.98419, 10.4, 115.8, 118, 'B');
+        ShipData ship2 = new ShipData(LocalDateTime.of(2020, 12, 31, 16, 9, 0), 40.13844, -73.83115, 10.5, 183.3, 185, 'B');
+        ArrayList<ShipData> dynamicData = new ArrayList<>();
+        dynamicData.add(ship1);
+        dynamicData.add(ship2);
+        Ship ship = new Ship(563076200, dynamicData, "MAERSK GATESHEAD", 9235543, "9V6210", 71, 292, 32, 10.5, 71);
+
+        Summary summary = new Summary(ship);
+        ship.setSummary(summary);
+    }
+
+
+    @Test
+    public void testGetDynamicDataFiltered() {
+        ShipData dynamic1 = new ShipData(LocalDateTime.of(2020, 12, 31, 13, 0, 0), 40.51396f, -73.98419f, 10.4f, 115.8f, 118, 'B');
+        ShipData dynamic2 = new ShipData(LocalDateTime.of(2020, 12, 31, 16, 0, 0), 40.13844f, -73.83115f, 10.5f, 183.3f, 185, 'B');
+        ShipData dynamic3 = new ShipData(LocalDateTime.of(2020, 12, 31, 19, 0, 0), 40.13844f, -73.83115f, 10.5f, 183.3f, 185, 'B');
+        ArrayList<ShipData> dynamicData1 = new ArrayList<>();
+        dynamicData1.add(dynamic1);
+        dynamicData1.add(dynamic2);
+        dynamicData1.add(dynamic3);
+        Ship ship1 = new Ship(563076200, dynamicData1, "MAERSK GATESHEAD", 9235543, "9V6210", 71, 292, 32, 10.5f, 71);
+
+        ArrayList<ShipData> filtered1 = ship1.filterShipData(null, null);
+        assertEquals(3, filtered1.size());
+        assertEquals(dynamic1.getDateTime(), filtered1.get(0).getDateTime());
+
+        filtered1 = ship1.filterShipData(null, LocalDateTime.of(2020, 12, 31, 18, 0, 0));
+        assertEquals(2, filtered1.size());
+        assertEquals(dynamic1.getDateTime(), filtered1.get(0).getDateTime());
+
+        filtered1 = ship1.filterShipData(LocalDateTime.of(2020, 12, 31, 14, 0, 0), null);
+        assertEquals(2, filtered1.size());
+        assertEquals(dynamic2.getDateTime(), filtered1.get(0).getDateTime());
+
+        filtered1 = ship1.filterShipData(LocalDateTime.of(2020, 12, 31, 14, 0, 0), LocalDateTime.of(2020, 12, 31, 18, 0, 0));
+        assertEquals(1, filtered1.size());
+        assertEquals(dynamic2.getDateTime(), filtered1.get(0).getDateTime());
     }
 }
