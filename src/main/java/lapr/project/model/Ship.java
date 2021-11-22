@@ -1,5 +1,7 @@
 package lapr.project.model;
 
+import lapr.project.utils.Summary;
+
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 
@@ -24,6 +26,7 @@ public class Ship {
     private final double width;
     private final double draft;
     private final double cargo;
+    private Summary summary;
 
     // private final double capacity;
     // private int code;
@@ -56,6 +59,7 @@ public class Ship {
         this.width = width;
         this.draft = draft;
         this.cargo = cargo;
+        this.summary = null;
     }
 
     /**
@@ -148,6 +152,14 @@ public class Ship {
 
     /**
      *
+     * @return Summary of Ships
+     */
+    public Summary getSummary() {
+        return summary;
+    }
+
+    /**
+     *
      * @param data ShipData to add the ArrayList
      */
     public void setDynamicShip(ArrayList<ShipData> data) {
@@ -161,6 +173,14 @@ public class Ship {
      */
     public void addDynamicShip(ShipData data) {
         this.dynamicShip.add(data);
+    }
+
+    public ShipData getFirstDynamicData() {
+        return this.dynamicShip.get(0);
+    }
+
+    public ShipData getLastDynamicData() {
+        return this.dynamicShip.get(this.dynamicShip.size() - 1);
     }
 
     /**
@@ -241,5 +261,9 @@ public class Ship {
                 ", draft=" + draft +
                 ", cargo=" + cargo +
                 '}';
+    }
+
+    public void setSummary(Summary summary) {
+        this.summary = summary;
     }
 }

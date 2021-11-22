@@ -3,11 +3,13 @@ package lapr.project.ui;
 import lapr.project.model.*;
 import lapr.project.tree.BST;
 import lapr.project.utils.CSVReaderUtils;
-import lapr.project.utils.CoordinatesUtils;
-import lapr.project.controller.*;
+import lapr.project.utils.Calculator;
+import lapr.project.utils.ShipCompare;
+import lapr.project.utils.Summary;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -20,8 +22,6 @@ public class Menu {
     private static final String BIG_SHIP_FILE = "src/data/bships.csv";
     private static final String SMALL_SHIP_FILE = "src/data/sships.csv";
 
-    private static final int MAX_YEAR = 2022;
-    private static final int MIN_YEAR = 0;
     private static ArrayList<Ship> shipArray = new ArrayList<>();
     private static final BST<ShipMMSI> mmsiBST = new BST<>();
     private static final BST<ShipIMO> imoBST = new BST<>();
@@ -34,20 +34,22 @@ public class Menu {
 
         do {
 
-            String[] options = {"Exit", "Import Menu", "Manage Ships", "Get the top-N ships"};
+            String[] options = {"Exit\n", "Import Ships", "Manage Ships"};
             printMenu("Main Menu", options, true);
             choice = getInput("Please make a selection", 3);
 
             switch (choice) {
-                case 0: break;
+                case 0:
+                    break;
                 case 1:
                     menuImport();
                     break;
                 case 2:
+                    if (shipArray.isEmpty()) {
+                        System.out.println("Please import ships first.");
+                        break;
+                    }
                     menuManageShips();
-                    break;
-                case 3:
-                    menuTopShips();
                     break;
             }
 
@@ -57,13 +59,17 @@ public class Menu {
     private static void menuImport() {
         int choice;
 
-        String[] options = {"Go Back", "Small Ship File", "Big Ship File", "Custom File"};
+        String[] options = {"Go Back\n", "Small Ship File", "Big Ship File", "Custom File"};
         printMenu("Import Ships", options, true);
-        choice = getInput("Please make a selection",3);
+        choice = getInput("Please make a selection", 3);
 
         switch (choice) {
-            case 0: break;
+            case 0:
+                break;
             case 1:
+                if (!shipArray.isEmpty()) {
+                    shipArray.clear();
+                }
                 try {
                     shipArray = CSVReaderUtils.readCSV(SMALL_SHIP_FILE);
                     insertShips();
@@ -72,6 +78,9 @@ public class Menu {
                 }
                 break;
             case 2:
+                if (!shipArray.isEmpty()) {
+                    shipArray.clear();
+                }
                 try {
                     shipArray = CSVReaderUtils.readCSV(BIG_SHIP_FILE);
                     insertShips();
@@ -91,12 +100,15 @@ public class Menu {
 
         do {
 
-            String[] options = {"Go Back", "Show all ships", "Search ship"};
+            String[] options = {"Go Back\n", "Show all Ships", "Search by Ship", "Search Ship Pairs", "Create Summary of Ships", "Get TOP N Ships", "Search Ship By Date"};
             printMenu("Manage Ships", options, true);
-            choice = getInput("Please make a selection",3);
+            choice = getInput("Please make a selection", 3);
+
+            Scanner sc = new Scanner(System.in);
 
             switch (choice) {
-                case 0: break;
+                case 0:
+                    break;
                 case 1:
                     for (Ship ship : Menu.mmsiBST.inOrder()) {
                         ship.printShip();
@@ -105,6 +117,30 @@ public class Menu {
                 case 2:
                     menuSearch();
                     break;
+                case 3:
+                    ArrayList<Calculator.ShipPair> pairs = Calculator.searchShipPairs(shipArray);
+                    for (Calculator.ShipPair shipPair : pairs) {
+                        System.out.println(shipPair.getFirstShip().getMmsi() + " + " + shipPair.getSecondShip().getMmsi());
+                    }
+                    break;
+                case 4:
+                    generateReports();
+                    break;
+                case 5:
+                    if (shipArray.get(0).getSummary() == null) {
+                        System.out.println("Reports must be created first.");
+                        break;
+                    }
+                    int option = readInt(sc, "TOP N Ships:\nN = ");
+                    getTopNShips(option);
+                    break;
+                case 6:
+                    LocalDateTime startDate = null;
+                    LocalDateTime endDate = null;
+
+                    sc.nextLine();
+                    startDate = readDate(sc, "Start Date: ");
+                    endDate = readDate(sc, "End Date: ");
             }
 
         } while (choice != 0);
@@ -113,12 +149,11 @@ public class Menu {
     private static void menuSearch() {
         int choice;
         Scanner scan = new Scanner(System.in);
-        boolean showShip;
 
         do {
-            String[] options = {"Go Back", "Search by MMSI", "Search by IMO", "Search by Call Sign"};
+            String[] options = {"Go Back\n", "> Search by MMSI", "> Search by IMO", "> Search by Call Sign"};
             printMenu("Search Ship", options, true);
-            choice = getInput("Please make a selection",4);
+            choice = getInput("Please make a selection", 4);
 
             switch (choice) {
                 case 0:
@@ -154,65 +189,6 @@ public class Menu {
                     }
                     break;
 
-                case 4:
-                    System.out.println(" > Not finished US107");
-                    ArrayList<Ship> ships = new ArrayList<>();
-                    for (Ship ship : mmsiBST.inOrder()) {
-                        ArrayList<ShipData> shipData = ship.getDynamicShip();
-
-                        double distance = CoordinatesUtils.distance(shipData.get(0).getLatitude(),
-                                shipData.get(0).getLongitude(),
-                                shipData.get(shipData.size() - 1).getLatitude(),
-                                shipData.get(shipData.size() - 1).getLongitude());
-
-                        if(distance > 10) {
-                            ships.add(ship);
-                            System.out.println("MMSI: " + ship.getMmsi());
-                            System.out.println(distance);
-                        }
-                    }
-
-                    ArrayList<ArrayList<Ship>> shipPairArrayList = new ArrayList<>();
-                    ArrayList<Ship> pairArrayList;
-                    for (int i = 0; i < ships.size(); i++) {
-                        for (int j = 1; j < ships.size(); j++) {
-                            Ship ship = ships.get(i);
-
-                            Ship newShip = ships.get(j);
-                            if (ship.getMmsi() != newShip.getMmsi()) {
-                                ArrayList<ShipData> oldData = ship.getDynamicShip();
-                                double initialOldLat = oldData.get(0).getLatitude();
-                                double initialOldLong = oldData.get(0).getLongitude();
-
-                                double finalOldLat = oldData.get(oldData.size() - 1).getLatitude();
-                                double finalOldLong = oldData.get(oldData.size() - 1).getLongitude();
-
-                                ArrayList<ShipData> shipData = newShip.getDynamicShip();
-                                double initialLat = shipData.get(0).getLatitude();
-                                double initialLong = shipData.get(0).getLongitude();
-
-                                double finalLat = shipData.get(shipData.size() - 1).getLatitude();
-                                double finalLong = shipData.get(shipData.size() - 1).getLongitude();
-
-                                double departureDistance = CoordinatesUtils.distance(initialOldLat,
-                                        initialOldLong, initialLat, initialLong);
-                                double arrivalDistance = CoordinatesUtils.distance(finalOldLat,
-                                        finalOldLong, finalLat, finalLong);
-                                if (departureDistance < 5 || arrivalDistance < 5) {
-                                    for (ArrayList<Ship> shipPairArray : shipPairArrayList) {
-                                        // Falta ver se par de ships já foi adicionado
-                                    }
-                                    pairArrayList = new ArrayList<>();
-                                    pairArrayList.add(ship);
-                                    pairArrayList.add(newShip);
-                                    shipPairArrayList.add(pairArrayList);
-                                    System.out.println(departureDistance);
-                                    System.out.println(arrivalDistance);
-                                    System.out.println();
-                                }
-                            }
-                        }
-                    }
             }
         } while (choice != 0);
     }
@@ -222,68 +198,33 @@ public class Menu {
 
         do {
 
-            String[] options = {"Go Back", "Show Ship Information", "Show Ship Records"};
+            String[] options = {"Go Back\n", "> Current Ship Information", "> Current Ship Records"};
             printMenu("Show Ship", options, true);
-            choice = getInput("Please make a selection",3);
+            choice = getInput("Please make a selection", 3);
 
 
             switch (choice) {
-                case 0: break;
+                case 0:
+                    break;
                 case 2:
                     System.out.println("Ship MMSI: " + Menu.currentShip.getMmsi());
                     for (ShipData data : Menu.currentShip.getDynamicShip()) {
                         System.out.println(data.toString());
                     }
-                    //menuFilterRecordsByDate();
                     break;
                 case 1:
                     System.out.println(Menu.currentShip.toString());
                     break;
-                //TODO:filter by period/date
             }
         } while (choice != 0);
     }
-
-    /*public static void menuFilterRecordsByDate() {
-        int choice;
-        // TODO: Terminar
-        do {
-
-            String[] options = {"Go Back", "Show All", "Filter by Date", "Filter by Period"};
-            printMenu("Filter by Date", options, true);
-            choice = getInput("Please make a selection",3);
-
-
-            switch (choice) {
-                case 0: break;
-                case 1:
-                    System.out.println("Ship MMSI: " + Menu.currentShip.getMmsi());
-                    for (ShipData data : Menu.currentShip.getDynamicShip()) {
-                        System.out.println(data.toString());
-                    }
-                    break;
-                case 2:
-                    System.out.println("Ship MMSI: " + Menu.currentShip.getMmsi());
-                    for (ShipData data : Menu.currentShip.getDynamicShip()) {
-                        if (data.getDateTime().equals(DATA INSERIDA)) System.out.println(data.toString());
-                    }
-                    break;
-                case 3:
-                    System.out.println("Ship MMSI: " + Menu.currentShip.getMmsi());
-                    for (ShipData data : Menu.currentShip.getDynamicShip()) {
-                        if (data.getDateTime().equals(DATA INSERIDA)) System.out.println(data.toString());
-                    }
-                    break;
-            }
-        } while (choice != 0);
-    }*/
 
     private static int getInput(String prompt, int optionCount) {
         Scanner scan = new Scanner(System.in);
         int choice = -1;
         while (choice < 1 || choice > optionCount) {
             try {
-                System.out.print(" > " + prompt + ": " );
+                System.out.print(" > " + prompt + ": ");
                 choice = Integer.parseInt(scan.nextLine());
                 break;
             } catch (NumberFormatException e) {
@@ -294,6 +235,9 @@ public class Menu {
     }
 
     private static void retrieveFilePath() {
+        if (!shipArray.isEmpty()) {
+            shipArray.clear();
+        }
         System.out.print(" > Please insert file path: ");
         Scanner scan = new Scanner(System.in);
         String path = scan.nextLine();
@@ -301,7 +245,7 @@ public class Menu {
             Menu.shipArray = CSVReaderUtils.readCSV(path);
             insertShips();
         } catch (Exception e) {
-            System.out.println("Invalid path, please try again.");
+            System.out.println("> Invalid path, please try again.");
             retrieveFilePath();
         }
     }
@@ -321,9 +265,9 @@ public class Menu {
                         "  CARGO APP 103 > " + title +
                         "\n+-----------------------------+");
 
-        for(int i = 0; i < options.length; i++) {
+        for (int i = 0; i < options.length; i++) {
             if (i == 0 && showExit || i > 0) {
-                System.out.println("  " + i + " - " + options[i]);
+                System.out.println("  " + i + " > " + options[i]);
             }
         }
 
@@ -331,185 +275,52 @@ public class Menu {
 
     }
 
-    private static ArrayList<Ship> getTimePeriod(String initialDate, String finalDate) {
-        String[] inDate = initialDate.split("-");
-        String[] finDate = finalDate.split("-");
+    public static LocalDateTime readDate(Scanner sc, String msg) {
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        System.out.print("Format: dd/MM/yyyy HH:mm\n");
+        System.out.print(msg);
+        LocalDateTime dateTime;
 
-        ArrayList<Ship> ships = new ArrayList<>();
-        boolean isBetweenFirst = false;
-        boolean isBetweenSecond = false;
+        String str = sc.nextLine();
 
-        for(Ship ship : mmsiBST.inOrder()) {
-            for (ShipData data : ship.getDynamicShip()) {
-                if(data.getDateTime().getYear() == Integer.parseInt(inDate[0])) {
-                    if (data.getDateTime().getMonthValue() == Integer.parseInt(inDate[1])) {
-                        if (data.getDateTime().getDayOfMonth() >= Integer.parseInt(inDate[2])) {
-                            isBetweenFirst = true;
-                        }
-                    } else if (data.getDateTime().getMonthValue() > Integer.parseInt(inDate[1])) {
-                        isBetweenFirst = true;
-                    }
-                } else if(data.getDateTime().getYear() > Integer.parseInt(inDate[0])) {
-                    isBetweenFirst = true;
-                }
-
-                if(data.getDateTime().getYear() == Integer.parseInt(finDate[0])) {
-                    if(data.getDateTime().getMonthValue() == Integer.parseInt(finDate[1])) {
-                        if(data.getDateTime().getDayOfMonth() <= Integer.parseInt(finDate[2])) {
-                            isBetweenSecond = true;
-                        }
-                    } else if (data.getDateTime().getDayOfMonth() < Integer.parseInt(inDate[1])) {
-                        isBetweenSecond = true;
-                    }
-                } else if (data.getDateTime().getYear() < Integer.parseInt(finDate[0])) {
-                    isBetweenSecond = true;
-                }
-            }
-            if(isBetweenFirst && isBetweenSecond) {
-                ships.add(ship);
-            }
+        try {
+            dateTime = LocalDateTime.parse(str, format);
+        } catch (Exception e) {
+            System.out.print("Invalid date.\n");
+            return null;
         }
-        return ships;
+        return dateTime;
     }
-    
-    private static void menuTopShips() {
-        int choice;
-        int n = 0;
-        Scanner scan = new Scanner(System.in);
-        int initialYear = -1;
-        int initialMonth = 13;
-        int initialDay = 35;
-        LocalDateTime initialDate = null;
-        int finalYear = -1;
-        int finalMonth = 13;
-        int finalDay = 35;
-        LocalDateTime finalDate = null;
-        boolean tryAgain = true;
-        
-        while (tryAgain == true) {
-            //Number of ships
-            System.out.println("How many ships?");
-            while (n == 0) {
-                System.out.println("Choose a value above 0.");
-                n = Integer.parseInt(scan.nextLine());
-            }
 
-            //Initial Date
-            System.out.println("Input initial date or press '0' for none.");
-            System.out.println("Which starting year?");
-            choice = Integer.parseInt(scan.nextLine());
-            while (choice != 0) {
-                while (choice < 0 || choice > 2022) {
-                    System.out.println("Choose a valid year.");
-                    choice = Integer.parseInt(scan.nextLine());
-                }
-                initialYear = choice;
-
-                System.out.println("Which starting month?");
-                choice = Integer.parseInt(scan.nextLine());
-                while (choice < 1 || choice > 12) {
-                    System.out.println("Choose a valid month.");
-                    choice = Integer.parseInt(scan.nextLine());
-                }
-                initialMonth = choice;
-                
-                System.out.println("Which starting day?");
-                choice = Integer.parseInt(scan.nextLine());
-                while (choice < 1 || choice > 31) {
-                    System.out.println("Choose a valid day.");
-                    choice = Integer.parseInt(scan.nextLine());
-                }
-                initialDay = choice;
-                try {
-                    initialDate = LocalDateTime.of(initialYear, initialMonth, initialDay, 0, 0);
-                } catch (DateTimeException e) {
-                    System.out.println("INVALID date please input the values again.");
-                    continue;
-                }
-                initialDate = LocalDateTime.of(initialYear, initialMonth, initialDay, 0, 0);
-                choice = 0;
-            }
-            
-            //Final Date
-            System.out.println("Input final date or press '0' for none.");
-            System.out.println("Which final year?");
-            choice = Integer.parseInt(scan.nextLine());
-            while (choice != 0) {
-                while (choice < 0 || choice > 2022) {
-                    System.out.println("Choose a valid year.");
-                    choice = Integer.parseInt(scan.nextLine());
-                }
-                finalYear = choice;
-
-                System.out.println("Which final month?");
-                choice = Integer.parseInt(scan.nextLine());
-                while (choice < 1 || choice > 12) {
-                    System.out.println("Choose a valid month.");
-                    choice = Integer.parseInt(scan.nextLine());
-                }
-                finalMonth = choice;
-                
-                System.out.println("Which final day?");
-                choice = Integer.parseInt(scan.nextLine());
-                while (choice < 1 || choice > 31) {
-                    System.out.println("Choose a valid day.");
-                    choice = Integer.parseInt(scan.nextLine());
-                }
-                finalDay = choice;
-                try {
-                    finalDate = LocalDateTime.of(finalYear, finalMonth, finalDay, 0, 0);
-                } catch (DateTimeException e) {
-                    System.out.println("INVALID date please input the values again.");
-                    continue;
-                }
-                finalDate = LocalDateTime.of(finalYear, finalMonth, finalDay, 0, 0);
-                choice = 0;
-            }
-            
-            if (initialDate != null && finalDate != null) {
-                if (initialDate.isAfter(finalDate)) {
-                    System.out.println("INVALID dates please input the values again.");
-                    continue;
-                }
-            }
-            
-            System.out.printf("Number of Ships: %d%n", n);
-            if(initialDate==null){
-                System.out.println("Inital date: none");
-            }else{
-                System.out.printf("Initial date: %s%n", initialDate.toString());
-            }
-            if(finalDate==null){
-                System.out.println("Final date: none");
-            }else{
-                System.out.printf("Final date: %s%n", finalDate.toString());
-            }
-            System.out.println("Review your inputs, and press '1' to continue or '0' to restart:");
-            choice = Integer.parseInt(scan.nextLine());
-            
-            if(choice==1){
-                tryAgain = false;
-            }
+    public static int readInt(Scanner sc, String msg) {
+        System.out.print(msg);
+        while (!sc.hasNextInt()) {
+            System.out.println("Invalid input.");
+            sc.next();
+            System.out.print(msg);
         }
-        TopShipsController controller = new TopShipsController();
-        controller.getNTopShips(n, initialDate, finalDate, imoBST);
-        ArrayList<Ship> shipList= controller.getTopShips();
-        ArrayList<Double> meanSogs = controller.getMeanSogs();
-        
-        System.out.println("-----------------The top-N ships with the most kilometres travelled-----------------\n");
-        
-        int vessel;
-        while (!shipList.isEmpty()) {
-            vessel=shipList.get(0).getVessel();
-            System.out.printf("---Vessel Type : %d\n", vessel);
-            for (int i = 0; i < shipList.size(); i++) {
-                if(vessel ==shipList.get(i).getVessel()) {
-                    System.out.printf("%20s %.2f\n", shipList.get(i).getName(), meanSogs.get(i));
-                    shipList.remove(i);
-                    meanSogs.remove(i);
-                    i--;
-                }
-            }
+
+        return sc.nextInt();
+    }
+
+    private static void generateReports() {
+        for (Ship ship : shipArray) {
+            ship.setSummary(new Summary(ship));
+        }
+        shipArray.sort(new ShipCompare().reversed());
+        System.out.println("Reports created.");
+    }
+
+    private static void getTopNShips(int n) {
+        if (n > shipArray.size()) {
+            System.out.println("The chosen number is great than the amount of ships available.");
+            return;
+        }
+
+        System.out.println();
+        for (int i = 0; i < n; i++) {
+            Ship current = shipArray.get(i);
+            System.out.printf("- %.5fkm - %s\n", current.getSummary().getTravelledDistance(), current.getName());
         }
     }
 }

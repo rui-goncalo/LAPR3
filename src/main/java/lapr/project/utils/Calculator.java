@@ -1,72 +1,111 @@
 package lapr.project.utils;
 
+import lapr.project.model.Ship;
 import lapr.project.model.ShipData;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Calculator {
-    //EARTH RADIUS   
-    private static final double R= 6371e3; // metres
-    
-    private static double degToRad(double deg) {
-        return (deg * Math.PI / 180.0);
-    }
-    
-    private static double radToDeg(double rad) {
-        return (rad * 180.0 / Math.PI);
-    }
-    
-     public static double distanceBetween(double lat1, double lon1, double lat2, double lon2){
-        //if latitude/longitude aren't available
-         if((lat1 < -90)  || (lat1 > 90)  || (lat2 < -90)  || (lat2 > 90) || 
-           (lon1 < -180) || (lon1 > 180) || (lon2 < -180) || (lon2 > 180)  ){
+
+    /**
+     * Calculates distance between two latitude and longitude points and
+     * convert it to a distance in kilometers. Uses Haversine method as its base.
+     *
+     * @param lat1 Start point.
+     * @param lon1 Start point.
+     * @param lat2 End point.
+     * @param lon2 End point.
+     * @return distance in Km's.
+     */
+
+    public static double getDistance(double lat1, double lon1, double lat2, double lon2) {
+        if (lat1 == lat2 && lon1 == lon2)
             return 0;
+        else {
+            double theta = lon1 - lon2;
+            double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
+            dist = Math.acos(dist);
+            dist = Math.toDegrees(dist);
+            dist = dist * 60 * 1.1515;
+            dist = dist * 1.609344;
+            return dist;
         }
-        
-        double lat1Rad = degToRad(lat1);
-        double lat2Rad = degToRad(lat2);
-        double Δlat = degToRad(lat2-lat1);
-        double Δlon = degToRad(lon2-lon1);
-        double a = Math.sin(Δlat/2) * Math.sin(Δlat/2) + Math.cos(lat1Rad) * Math.cos(lat2Rad) * Math.sin(Δlon/2) * Math.sin(Δlon/2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        
-        return (R * c); // in metres      
     }
 
-    
-    //handle shipData before
-    //also works for deltaDistance
-    public static double totalDistance(ArrayList<ShipData> shipData){
-        if(shipData.isEmpty()) { return 0;}
-        
-        double totalDistance = -1;
-        double lat1;
-        double lat2;
-        double lon1;
-        double lon2;
-        ShipData pos1;
-        ShipData pos2;
-        
-        for(int i = 0; i < shipData.size() - 1; i++) {
-            pos1= shipData.get(i);
-            pos2= shipData.get(i+1);
-            lat1= pos1.getLatitude();
-            lat2= pos2.getLatitude();
-            lon1= pos1.getLongitude();
-            lon2= pos2.getLongitude();
-            
-            totalDistance+= distanceBetween(lat1, lon1, lat2, lon2);
+    /**
+     * Nested static class for a pair of ships.
+     */
+    public static class ShipPair {
+        private final Ship firstShip;
+        private final Ship secondShip;
+
+        public ShipPair(Ship firstShip, Ship secondShip) {
+            this.firstShip = firstShip;
+            this.secondShip = secondShip;
         }
-        return totalDistance;
+
+        public Ship getFirstShip() {
+            return firstShip;
+        }
+
+        public Ship getSecondShip() {
+            return secondShip;
+        }
     }
 
-    public static Date convertToDateViaInstant(LocalDateTime dateToConvert) {
-        return java.util.Date
-                .from(dateToConvert.atZone(ZoneId.systemDefault())
-                        .toInstant());
+    /**
+     * Given the pairs of ships, check the combination of
+     * ships with arrival/departures less than 5km's within
+     * an ArrayList
+     *
+     * @param shipArray the list to use during the search
+     * @return Pairs of ships with arrival/departure nearest (both less than 5km's)
+     */
+    public static ArrayList<ShipPair> searchShipPairs(ArrayList<Ship> shipArray) {
+        ArrayList<Ship> shipCandidates = new ArrayList<>();
+
+        for (Ship ship : shipArray) {
+            ShipData firstDynamic = ship.getFirstDynamicData();
+            ShipData lastDynamic = ship.getLastDynamicData();
+
+            double travelledDistance = getDistance(firstDynamic.getLatitude(),
+                    firstDynamic.getLongitude(),
+                    lastDynamic.getLatitude(),
+                    lastDynamic.getLongitude());
+
+            if (travelledDistance > 10)
+                shipCandidates.add(ship);
+        }
+
+        ArrayList<ShipPair> shipPairs = new ArrayList<>();
+
+        for (int i = 0; i < shipCandidates.size() - 1; i++) {
+            for (int j = i + 1; j < shipCandidates.size(); j++) {
+                Ship currentShip = shipCandidates.get(i);
+                Ship nextShip = shipCandidates.get(j);
+
+                ShipData currentFirstDynamic = currentShip.getFirstDynamicData();
+                ShipData currentLastDynamic = currentShip.getLastDynamicData();
+
+                ShipData nextFirstDynamic = nextShip.getFirstDynamicData();
+                ShipData nextLastDynamic = nextShip.getLastDynamicData();
+
+                double departureDistance = getDistance(currentFirstDynamic.getLatitude(),
+                        currentFirstDynamic.getLongitude(),
+                        nextFirstDynamic.getLatitude(),
+                        nextFirstDynamic.getLongitude());
+
+                double arrivalDistance = getDistance(currentLastDynamic.getLatitude(),
+                        currentLastDynamic.getLongitude(),
+                        nextLastDynamic.getLatitude(),
+                        nextLastDynamic.getLongitude());
+
+                if (departureDistance < 5 || arrivalDistance < 5)
+                    shipPairs.add(new ShipPair(currentShip, nextShip));
+            }
+        }
+        return shipPairs;
     }
 
 }
