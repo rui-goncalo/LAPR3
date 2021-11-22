@@ -18,6 +18,7 @@ public class CalculatorTest {
 
         assertEquals(0.07155283773026822, Calculator.getDistance(dynamic1.getLatitude(), dynamic1.getLongitude(), dynamic2.getLatitude(), dynamic2.getLongitude()));
         assertEquals(0, Calculator.getDistance(dynamic1.getLatitude(), dynamic1.getLongitude(), dynamic1.getLatitude(), dynamic1.getLongitude()));
+
     }
 
     @Test
