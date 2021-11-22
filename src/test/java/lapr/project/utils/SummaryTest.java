@@ -17,11 +17,11 @@ public class SummaryTest {
     LocalDateTime time2 = LocalDateTime.of(2020, 12, 31, 23, 31, 0);
     LocalDateTime time3 = LocalDateTime.of(2021, 1, 1, 5, 31, 0);
 
-    ShipData sd1 = new ShipData(time1, 24.23188f, -130.33667f, 0.1f, 82.8f, 0, 'A');
-    ShipData sd2 = new ShipData(time2, 54.23184f, -150.33702f, 0.1f, 34.6f, 0, 'A');
-    ShipData sd3 = new ShipData(time3, 64.23184f, -170.33702f, 0.1f, 34.6f, 0, 'A');
+    ShipData sd1 = new ShipData(time1, 24.23188, -130.33667, 0.1, 82.8, 0, 'A');
+    ShipData sd2 = new ShipData(time2, 54.23184, -150.33702, 0.1, 34.6, 0, 'A');
+    ShipData sd3 = new ShipData(time3, 64.23184, -170.33702, 0.1, 34.6, 0, 'A');
 
-    Ship ship = new Ship(229961000, sd, "ARABELLA", 9700122, "9HA3752", 70, 199, 32, 14.4f, 0);
+    Ship ship = new Ship(229961000, sd, "ARABELLA", 9700122, "9HA3752", 70, 199, 32, 14.4, 0);
 
     @Test
     public void createSummary() {
@@ -45,7 +45,7 @@ public class SummaryTest {
         assertEquals((sd1.getSog() + sd2.getSog() + sd3.getSog()) / 3, summary.getMeanSog());
         assertEquals(sd1.getCog(), summary.getMaxCog());
         assertEquals((sd1.getCog() + sd2.getCog() + sd3.getCog()) / 3, summary.getMeanCog());
-        assertEquals(5302.816f, summary.getTravelledDistance());
-        assertEquals(5301.2925f, summary.getDeltaDistance());
+        assertEquals(5302.815559139995, summary.getTravelledDistance());
+        assertEquals(5301.292535471905, summary.getDeltaDistance());
     }
 }
