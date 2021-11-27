@@ -1,16 +1,15 @@
 package lapr.project.ui;
 
 import lapr.project.model.*;
-import lapr.project.tree.BST;
-import lapr.project.utils.CSVReaderUtils;
-import lapr.project.utils.Calculator;
-import lapr.project.utils.ShipCompare;
-import lapr.project.utils.Summary;
+import lapr.project.tree.AVL;
+import lapr.project.tree.KdTree;
+import lapr.project.tree.Node;
+import lapr.project.utils.*;
 
-import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -22,10 +21,18 @@ public class Menu {
     private static final String BIG_SHIP_FILE = "src/data/bships.csv";
     private static final String SMALL_SHIP_FILE = "src/data/sships.csv";
 
+    private static final String BIG_PORTS_FILE = "src/data/bports.csv";
+    private static final String SMALL_PORTS_FILE = "src/data/sports.csv";
+
     private static ArrayList<Ship> shipArray = new ArrayList<>();
-    private static final BST<ShipMMSI> mmsiBST = new BST<>();
-    private static final BST<ShipIMO> imoBST = new BST<>();
-    private static final BST<ShipCallSign> csBST = new BST<>();
+    private static ArrayList<Port> portsArray = new ArrayList<>();
+
+    private static final AVL<ShipMMSI> mmsiAVL = new AVL<>();
+    private static final AVL<ShipIMO> imoAVL = new AVL<>();
+    private static final AVL<ShipCallSign> csAVL = new AVL<>();
+
+    private static final KdTree<Port> portTree = new KdTree<>();
+
     private static Ship currentShip = null;
 
     public static void mainMenu() {
@@ -34,7 +41,7 @@ public class Menu {
 
         do {
 
-            String[] options = {"Exit\n", "Import Ships", "Manage Ships"};
+            String[] options = {"Exit\n", "Import Ships/Ports", "Manage Ships"};
             printMenu("Main Menu", options, true);
             choice = getInput("Please make a selection", 3);
 
@@ -46,7 +53,7 @@ public class Menu {
                     break;
                 case 2:
                     if (shipArray.isEmpty()) {
-                        System.out.println("Please import ships first.");
+                        System.out.println("Please import ships/ports first.");
                         break;
                     }
                     menuManageShips();
@@ -59,7 +66,7 @@ public class Menu {
     private static void menuImport() {
         int choice;
 
-        String[] options = {"Go Back\n", "Small Ship File", "Big Ship File", "Custom File"};
+        String[] options = {"Go Back\n", "Small Ship File", "Big Ship File", "Small Ports File", "Big Ports File", "Custom File"};
         printMenu("Import Ships", options, true);
         choice = getInput("Please make a selection", 3);
 
@@ -71,7 +78,7 @@ public class Menu {
                     shipArray.clear();
                 }
                 try {
-                    shipArray = CSVReaderUtils.readCSV(SMALL_SHIP_FILE);
+                    shipArray = CSVReaderUtils.readShipCSV(SMALL_SHIP_FILE);
                     insertShips();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -82,17 +89,47 @@ public class Menu {
                     shipArray.clear();
                 }
                 try {
-                    shipArray = CSVReaderUtils.readCSV(BIG_SHIP_FILE);
+                    shipArray = CSVReaderUtils.readShipCSV(BIG_SHIP_FILE);
                     insertShips();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;
             case 3:
+                if (!portsArray.isEmpty()) {
+                    portsArray.clear();
+                }
+                try {
+                    portsArray = CSVReaderUtils.readPortCSV(SMALL_PORTS_FILE);
+                    insertPorts();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 4:
+                if (!portsArray.isEmpty()) {
+                    portsArray.clear();
+                }
+                try {
+                    portsArray = CSVReaderUtils.readPortCSV(BIG_PORTS_FILE);
+                    insertPorts();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 5:
                 retrieveFilePath();
                 break;
         }
+    }
 
+    private static void insertPorts() {
+        List<Node<Port>> nodes = new ArrayList<>();
+        for (Port port : portsArray) {
+            Node<Port> node = new Node<Port>(port, port.getLat(), port.getLon());
+            nodes.add(node);
+        }
+        portTree.buildTree(nodes);
     }
 
     private static void menuManageShips() {
@@ -100,7 +137,8 @@ public class Menu {
 
         do {
 
-            String[] options = {"Go Back\n", "Show all Ships", "Search by Ship", "Search Ship Pairs", "Create Summary of Ships", "Get TOP N Ships", "Search Ship By Date"};
+            String[] options = {"Go Back\n", "Show all Ships", "Search by Ship", "Search Ship Pairs",
+                    "Create Summary of Ships", "Get TOP N Ships", "Search Ship By Date", "Get Nearest Port"};
             printMenu("Manage Ships", options, true);
             choice = getInput("Please make a selection", 3);
 
@@ -110,7 +148,7 @@ public class Menu {
                 case 0:
                     break;
                 case 1:
-                    for (Ship ship : Menu.mmsiBST.inOrder()) {
+                    for (Ship ship : Menu.mmsiAVL.inOrder()) {
                         ship.printShip();
                     }
                     break;
@@ -135,12 +173,39 @@ public class Menu {
                     getTopNShips(option);
                     break;
                 case 6:
-                    LocalDateTime startDate = null;
+                    /*LocalDateTime startDate = null;
                     LocalDateTime endDate = null;
 
                     sc.nextLine();
-                    startDate = readDate(sc, "Start Date: ");
-                    endDate = readDate(sc, "End Date: ");
+                    startDate = DateUtils.readDate(sc, "Start Date: ");
+                    endDate = DateUtils.readDate(sc, "End Date: ");*/
+                case 7:
+
+                    LocalDateTime date;
+
+                    System.out.print(" > Please insert ship's CallSign:");
+                    String callSign = sc.nextLine();
+                    if (csAVL.find(new ShipCallSign(callSign)) != null) {
+                        currentShip = csAVL.find(new ShipCallSign(callSign));
+                        date = DateUtils.readDate(sc, "Insert date: ");
+                        System.out.println(date.getHour());
+                        System.out.println(date.getMinute());
+                        ShipData data = currentShip.getDataByDate(date);
+                        if (data != null) {
+                            Port nearestPort = portTree.findNearestNeighbour(
+                                    data.getLatitude(),
+                                    data.getLongitude());
+                            System.out.println(nearestPort.getName());
+                        }
+
+                    } else {
+                        System.out.println("Ship not found");
+                    }
+
+
+
+
+                    break;
             }
 
         } while (choice != 0);
@@ -161,8 +226,8 @@ public class Menu {
                 case 1:
                     System.out.print(" > Please insert ship's MMSI: ");
                     String mmsi = scan.nextLine();
-                    if (mmsiBST.find(new ShipMMSI(Integer.parseInt(mmsi))) != null) {
-                        Menu.currentShip = mmsiBST.find(new ShipMMSI(Integer.parseInt(mmsi)));
+                    if (mmsiAVL.find(new ShipMMSI(Integer.parseInt(mmsi))) != null) {
+                        Menu.currentShip = mmsiAVL.find(new ShipMMSI(Integer.parseInt(mmsi)));
                         menuShowShip();
                     } else {
                         System.out.println("Ship not found");
@@ -171,8 +236,8 @@ public class Menu {
                 case 2:
                     System.out.print(" > Please insert ship's IMO: ");
                     String imo = scan.nextLine();
-                    if (imoBST.find(new ShipIMO(Integer.parseInt(imo))) != null) {
-                        Menu.currentShip = imoBST.find(new ShipIMO(Integer.parseInt(imo)));
+                    if (imoAVL.find(new ShipIMO(Integer.parseInt(imo))) != null) {
+                        Menu.currentShip = imoAVL.find(new ShipIMO(Integer.parseInt(imo)));
                         menuShowShip();
                     } else {
                         System.out.println("Ship not found");
@@ -181,8 +246,8 @@ public class Menu {
                 case 3:
                     System.out.print(" > Please insert ship's CallSign:");
                     String callSign = scan.nextLine();
-                    if (csBST.find(new ShipCallSign(callSign)) != null) {
-                        Menu.currentShip = csBST.find(new ShipCallSign(callSign));
+                    if (csAVL.find(new ShipCallSign(callSign)) != null) {
+                        Menu.currentShip = csAVL.find(new ShipCallSign(callSign));
                         menuShowShip();
                     } else {
                         System.out.println("Ship not found");
@@ -242,7 +307,7 @@ public class Menu {
         Scanner scan = new Scanner(System.in);
         String path = scan.nextLine();
         try {
-            Menu.shipArray = CSVReaderUtils.readCSV(path);
+            Menu.shipArray = CSVReaderUtils.readShipCSV(path);
             insertShips();
         } catch (Exception e) {
             System.out.println("> Invalid path, please try again.");
@@ -252,9 +317,9 @@ public class Menu {
 
     private static void insertShips() {
         for (Ship ship : Menu.shipArray) {
-            Menu.mmsiBST.insert(new ShipMMSI(ship));
-            Menu.imoBST.insert(new ShipIMO(ship));
-            Menu.csBST.insert(new ShipCallSign(ship));
+            Menu.mmsiAVL.insert(new ShipMMSI(ship));
+            Menu.imoAVL.insert(new ShipIMO(ship));
+            Menu.csAVL.insert(new ShipCallSign(ship));
         }
     }
 
@@ -273,23 +338,6 @@ public class Menu {
 
         System.out.println("+-----------------------------+");
 
-    }
-
-    public static LocalDateTime readDate(Scanner sc, String msg) {
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        System.out.print("Format: dd/MM/yyyy HH:mm\n");
-        System.out.print(msg);
-        LocalDateTime dateTime;
-
-        String str = sc.nextLine();
-
-        try {
-            dateTime = LocalDateTime.parse(str, format);
-        } catch (Exception e) {
-            System.out.print("Invalid date.\n");
-            return null;
-        }
-        return dateTime;
     }
 
     public static int readInt(Scanner sc, String msg) {

@@ -12,7 +12,6 @@ package lapr.project.tree;
  */
 public class AVL <E extends Comparable<E>> extends BST<E> {
 
-
     private int balanceFactor(Node<E> node){
         int heightLeft = 0;
         int heightRight = 0;
@@ -118,7 +117,6 @@ public class AVL <E extends Comparable<E>> extends BST<E> {
         return node;
     }
 
-
     public boolean equals(Object otherObj) {
 
         if (this == otherObj)
@@ -143,5 +141,4 @@ public class AVL <E extends Comparable<E>> extends BST<E> {
         }
         else return false;
     }
-
 }

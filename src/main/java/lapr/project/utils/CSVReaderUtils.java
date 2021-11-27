@@ -1,5 +1,6 @@
 package lapr.project.utils;
 
+import lapr.project.model.Port;
 import lapr.project.model.Ship;
 import lapr.project.model.ShipData;
 
@@ -29,7 +30,7 @@ public final class CSVReaderUtils {
      * @return an ArrayList filled with ships and their dynamic data.
      * @throws Exception if the file path doesn't exist.
      */
-    public static ArrayList<Ship> readCSV(String path) throws Exception {
+    public static ArrayList<Ship> readShipCSV(String path) throws Exception {
 
         DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
@@ -78,6 +79,32 @@ public final class CSVReaderUtils {
             }
         }
         return sortByDate(shipArray);
+    }
+
+
+    public static ArrayList<Port> readPortCSV(String path) {
+        ArrayList<Port> portArrayList = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            String line = br.readLine();
+
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+
+                Port newPort = new Port(values[0],
+                        values[1],
+                        Integer.parseInt(values[2]),
+                        values[3],
+                        Double.parseDouble(values[4]),
+                        Double.parseDouble(values[5]));
+
+                portArrayList.add(newPort);
+            }
+            return portArrayList;
+        } catch (Exception e) {
+            System.out.println("No ports were imported - Try again.\n");
+            return null;
+        }
     }
 
     /**

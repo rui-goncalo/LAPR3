@@ -13,7 +13,7 @@ public class CSVReaderTest {
     @Test
     public void testReadCSV() throws Exception {
 
-        ArrayList<Ship> arrayship = CSVReaderUtils.readCSV("src/data/sships.csv");
+        ArrayList<Ship> arrayship = CSVReaderUtils.readShipCSV("src/data/sships.csv");
         assertEquals(22, arrayship.size());
         assertEquals(210950000, arrayship.get(0).getMmsi());
         assertEquals("VARAMO", arrayship.get(0).getName());

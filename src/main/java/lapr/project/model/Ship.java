@@ -266,4 +266,15 @@ public class Ship {
     public void setSummary(Summary summary) {
         this.summary = summary;
     }
+
+    public ShipData getDataByDate(LocalDateTime date) {
+        ShipData foundData = null;
+        for (ShipData data : this.dynamicShip) {
+            LocalDateTime currentDate = data.getDateTime();
+            if (currentDate.isEqual(date)) {
+                foundData = data;
+            }
+        }
+        return foundData;
+    }
 }
