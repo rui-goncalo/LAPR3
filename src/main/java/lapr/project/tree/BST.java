@@ -349,34 +349,5 @@ public class BST<E extends Comparable<E>> implements BSTInterface<E> {
         toStringRec(root.getLeft(), level+1, sb);
     }
 
-    public void printShips() {
-        this.printShips(this.root());
-    }
-
-    private void printShips(Node<E> node) {
-        if (node != null) {
-            Ship ship = (Ship) node.getElement();
-            ship.printShip();
-            printShips(node.getLeft());
-            printShips(node.getRight());
-        }
-    }
-
-
-    public void printTree(String prefix) {
-        this.printTree(this.root(), prefix);
-    }
-
-    public void printTree(Node<E> node, String prefix) {
-        if (node != null) {
-            Ship ship = (Ship) node.getElement();
-            System.out.println(prefix + "IMO: " + ship.getImo());
-            printTree(node.getLeft(), "left ");
-            printTree(node.getRight(), "right ");
-        }
-    }
-
-
-
 } //----------- end of BST class -----------
 

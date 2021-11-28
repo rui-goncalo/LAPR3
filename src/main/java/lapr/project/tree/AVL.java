@@ -117,6 +117,7 @@ public class AVL <E extends Comparable<E>> extends BST<E> {
         return node;
     }
 
+    @Override
     public boolean equals(Object otherObj) {
 
         if (this == otherObj)

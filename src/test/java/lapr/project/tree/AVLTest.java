@@ -75,7 +75,7 @@ public class AVLTest {
       /**
      * Test of remove method, of class AVL.
      */
-    /*@Test
+    @Test
     public void testRemove() {
         System.out.println("remove");
         List<Integer> lExpected;
@@ -102,7 +102,7 @@ public class AVLTest {
         instance.remove(10);
         lExpected = Arrays.asList(4,6,8);           
         assertEquals( lExpected, instance.inOrder(),"inOrder should be "+lExpected.toString());
-        assertEquals(instance.height(), 1,"height should be 1 ");
+        assertEquals(instance.height(), 2,"height should be 2 ");
 
         instance.remove(6);
         lExpected = Arrays.asList(4,8);           
@@ -120,7 +120,7 @@ public class AVLTest {
         assertEquals( -1, instance.height(),"height should be 1 ");
 
         System.out.println("------------------------------------");
-    }*/
+    }
     
      @Test
     public void testEquals() {

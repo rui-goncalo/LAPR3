@@ -138,7 +138,7 @@ public class Menu {
         do {
 
             String[] options = {"Go Back\n", "Show all Ships", "Search by Ship", "Search Ship Pairs",
-                    "Create Summary of Ships", "Get TOP N Ships", "Search Ship By Date", "Get Nearest Port"};
+                    "Create Summary of Ships", "Get TOP N Ships", "Get Nearest Port"};
             printMenu("Manage Ships", options, true);
             choice = getInput("Please make a selection", 3);
 
@@ -173,13 +173,6 @@ public class Menu {
                     getTopNShips(option);
                     break;
                 case 6:
-                    /*LocalDateTime startDate = null;
-                    LocalDateTime endDate = null;
-
-                    sc.nextLine();
-                    startDate = DateUtils.readDate(sc, "Start Date: ");
-                    endDate = DateUtils.readDate(sc, "End Date: ");*/
-                case 7:
 
                     LocalDateTime date;
 
@@ -224,7 +217,7 @@ public class Menu {
                 case 0:
                     break;
                 case 1:
-                    System.out.print(" > Please insert ship's MMSI: ");
+                    System.out.print("Please insert ship's MMSI: ");
                     String mmsi = scan.nextLine();
                     if (mmsiAVL.find(new ShipMMSI(Integer.parseInt(mmsi))) != null) {
                         Menu.currentShip = mmsiAVL.find(new ShipMMSI(Integer.parseInt(mmsi)));
@@ -234,7 +227,7 @@ public class Menu {
                     }
                     break;
                 case 2:
-                    System.out.print(" > Please insert ship's IMO: ");
+                    System.out.print("Please insert ship's IMO: ");
                     String imo = scan.nextLine();
                     if (imoAVL.find(new ShipIMO(Integer.parseInt(imo))) != null) {
                         Menu.currentShip = imoAVL.find(new ShipIMO(Integer.parseInt(imo)));
@@ -244,7 +237,7 @@ public class Menu {
                     }
                     break;
                 case 3:
-                    System.out.print(" > Please insert ship's CallSign:");
+                    System.out.print("Please insert ship's CallSign:");
                     String callSign = scan.nextLine();
                     if (csAVL.find(new ShipCallSign(callSign)) != null) {
                         Menu.currentShip = csAVL.find(new ShipCallSign(callSign));
