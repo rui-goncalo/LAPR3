@@ -242,10 +242,12 @@ public class ShipTest {
     @Test
     public void testGetDataByDate() {
         LocalDateTime currentDate = LocalDateTime.of(2021, 12, 06, 22, 10, 00);
-
+        LocalDateTime currentDate2 = LocalDateTime.of(2020, 12, 06, 22, 10, 00);
 
         ShipData shipDateTime = new ShipData(LocalDateTime.of(2021, 12, 06, 22, 10, 0), 40.51396f, -73.98419f, 10.4f, 115.8f, 118, 'B');
+
         assertEquals(shipDateTime.getDateTime(), currentDate);
+        assertFalse((shipDateTime.getDateTime() == currentDate2));
 
     }
 }
