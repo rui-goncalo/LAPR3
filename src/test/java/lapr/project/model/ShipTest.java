@@ -241,15 +241,17 @@ public class ShipTest {
 
     @Test
     public void testGetDataByDate() {
-        LocalDateTime currentDate = LocalDateTime.of(2021, 12, 06, 22, 10, 00);
-        LocalDateTime currentDate2 = LocalDateTime.of(2020, 12, 06, 22, 10, 00);
+        ShipData ship1 = new ShipData(LocalDateTime.of(2021, 12, 06, 22, 10, 00), 40.51396f, -73.98419f, 10.4f, 115.8f, 118, 'B');
+        ShipData ship2 = new ShipData(LocalDateTime.of(2020, 12, 06, 22, 10, 00), 40.51396f, -73.98419f, 10.4f, 115.8f, 118, 'B');
+        ArrayList<ShipData> dynamicData = new ArrayList<>();
+        dynamicData.add(ship1);
+        dynamicData.add(ship2);
 
         ShipData shipDateTime = new ShipData(LocalDateTime.of(2021, 12, 06, 22, 10, 0), 40.51396f, -73.98419f, 10.4f, 115.8f, 118, 'B');
 
-        assertEquals(shipDateTime.getDateTime(), currentDate);
-
-        assertFalse((shipDateTime.getDateTime() == currentDate2));
-        assertTrue((shipDateTime.getDateTime() != currentDate2));
+        assertEquals(shipDateTime.getDateTime(), ship1.getDateTime());
+        assertFalse((shipDateTime.getDateTime() == ship2.getDateTime()));
+        assertTrue((shipDateTime.getDateTime() != ship2.getDateTime()));
 
     }
 }
