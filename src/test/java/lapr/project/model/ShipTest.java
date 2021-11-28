@@ -247,7 +247,9 @@ public class ShipTest {
         ShipData shipDateTime = new ShipData(LocalDateTime.of(2021, 12, 06, 22, 10, 0), 40.51396f, -73.98419f, 10.4f, 115.8f, 118, 'B');
 
         assertEquals(shipDateTime.getDateTime(), currentDate);
+
         assertFalse((shipDateTime.getDateTime() == currentDate2));
+        assertTrue((shipDateTime.getDateTime() != currentDate2));
 
     }
 }
