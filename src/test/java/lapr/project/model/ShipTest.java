@@ -1,5 +1,6 @@
 package lapr.project.model;
 
+
 import lapr.project.utils.Summary;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -235,5 +236,16 @@ public class ShipTest {
         filtered1 = ship1.filterShipData(LocalDateTime.of(2020, 12, 31, 14, 0, 0), LocalDateTime.of(2020, 12, 31, 18, 0, 0));
         assertEquals(1, filtered1.size());
         assertEquals(dynamic2.getDateTime(), filtered1.get(0).getDateTime());
+    }
+
+
+    @Test
+    public void testGetDataByDate() {
+        LocalDateTime currentDate = LocalDateTime.of(2021, 12, 06, 22, 10, 00);
+
+
+        ShipData shipDateTime = new ShipData(LocalDateTime.of(2021, 12, 06, 22, 10, 0), 40.51396f, -73.98419f, 10.4f, 115.8f, 118, 'B');
+        assertEquals(shipDateTime.getDateTime(), currentDate);
+
     }
 }
