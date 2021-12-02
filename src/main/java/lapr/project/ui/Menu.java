@@ -7,7 +7,6 @@ import lapr.project.tree.Node;
 import lapr.project.utils.*;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -126,7 +125,7 @@ public class Menu {
     private static void insertPorts() {
         List<Node<Port>> nodes = new ArrayList<>();
         for (Port port : portsArray) {
-            Node<Port> node = new Node<Port>(port, port.getLat(), port.getLon());
+            Node<Port> node = new Node<>(port, port.getLat(), port.getLon());
             nodes.add(node);
         }
         portTree.buildTree(nodes);
@@ -181,8 +180,6 @@ public class Menu {
                     if (csAVL.find(new ShipCallSign(callSign)) != null) {
                         currentShip = csAVL.find(new ShipCallSign(callSign));
                         date = DateUtils.readDate(sc, "Insert date: ");
-                        System.out.println(date.getHour());
-                        System.out.println(date.getMinute());
                         ShipData data = currentShip.getDataByDate(date);
                         if (data != null) {
                             Port nearestPort = portTree.findNearestNeighbour(

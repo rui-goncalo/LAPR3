@@ -80,8 +80,7 @@ public class BST<E extends Comparable<E>> implements BSTInterface<E> {
 
     private Node<E> insert(E element, Node<E> node){
         if (root == null) {
-            root = new Node<>(element, null, null);
-            return root;
+            return new Node<>(element, null, null);
         }
         if (node == null) {
             node = new Node<>(element, null, null);

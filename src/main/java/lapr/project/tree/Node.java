@@ -26,15 +26,6 @@ public class Node<T> {
         return object;
     }
 
-    public void setObject(T object) {
-        this.object = object;
-    }
-
-
-    public Point2D.Double getCoords() {
-        return coords;
-    }
-
     public Double getX() {
         return coords.x;
     }
