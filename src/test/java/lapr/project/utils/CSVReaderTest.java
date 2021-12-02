@@ -1,9 +1,11 @@
 package lapr.project.utils;
 
+import lapr.project.model.Port;
 import lapr.project.model.Ship;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.ArrayList;
 
@@ -34,4 +36,24 @@ public class CSVReaderTest {
         assertEquals(355, arrayship.get(0).getDynamicShip().get(0).getHeading());
         assertEquals('B', arrayship.get(0).getDynamicShip().get(0).getTransceiver());
     }
+
+    @Test
+    void readPorts() throws Exception {
+        ArrayList<Port> ports = CSVReaderUtils.readPortCSV("src/data/portTest.csv");
+        assertEquals(1, ports.size());
+        assertEquals("Europe", ports.get(0).getContinent());
+        assertEquals("United Kingdom", ports.get(0).getCountry());
+        assertEquals(29002, ports.get(0).getId());
+        assertEquals("Liverpool", ports.get(0).getName());
+        assertEquals(53.46666667, ports.get(0).getLat());
+        assertEquals(-3.033333333, ports.get(0).getLon());
+    }
+
+    @Test
+    void readPortsExp() throws Exception {
+        ArrayList<Port> ports = CSVReaderUtils.readPortCSV("src/data/1234.csv");
+        ArrayList<Port> expectRes = null;
+        assertEquals(ports, expectRes);
+    }
+
 }
