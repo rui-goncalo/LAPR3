@@ -9,7 +9,7 @@ import java.util.Properties;
 
 
 /**
- * @author Rui Gonçalves - 11918331
+ * @author Rui Gonçalves - 119183311
  */
 public class MakeDBConnection {
 

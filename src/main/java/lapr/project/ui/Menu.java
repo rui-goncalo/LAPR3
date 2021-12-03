@@ -5,6 +5,7 @@ import lapr.project.tree.AVL;
 import lapr.project.tree.KDTree;
 import lapr.project.utils.*;
 
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,27 +35,27 @@ public class Menu {
 
     public static void mainMenu() {
         int choice;
-            do {
-                String[] options = {"Exit\n", "Imports", "Manages"};
-                printMenu("Main Menu", options, true);
-                choice = getInput("Please make a selection", 3);
+        do {
+            String[] options = {"Exit\n", "Imports", "Manages"};
+            printMenu("Main Menu", options, true);
+            choice = getInput("Please make a selection", 3);
 
-                switch (choice) {
-                    case 0:
+            switch (choice) {
+                case 0:
+                    break;
+                case 1:
+                    menuImport();
+                    break;
+                case 2:
+                    if (shipArray.isEmpty()) {
+                        System.out.println("Please import Ships and Ports first.");
                         break;
-                    case 1:
-                        menuImport();
-                        break;
-                    case 2:
-                        if (shipArray.isEmpty()) {
-                            System.out.println("Please import Ships and Ports first.");
-                            break;
-                        }
-                        menuManageShips();
-                        break;
-                }
+                    }
+                    menuManageShips();
+                    break;
+            }
 
-            } while (choice != 0);
+        } while (choice != 0);
     }
 
     private static void menuImport() {
@@ -139,7 +140,7 @@ public class Menu {
         do {
 
             String[] options = {"Go Back\n", "Show all Ships", "Search by Ship", "Search Ship Pairs",
-                    "Create Summary of Ships", "Get TOP N Ships", "Get Nearest Port"};
+                    "Create Summary of Ships", "Get TOP N Ships", "Get Nearest Port", "Querys DV"};
             printMenu("Manage Ships", options, true);
             choice = getInput("Please make a selection", 3);
 
@@ -174,7 +175,6 @@ public class Menu {
                     getTopNShips(option);
                     break;
                 case 6:
-
                     LocalDateTime date;
 
                     System.out.print(" > Please insert ship's CallSign:");
@@ -193,8 +193,9 @@ public class Menu {
                     } else {
                         System.out.println("Ship not found");
                     }
-
-
+                    break;
+                case 7:
+                    dbQueriesMenu();
                     break;
             }
 
@@ -273,6 +274,62 @@ public class Menu {
             }
         } while (choice != 0);
     }
+
+
+    private static void dbQueriesMenu() {
+        int choice;
+        //Connection connection = MakeDBConnection.makeConnection();
+        //if (connection != null) {
+            do {
+
+                String[] options = {"Go Back\n", "> US204", "> SELECT * FROM SHIP"};
+                printMenu("Show Ships", options, true);
+                choice = getInput("Please make a selection", 3);
+
+                switch (choice) {
+                    case 1:
+                        System.out.println("Número do Container: ");
+                        Scanner sc = new Scanner(System.in);
+
+                        DBUtils.getCurrentContainerInfo(sc.nextInt());
+                        break;
+                    case 2:
+
+                    case 3:
+                        //TODO: US204
+                        break;
+                    case 4:
+                        //TODO: US205
+                        break;
+                    case 5:
+                        //TODO: US206
+                        break;
+                    case 6:
+                        //TODO: US207
+                        break;
+                    case 7:
+                        //TODO: US208
+                        break;
+                    case 8:
+                        //TODO: US209
+                        break;
+                    case 9:
+                        //TODO: US210
+                        break;
+                    case 0:
+//                        try {
+//                            connection.close();
+//                        } catch (SQLException e) {
+//                            System.out.println("An error occurred: " + e);
+//                        }
+                        break;
+                    default:
+                        System.out.println("Invalid option, choose again.");
+                        break;
+                }
+            } while (choice != 0);
+        }
+
 
     private static int getInput(String prompt, int optionCount) {
         Scanner scan = new Scanner(System.in);
