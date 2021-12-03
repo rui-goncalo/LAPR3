@@ -11,21 +11,20 @@ import java.util.*;
  */
 
 public class BST<E extends Comparable<E>> implements BSTInterface<E> {
-
-
-    /** Nested static class for a binary search tree node. */
-
+    /**
+     * Nested static class for a binary search tree node.
+     */
     protected static class Node<E> {
-        private E element;          // an element stored at this node
-        private Node<E> left;       // a reference to the left child (if any)
-        private Node<E> right;      // a reference to the right child (if any)
+        private E element;         // Element stored inside the node
+        private Node<E> left;      // Reference to the left child (if any)
+        private Node<E> right;     // Reference to the right child (if any)
 
         /**
          * Constructs a node with the given element and neighbors.
          *
-         * @param e  the element to be stored
-         * @param leftChild   reference to a left child node
-         * @param rightChild  reference to a right child node
+         * @param e          the element to be stored
+         * @param leftChild  reference to a left child node
+         * @param rightChild reference to a right child node
          */
         public Node(E e, Node<E> leftChild, Node<E> rightChild) {
             element = e;
@@ -33,320 +32,327 @@ public class BST<E extends Comparable<E>> implements BSTInterface<E> {
             right = rightChild;
         }
 
-        // accessor methods
-        public E getElement() { return element; }
-        public Node<E> getLeft() { return left; }
-        public Node<E> getRight() { return right; }
+        public E getElement() {
+            return element;
+        }
 
-        // update methods
-        public void setElement(E e) { element = e; }
-        public void setLeft(Node<E> leftChild) { left = leftChild; }
-        public void setRight(Node<E> rightChild) { right = rightChild; }
+        public Node<E> getLeft() {
+            return left;
+        }
+
+        public Node<E> getRight() {
+            return right;
+        }
+
+        public void setElement(E e) {
+            element = e;
+        }
+
+        public void setLeft(Node<E> leftChild) {
+            left = leftChild;
+        }
+
+        public void setRight(Node<E> rightChild) {
+            right = rightChild;
+        }
     }
 
-    //----------- end of nested Node class -----------
+    protected Node<E> root;     // Root of the tree
 
-    protected Node<E> root = null;     // root of the tree
-
-
-    /* Constructs an empty binary search tree. */
+    /**
+     * Constructor for an empty binary search tree.
+     */
     public BST() {
         root = null;
     }
 
-    /*
+    /**
      * @return root Node of the tree (or null if tree is empty)
      */
     protected Node<E> root() {
         return root;
     }
 
-    /*
-     * Verifies if the tree is empty
+    /**
+     * Checks if the tree is empty
+     *
      * @return true if the tree is empty, false otherwise
      */
-    public boolean isEmpty(){
-        return root==null;
+    public boolean isEmpty() {
+        return root == null;
     }
 
-    /*
-     * Inserts an element in the tree.
+    /**
+     * Returns the Node containing a specific Element or null otherwise.
+     *
+     * @param element the element to find
+     * @return the Node that contains the Element, or null otherwise
+     * <p>
+     * This method despite not being essential is very useful.
+     * It is written here in order to be used by this class and
+     * its subclasses to avoid recoding.
      */
-    public void insert(E element){
-        if (element != null) {
-            insert(element, root);
-        }
+    public E find(E element) {
+        Node<E> result = find(root, element);
+        if (result != null)
+            return result.getElement();
+
+        return null;
     }
 
-    private Node<E> insert(E element, Node<E> node){
-        if (root == null) {
+    protected Node<E> find(Node<E> node, E element) {
+        if (node == null || element.compareTo(node.getElement()) == 0)
+            return node;
+
+        if (element.compareTo(node.getElement()) < 0)
+            return find(node.getLeft(), element);
+
+        return find(node.getRight(), element);
+    }
+
+    /**
+     * Adds an element to the tree.
+     */
+    public void insert(E element) {
+        if (element != null)
+            root = insert(element, root);
+    }
+
+    private Node<E> insert(E element, Node<E> node) {
+        if (node == null)
             return new Node<>(element, null, null);
-        }
-        if (node == null) {
-            node = new Node<>(element, null, null);
-        }
-        if (element.compareTo(node.getElement()) == 0) {
-            node.setElement(element);
-        }
-        else if (element.compareTo(node.getElement()) < 0) {
+
+        if (element.compareTo(node.getElement()) < 0)
             node.setLeft(insert(element, node.getLeft()));
-        } else {
+        else if (element.compareTo(node.getElement()) > 0)
             node.setRight(insert(element, node.getRight()));
-        }
+        else
+            node.setElement(element);
+
         return node;
     }
 
     /**
      * Removes an element from the tree maintaining its consistency as a Binary Search Tree.
      */
-    public void remove(E element){
-        root = remove(element, root());
+    public void remove(E element) {
+        if (element != null)
+            root = remove(element, root());
     }
 
     private Node<E> remove(E element, Node<E> node) {
-        if (node == null) {
-            return null;    //throw new IllegalArgumentException("Element does not exist");
-        }
-        if (element.compareTo(node.getElement())==0) {
-            // node is the Node to be removed
-            if (node.getLeft() == null && node.getRight() == null) { //node is a leaf (has no childs)
+        if (node == null)
+            return null;
+        if (element.compareTo(node.getElement()) == 0) {
+            if (node.getLeft() == null && node.getRight() == null)
                 return null;
-            }
-            if (node.getLeft() == null) {   //has only right child
+            if (node.getLeft() == null)
                 return node.getRight();
-            }
-            if (node.getRight() == null) {  //has only left child
+            if (node.getRight() == null)
                 return node.getLeft();
-            }
             E min = smallestElement(node.getRight());
             node.setElement(min);
             node.setRight(remove(min, node.getRight()));
-        }
-        else if (element.compareTo(node.getElement()) < 0)
-            node.setLeft( remove(element, node.getLeft()) );
+        } else if (element.compareTo(node.getElement()) < 0)
+            node.setLeft(remove(element, node.getLeft()));
         else
-            node.setRight( remove(element, node.getRight()) );
-
+            node.setRight(remove(element, node.getRight()));
         return node;
     }
 
-    /*
+    /**
      * Returns the number of nodes in the tree.
+     *
      * @return number of nodes in the tree
      */
     public int size() {
         return size(root);
     }
 
-    private int size(Node<E> node){
-        if (node == null) {
+    private int size(Node<E> node) {
+        if (node == null)
             return 0;
-        } else {
-            return 1 + size(node.getLeft()) + size(node.getRight());
-        }
+
+        return size(node.getLeft()) + 1 + size(node.getRight());
     }
 
-    /*
+    /**
      * Returns the height of the tree
+     *
      * @return height
      */
     public int height() {
-        if (root == null) {
-            return -1;
-        } else {
-            return height(root);
-        }
+        return height(root);
     }
 
-    /*
+    /**
      * Returns the height of the subtree rooted at Node node.
+     *
      * @param node A valid Node within the tree
      * @return height
      */
     protected int height(Node<E> node) {
-        if (node == null) {
+        if (node == null)
             return -1;
-        } else {
-            if (height(node.getLeft()) > height(node.getRight())) {
-                return 1 + height(node.getLeft());
-            } else {
-                return 1 + height(node.getRight());
-            }
-        }
+
+        int lDepth = height(node.getLeft());
+        int rDepth = height(node.getRight());
+
+        if (lDepth > rDepth)
+            return (lDepth + 1);
+
+        return (rDepth + 1);
     }
 
     /**
      * Returns the smallest element within the tree.
+     *
      * @return the smallest element within the tree
      */
-    public E smallestElement(){
-        return smallestElement(root);
-    }
+    public E smallestElement() {
+        if (root != null)
+            return smallestElement(root);
 
-    protected E smallestElement(Node<E> node){
-        while (node != null) {
-            if (node.getLeft() == null) {
-                return node.getElement();
-            }
-            node = node.getLeft();
-        }
         return null;
     }
 
+    protected E smallestElement(Node<E> node) {
+        if (node.getLeft() != null)
+            return smallestElement(node.getLeft());
+
+        return node.getElement();
+    }
+
     /**
-     * Returns the Node containing a specific Element, or null otherwise.
-     *
-     * @param element    the element to find
-     * @return the Node that contains the Element, or null otherwise
-     *
-     * This method despite not being essential is very useful.
-     * It is written here in order to be used by this class and its
-     * subclasses avoiding recoding.
-     * So its access level is protected
-     */
-    protected Node<E> find(Node<E> node, E element){
-        if (node == null) {
-            return null;
-        }
-        if (node.getElement().compareTo(element) == 0) { //TENTAR COMPARETO
-            return node;
-        }
-        if (node.getElement().compareTo(element) > 0) {
-            return find(node.getLeft(), element);
-        }
-        return find(node.getRight(), element);
-    }
-
-    public E find(E element) {
-        return this.find(this.root(), element).getElement();
-    }
-
-    /*
      * Returns an iterable collection of elements of the tree, reported in in-order.
+     *
      * @return iterable collection of the tree's elements reported in in-order
      */
-    public Iterable<E> inOrder(){
+    public Iterable<E> inOrder() {
         List<E> snapshot = new ArrayList<>();
         if (root != null)
-            inOrderSubtree(root, snapshot);   // fill the snapshot recursively
+            inOrderSubtree(root, snapshot);
+
         return snapshot;
     }
+
     /**
      * Adds elements of the subtree rooted at Node node to the given
      * snapshot using an in-order traversal
-     * @param node       Node serving as the root of a subtree
-     * @param snapshot  a list to which results are appended
+     *
+     * @param node     Node serving as the root of a subtree
+     * @param snapshot a list to which results are appended
      */
     private void inOrderSubtree(Node<E> node, List<E> snapshot) {
         if (node == null)
             return;
+
         inOrderSubtree(node.getLeft(), snapshot);
         snapshot.add(node.getElement());
         inOrderSubtree(node.getRight(), snapshot);
     }
+
     /**
      * Returns an iterable collection of elements of the tree, reported in pre-order.
+     *
      * @return iterable collection of the tree's elements reported in pre-order
      */
-    public Iterable<E> preOrder(){
+    public Iterable<E> preOrder() {
         List<E> snapshot = new ArrayList<>();
-        if (root != null) {
-            preOrderSubtree(root, snapshot);   // fill the snapshot recursively
-        }
+        if (root != null)
+            preOrderSubtree(root, snapshot);
+
         return snapshot;
     }
+
     /**
-     * Adds elements of the subtree rooted at Node node to the given
-     * snapshot using an pre-order traversal
-     * @param node       Node serving as the root of a subtree
-     * @param snapshot  a list to which results are appended
+     * Adds elements of the subtree rooted at Node node to a
+     * given snapshot using a pre-order traversal
+     *
+     * @param node     serving as the root of a subtree
+     * @param snapshot a list to which results are appended
      */
     private void preOrderSubtree(Node<E> node, List<E> snapshot) {
-        if (node == null) {
+        if (node == null)
             return;
-        }
+
         snapshot.add(node.getElement());
         preOrderSubtree(node.getLeft(), snapshot);
         preOrderSubtree(node.getRight(), snapshot);
     }
+
     /**
      * Returns an iterable collection of elements of the tree, reported in post-order.
+     *
      * @return iterable collection of the tree's elements reported in post-order
      */
-    public Iterable<E> posOrder(){
+    public Iterable<E> posOrder() {
         List<E> snapshot = new ArrayList<>();
-        if (root != null) {
-            posOrderSubtree(root, snapshot);   // fill the snapshot recursively
-        }
+        if (root != null)
+            posOrderSubtree(root, snapshot);
+
         return snapshot;
     }
+
     /**
-     * Adds positions of the subtree rooted at Node node to the given
-     * snapshot using an post-order traversal
-     * @param node       Node serving as the root of a subtree
-     * @param snapshot  a list to which results are appended
+     * Adds positions of the subtree rooted at Node node to a
+     * given snapshot using a post-order traversal
+     *
+     * @param node     Node serving as the root of a subtree
+     * @param snapshot a list to which results are appended
      */
     private void posOrderSubtree(Node<E> node, List<E> snapshot) {
-        if (node == null) {
+        if (node == null)
             return;
-        }
+
         posOrderSubtree(node.getLeft(), snapshot);
         posOrderSubtree(node.getRight(), snapshot);
         snapshot.add(node.getElement());
     }
 
-    /*
+    /**
      * Returns a map with a list of nodes by each tree level.
+     *
      * @return a map with a list of nodes by each tree level
      */
-    public Map<Integer,List<E>> nodesByLevel(){
-        Map<Integer, List<E>> mapa = new HashMap<>();
-        if (root != null) {
-            processBstByLevel(root, mapa, 0);
-        }
-        return mapa;
+    public Map<Integer, List<E>> nodesByLevel() {
+        Map<Integer, List<E>> map = new HashMap<>();
+        processBstByLevel(root, map, 0);
+        return map;
     }
 
-    private void processBstByLevel(Node<E> node, Map<Integer,List<E>> result, int level){
-        if (node == null) {
+    private void processBstByLevel(Node<E> node, Map<Integer, List<E>> result, int level) {
+        if (node == null)
             return;
-        }
+
+        if (result.get(level) == null)
+            result.put(level, new ArrayList<>());
+
+        result.get(level).add(node.getElement());
         processBstByLevel(node.getLeft(), result, level + 1);
-        if (result.containsKey(level)) {
-            result.get(level).add(node.getElement());
-        } else {
-            List<E> lista = new ArrayList<>();
-            lista.add(node.getElement());
-            result.put(level, lista);
-        }
         processBstByLevel(node.getRight(), result, level + 1);
     }
-
-//#########################################################################
 
     /**
      * Returns a string representation of the tree.
      * Draw the tree horizontally
      */
-    public String toString(){
+    public String toString() {
         StringBuilder sb = new StringBuilder();
         toStringRec(root, 0, sb);
         return sb.toString();
     }
 
-    private void toStringRec(Node<E> root, int level, StringBuilder sb){
-        if(root==null)
+    private void toStringRec(Node<E> root, int level, StringBuilder sb) {
+        if (root == null)
             return;
-        toStringRec(root.getRight(), level+1, sb);
-        if (level!=0){
-            for(int i=0;i<level-1;i++)
+        toStringRec(root.getRight(), level + 1, sb);
+        if (level != 0) {
+            for (int i = 0; i < level - 1; i++)
                 sb.append("|\t");
-            sb.append("|-------"+root.getElement()+"\n");
-        }
-        else
-            sb.append(root.getElement()+"\n");
-        toStringRec(root.getLeft(), level+1, sb);
+            sb.append("|-------").append(root.getElement()).append("\n");
+        } else
+            sb.append(root.getElement()).append("\n");
+        toStringRec(root.getLeft(), level + 1, sb);
     }
-
-} //----------- end of BST class -----------
-
+}
