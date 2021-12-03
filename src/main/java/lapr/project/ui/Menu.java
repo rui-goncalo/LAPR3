@@ -2,8 +2,7 @@ package lapr.project.ui;
 
 import lapr.project.model.*;
 import lapr.project.tree.AVL;
-import lapr.project.tree.KdTree;
-import lapr.project.tree.Node;
+import lapr.project.tree.KDTree;
 import lapr.project.utils.*;
 
 import java.time.LocalDateTime;
@@ -19,7 +18,6 @@ public class Menu {
 
     private static final String BIG_SHIP_FILE = "src/data/bships.csv";
     private static final String SMALL_SHIP_FILE = "src/data/sships.csv";
-
     private static final String BIG_PORTS_FILE = "src/data/bports.csv";
     private static final String SMALL_PORTS_FILE = "src/data/sports.csv";
 
@@ -30,36 +28,33 @@ public class Menu {
     private static final AVL<ShipIMO> imoAVL = new AVL<>();
     private static final AVL<ShipCallSign> csAVL = new AVL<>();
 
-    private static final KdTree<Port> portTree = new KdTree<>();
+    private static final KDTree<Port> portTree = new KDTree<>();
 
     private static Ship currentShip = null;
 
     public static void mainMenu() {
-
         int choice;
+            do {
+                String[] options = {"Exit\n", "Imports", "Manages"};
+                printMenu("Main Menu", options, true);
+                choice = getInput("Please make a selection", 3);
 
-        do {
-
-            String[] options = {"Exit\n", "Import Ships/Ports", "Manage Ships"};
-            printMenu("Main Menu", options, true);
-            choice = getInput("Please make a selection", 3);
-
-            switch (choice) {
-                case 0:
-                    break;
-                case 1:
-                    menuImport();
-                    break;
-                case 2:
-                    if (shipArray.isEmpty()) {
-                        System.out.println("Please import ships/ports first.");
+                switch (choice) {
+                    case 0:
                         break;
-                    }
-                    menuManageShips();
-                    break;
-            }
+                    case 1:
+                        menuImport();
+                        break;
+                    case 2:
+                        if (shipArray.isEmpty()) {
+                            System.out.println("Please import Ships and Ports first.");
+                            break;
+                        }
+                        menuManageShips();
+                        break;
+                }
 
-        } while (choice != 0);
+            } while (choice != 0);
     }
 
     private static void menuImport() {
@@ -123,13 +118,20 @@ public class Menu {
     }
 
     private static void insertPorts() {
-        List<Node<Port>> nodes = new ArrayList<>();
-        for (Port port : portsArray) {
-            Node<Port> node = new Node<>(port, port.getLat(), port.getLon());
-            nodes.add(node);
+        if (!portsArray.isEmpty()) {
+            portsArray.clear();
         }
-        portTree.buildTree(nodes);
+
+        if (portsArray == null) menuImport();
+
+        List<KDTree.Node<Port>> nodesPorts = new ArrayList<>();
+        for (Port port : portsArray) {
+            KDTree.Node<Port> node = new KDTree.Node<>(port.getLat(), port.getLon(), port);
+            nodesPorts.add(node);
+        }
+        portTree.buildTree(nodesPorts);
     }
+
 
     private static void menuManageShips() {
         int choice;
@@ -179,7 +181,7 @@ public class Menu {
                     String callSign = sc.nextLine();
                     if (csAVL.find(new ShipCallSign(callSign)) != null) {
                         currentShip = csAVL.find(new ShipCallSign(callSign));
-                        date = DateUtils.readDate(sc, "Insert date: ");
+                        date = DateMenu.readDate(sc, "Insert date: ");
                         ShipData data = currentShip.getDataByDate(date);
                         if (data != null) {
                             Port nearestPort = portTree.findNearestNeighbour(
@@ -191,8 +193,6 @@ public class Menu {
                     } else {
                         System.out.println("Ship not found");
                     }
-
-
 
 
                     break;

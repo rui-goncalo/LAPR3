@@ -56,8 +56,9 @@ public class AVL <E extends Comparable<E>> extends BST<E> {
         root = insert(element, root);
     }
 
+
     private Node<E> insert(E element, Node<E> node) {
-        if (root == null) {
+        if (node == null) {
             return new Node<>(element, null, null);
         }
         if (node.getElement() != element) {
