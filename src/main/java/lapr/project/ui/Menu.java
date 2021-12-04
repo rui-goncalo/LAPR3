@@ -278,10 +278,9 @@ public class Menu {
 
     private static void dbQueriesMenu() {
         int choice;
-        //Connection connection = MakeDBConnection.makeConnection();
-        //if (connection != null) {
-            do {
+        Scanner scan = new Scanner(System.in);
 
+            do {
                 String[] options = {"Go Back\n", "> US204", "> SELECT * FROM SHIP"};
                 printMenu("Show Ships", options, true);
                 choice = getInput("Please make a selection", 3);
@@ -289,14 +288,32 @@ public class Menu {
                 switch (choice) {
                     case 1:
                         System.out.println("Número do Container: ");
-                        Scanner sc = new Scanner(System.in);
 
-                        DBUtils.getCurrentContainerInfo(sc.nextInt());
+                        DBUtils.getCurrentContainerInfo(scan.nextInt());
                         break;
                     case 2:
 
                     case 3:
-                        //TODO: US204
+                        System.out.print("Please insert ship mmsi: ");
+
+                        int mmsi = scan.nextInt();
+
+                        if (mmsiAVL.find(new ShipMMSI(mmsi)) != null) {
+                            currentShip = mmsiAVL.find(new ShipMMSI(mmsi));
+
+                            Port nearestPort = null;
+                            ShipData data = currentShip.getLastDynamicData();
+                            if (data != null) {
+                                nearestPort = portTree.findNearestNeighbour(
+                                        data.getLatitude(),
+                                        data.getLongitude());
+                                System.out.println(nearestPort.getName());
+                            }
+
+
+                        } else {
+                            System.out.println("Ship not found");
+                        }
                         break;
                     case 4:
                         //TODO: US205
