@@ -5,13 +5,31 @@
 \paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
 
-\f0\fs24 \cf0 SELECT c.id AS "Container ID", cr.id AS "Type Container", tl.description AS "Current Location"\
-FROM Container c, Container_Refrigerated cr, container_cargo_manifest ccm, Cargo_Manifest cm, Type_Cargo_Manifest tcm, Arrival a, Location l, type_location tl\
-WHERE c.id = 5\
-AND c.container_refrigeratedid = cr.id\
-AND c.id = ccm.ContainerId_container\
-AND ccm.Cargo_ManifestId_cargo_manifest = cm.id\
-AND tcm.id = cm.Type_Cargo_ManifestId\
-AND a.cargo_manifestid = cm.id\
-AND a.initiallocationid = l.id\
-AND l.type_locationid = tl.id;}
+\f0\fs32 \cf0 SET SERVEROUTPUT ON;\
+DROP FUNCTION func_client_container;\
+CREATE OR REPLACE FUNCTION func_client_container(f_container Container.id%type)\
+RETURN VARCHAR\
+IS\
+    t_str VARCHAR(100);\
+    t_containerId INTEGER;\
+    t_type_container INTEGER;\
+    t_location VARCHAR(10);\
+BEGIN\
+    SELECT c.id AS "Container ID", cr.id AS "Type Container", tl.description AS "Current Location"\
+    INTO t_containerId, t_type_container, t_location\
+    FROM Container c, Container_Refrigerated cr, container_cargo_manifest ccm, Cargo_Manifest cm, Type_Cargo_Manifest tcm, Arrival a, Location l, type_location tl\
+    WHERE c.id = f_container\
+    AND c.container_refrigeratedid = cr.id\
+    AND c.id = ccm.ContainerId_container\
+    AND ccm.Cargo_ManifestId_cargo_manifest = cm.id\
+    AND tcm.id = cm.Type_Cargo_ManifestId\
+    AND a.cargo_manifestid = cm.id\
+    AND a.initiallocationid = l.id\
+    AND l.type_locationid = tl.id;\
+        t_str := 'Container ID: ' || t_containerId || '. Type Container: ' || t_type_container || '. Current Location: ' || t_location || '.';\
+    RETURN t_str;\
+END;\
+\
+BEGIN\
+DBMS_OUTPUT.PUT_LINE(func_client_container(5));\
+END;}
