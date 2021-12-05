@@ -22,6 +22,8 @@ DROP TABLE Role CASCADE CONSTRAINTS PURGE;
 DROP TABLE "User" CASCADE CONSTRAINTS PURGE;
 DROP TABLE Container_Refrigerated CASCADE CONSTRAINTS PURGE;
 DROP TABLE Trip CASCADE CONSTRAINTS PURGE;
+DROP TABLE Client CASCADE CONSTRAINTS PURGE;
+DROP TABLE Container_Client CASCADE CONSTRAINTS PURGE;
 
 -- CREATE Tables --
 CREATE TABLE Ship (
@@ -197,6 +199,18 @@ CREATE TABLE Trip (
     Shipmmsi INTEGER
 );
 
+CREATE TABLE Client (
+    id INTEGER CONSTRAINT Client_pk PRIMARY KEY,
+    name VARCHAR(30)
+);
+
+CREATE TABLE Container_Client(
+    ContainerId INTEGER,
+    ClientId INTEGER,
+    CONSTRAINT Container_Client_pk
+    PRIMARY KEY (ContainerId, ClientId)
+);
+
 -- ALTER Tables --
 ALTER TABLE Location ADD CONSTRAINT
 location_type_location_fk FOREIGN KEY (Type_Locationid)
@@ -317,3 +331,11 @@ REFERENCES Location(id);
 ALTER TABLE Arrival ADD CONSTRAINT
 arrival_tripId_fk FOREIGN KEY (TripId)
 REFERENCES Trip(id);
+
+ALTER TABLE Container_Client ADD CONSTRAINT
+Container_Client_ContainerId_fk FOREIGN KEY (ContainerId)
+REFERENCES Container(id);
+
+ALTER TABLE Container_Client ADD CONSTRAINT
+Container_Client_ClientId_fk FOREIGN KEY (ClientId)
+REFERENCES Client(id);
