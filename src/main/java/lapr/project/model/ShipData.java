@@ -96,6 +96,11 @@ public class ShipData {
         return this.transceiverClass;
     }
 
+    /**
+     * Override method of Object toString
+     * 
+     * @return a string representation of ShipData
+     */
     @Override
     public String toString() {
         String[] date = this.getDateTime().toString().split("T");

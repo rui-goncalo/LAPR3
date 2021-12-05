@@ -33,6 +33,14 @@ public class ShipMMSI extends Ship implements Comparable<ShipMMSI> {
         super(mmsi, null, null, 0, null, 0, 0, 0, 0, 0);
     }
 
+    /**
+     * Override for Object compareTo method
+     * 
+     * @param o ShipMMSI to compare to
+     * @return  1 if the first ShipMMSI is greater than the other
+     *         -1 if the first ShipMMSI is less than the other
+     *          0 if they're equal
+     */
     @Override
     public int compareTo(ShipMMSI o) {
         if (this.getMmsi() > o.getMmsi()) {
