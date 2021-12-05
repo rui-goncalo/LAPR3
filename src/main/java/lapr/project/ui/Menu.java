@@ -346,7 +346,7 @@ public class Menu {
                     case 1:
                         System.out.println("Container Number: ");
 
-                        DBUtils.getCurrentContainerInfo(scan.nextInt());
+                        DBFunctions.getCurrentContainerInfo(scan.nextInt());
                         break;
                     case 2:
                         System.out.print("Please insert ship mmsi: ");
@@ -362,11 +362,16 @@ public class Menu {
                                         data.getLatitude(),
                                         data.getLongitude());
                                 System.out.println("Nearest Port: " + nearestPort.getName());
+                                DBFunctions.getGetContainersOffloaded(currentShip);
                             }
                         } else {
                             System.out.println("Ship not found");
                         }
                         break;
+                    case 3:
+                        Scanner scanner = new Scanner(System.in);
+                        int date = Integer.parseInt(scanner.nextLine());
+                        DBFunctions.us207(date);
                     case 0:
 //                        try {
 //                            connection.close();
