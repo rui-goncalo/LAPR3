@@ -9,23 +9,16 @@ INSERT INTO ship VALUES (211331683, 'SEOUlEXPRE', 9193332, 21, 12.3, 'DHOP', 70,
 INSERT INTO ship VALUES (211331619, 'SEOUlEXPRE', 9193303, 21, 12.3, 'DHAS', 70, 294.5, 32.6, 350, 13.6, 'B', 1254);
 INSERT INTO ship VALUES (211331610, 'SEOUlEXPRE', 9193365, 21, 12.3, 'DHDF', 70, 294.5, 32.6, 350, 13.6, 'B', 1254);
 INSERT INTO ship VALUES (211331612, 'SEOUlEXPRE', 9193356, 21, 12.3, 'DHGH', 70, 294.5, 32.6, 350, 13.6, 'B', 1254);
-<<<<<<< HEAD
 INSERT INTO ship VALUES (211331613, 'SEOUlEXPRE', 9193322, 21, 12.3, 'DHJK', 70, 294.5, 32.6, 350, 13.6, 'B', 1254);
 INSERT INTO ship VALUES (211311111, 'SEOUlEXPRE', 9193310, 21, 12.3, 'DHGG', 70, 294.5, 32.6, 350, 13.6, 'B', 1254);
 INSERT INTO ship VALUES (211311112, 'SEOUlEXPRE', 9193311, 21, 12.3, 'DHJJ', 70, 294.5, 32.6, 350, 13.6, 'B', 1254);
 INSERT INTO ship VALUES (210950000, 'VARAMO', 9395044, 21, 12.3,'C4SQ2', 70, 294.5, 32.6, 350, 13.6, 'B', 1254);
-=======
-INSERT INTO ship VALUES (211331613, 'SEOUlEXPRE', 9193321, 21, 12.3, 'DHJK', 70, 294.5, 32.6, 350, 13.6, 'B', 1254);
->>>>>>> fd6f281c7706263a42b29f1b059d86504d6d9ae7
 
-SELECT * FROM ship;
 
 --INSERT CONTINENT--
 INSERT INTO continent VALUES (1, 'Europe');
 INSERT INTO continent VALUES (2, 'America');
 INSERT INTO continent VALUES (3, 'Africa');
-
-SELECT * FROM continent;
 
 --INSERT COUNTRY--
 INSERT INTO country VALUES (1, 'UK', 1);
@@ -39,13 +32,11 @@ INSERT INTO country VALUES (8, 'Turkey', 1);
 INSERT INTO country VALUES (9, 'Italy', 1);
 INSERT INTO country VALUES (10, 'Canada', 2);
 
-SELECT * FROM country;
-
 --INSERT TYPE_LOCATION--
 INSERT INTO type_location VALUES (1, 'Port');
 INSERT INTO type_location VALUES (2, 'Warehouse');
-
-SELECT * FROM type_location;
+INSERT INTO type_location VALUES (3, 'Ship');
+INSERT INTO type_location VALUES (4, 'Truck');
 
 --INSERT LOCATION--
 INSERT INTO location VALUES (1, 'Liverpool', 34.91666667, 33.65, 1, 1);
@@ -58,8 +49,8 @@ INSERT INTO location VALUES (7, 'Halifax', 34.91666667, 33.65, 1, 7);
 INSERT INTO location VALUES (8, 'Vancouver', 34.91666667, 33.65, 2, 8);
 INSERT INTO location VALUES (9, 'San Vicente', 34.91666667, 33.65, 1, 9);
 INSERT INTO location VALUES (10, 'Pisa', 34.91666667, 33.65, 1, 10);
-
-SELECT * FROM location;
+INSERT INTO location VALUES (11, 'Ship', 34.91666667, 33.65, 3, 7);
+INSERT INTO location VALUES (12, 'Warehouse', 34.91666667, 33.65, 3, 3);
 
 --INSERT TYPE_EMPLOYEE--
 INSERT INTO type_employee VALUES (1, 'Client');
@@ -74,8 +65,6 @@ INSERT INTO type_employee VALUES (9, 'Ship Chief Electrical Engineer');
 INSERT INTO type_employee VALUES (10, 'Truck Driver');
 INSERT INTO type_employee VALUES (11, 'Administrator');
 
-SELECT * FROM type_employee;
-
 --INSERT EMPLOYEE--
 INSERT INTO employee VALUES (1, 'João', 8);
 INSERT INTO employee VALUES (2, 'Rui', 9);
@@ -89,8 +78,6 @@ INSERT INTO employee VALUES (9, 'David', 2);
 INSERT INTO employee VALUES (10, 'Francisco', 1);
 INSERT INTO employee VALUES (11, 'Rodrigo', 11);
 
-SELECT * FROM employee;
-
 --INSERT EMPLOYEE_LOCATION--
 INSERT INTO employee_location VALUES (4, 1);
 INSERT INTO employee_location VALUES (5, 2);
@@ -98,8 +85,6 @@ INSERT INTO employee_location VALUES (6, 1);
 INSERT INTO employee_location VALUES (7, 1);
 INSERT INTO employee_location VALUES (8, 2);
 INSERT INTO employee_location VALUES (9, 1);
-
-SELECT * FROM employee_location;
 
 --INSERT TRUCK--
 INSERT INTO truck VALUES ('Kotka', 3);
@@ -113,8 +98,6 @@ INSERT INTO truck VALUES ('OLA', 3);
 INSERT INTO truck VALUES ('A', 3);
 INSERT INTO truck VALUES ('AL', 3);
 
-SELECT * FROM truck;
-
 --INSERT TRUCK_WAREHOUSE--
 INSERT INTO truck_warehouse VALUES ('Kotka', 2);
 INSERT INTO truck_warehouse VALUES ('Kotk', 3);
@@ -127,23 +110,13 @@ INSERT INTO truck_warehouse VALUES ('OLA', 4);
 INSERT INTO truck_warehouse VALUES ('A', 6);
 INSERT INTO truck_warehouse VALUES ('AL', 8);
 
-SELECT * FROM truck_warehouse;
-
 --INSERT TYPE_CARGO_MANIFEST--
 INSERT INTO type_cargo_manifest VALUES (1, 'loading');
 INSERT INTO type_cargo_manifest VALUES (2, 'unloading');
 
-
-SELECT * FROM type_cargo_manifest;
-
 --INSERT CARGO_MANIFEST--
-<<<<<<< HEAD
 INSERT INTO cargo_manifest VALUES (1, 5.3, 2021, 1, 211311111);
 INSERT INTO cargo_manifest VALUES (2, 5.3, 2021, 2, 210950000);
-=======
-INSERT INTO cargo_manifest VALUES (1, 5.3, 2020, 1, 211331620);
-INSERT INTO cargo_manifest VALUES (2, 5.3, 2020, 2, 211331624);
->>>>>>> fd6f281c7706263a42b29f1b059d86504d6d9ae7
 INSERT INTO cargo_manifest VALUES (3, 5.3, 2019, 2, 211331635);
 INSERT INTO cargo_manifest VALUES (4, 5.3, 2018, 1, 211331643);
 INSERT INTO cargo_manifest VALUES (5, 5.3, 2021, 1, 211331678);
@@ -152,7 +125,6 @@ INSERT INTO cargo_manifest VALUES (7, 5.3, 2019, 2, 211331683);
 INSERT INTO cargo_manifest VALUES (8, 5.3, 2018, 2, 211331610);
 INSERT INTO cargo_manifest VALUES (9, 5.3, 2017, 1, 211331612);
 INSERT INTO cargo_manifest VALUES (10, 5.3, 2018, 2, 211331613);
-<<<<<<< HEAD
 INSERT INTO cargo_manifest VALUES (11, 5.3, 2020, 1, 211331620);
 INSERT INTO cargo_manifest VALUES (12, 5.3, 2020, 2, 210950000);
 INSERT INTO cargo_manifest VALUES (13, 5.3, 2019, 2, 211331635);
@@ -166,10 +138,6 @@ INSERT INTO cargo_manifest VALUES (20, 5.3, 2021, 2, 211331613);
 --US RUI
 INSERT INTO cargo_manifest VALUES (21, 5.3, 2021, 2, 210950000);
 INSERT INTO cargo_manifest VALUES (22, 5.3, 2021, 2, 210950000);
-=======
-
-SELECT * FROM cargo_manifest;
->>>>>>> fd6f281c7706263a42b29f1b059d86504d6d9ae7
 
 --INSERT TRIP--
 INSERT INTO trip VALUES (1, TO_DATE('01-01-2020 09:00', 'DD-MM-YYYY HH24-MI'), TO_DATE('01-03-2020 23:45', 'DD-MM-YYYY HH24-MI'), 1, 10, 211331620);
@@ -185,8 +153,6 @@ INSERT INTO trip VALUES (10, TO_DATE('05-12-2021 12:10', 'DD-MM-YYYY HH24-MI'), 
 INSERT INTO trip VALUES (11, TO_DATE('04-01-2022 09:00', 'DD-MM-YYYY HH24-MI'), TO_DATE('10-01-2022 11:40', 'DD-MM-YYYY HH24-MI'), 10, 1, 211331613);
 --211331624
 
-SELECT * FROM trip;
-
 --INSERT ARRIVAL--
 INSERT INTO arrival VALUES (1, 10, TO_DATE('30-12-2021 12:00', 'DD-MM-YYYY HH24-MI'), 10, 4, 1);
 INSERT INTO arrival VALUES (2, 9, TO_DATE('15-09-2021 00:15', 'DD-MM-YYYY HH24-MI'), 9, 3, 2);
@@ -196,16 +162,9 @@ INSERT INTO arrival VALUES (5, 6, TO_DATE('03-01-2021 13:00', 'DD-MM-YYYY HH24-M
 INSERT INTO arrival VALUES (6, 5, TO_DATE('29-12-2020 10:00', 'DD-MM-YYYY HH24-MI'), 5, 4, 6);
 INSERT INTO arrival VALUES (7, 4, TO_DATE('03-11-2020 23:45', 'DD-MM-YYYY HH24-MI'), 4, 9, 7);
 INSERT INTO arrival VALUES (8, 3, TO_DATE('03-09-2020 12:45', 'DD-MM-YYYY HH24-MI'), 3, 7, 8);
-<<<<<<< HEAD
 INSERT INTO arrival VALUES (9, 2, TO_DATE('03-03-2020 23:00', 'DD-MM-YYYY HH24-MI'), 2, 2, 3);
 INSERT INTO arrival VALUES (10, 1, TO_DATE('03-01-2020 09:00', 'DD-MM-YYYY HH24-MI'), 1, 11, 10);
 INSERT INTO arrival VALUES (19, 11, TO_DATE('10-01-2022 23:50', 'DD-MM-YYYY HH24-MI'), 20, 3, 9);
-=======
-INSERT INTO arrival VALUES (9, 2, TO_DATE('03-03-2020 23:00', 'DD-MM-YYYY HH24-MI'), 2, 3, 9);
-INSERT INTO arrival VALUES (10, 1, TO_DATE('03-01-2020 09:00', 'DD-MM-YYYY HH24-MI'), 1, 5, 10);
-
-SELECT * FROM arrival;
->>>>>>> fd6f281c7706263a42b29f1b059d86504d6d9ae7
 
 --INSERT SHIP_PORT--
 INSERT INTO ship_port VALUES (211331620, 1);
@@ -218,8 +177,8 @@ INSERT INTO ship_port VALUES (211331683, 5);
 INSERT INTO ship_port VALUES (211331610, 7);
 INSERT INTO ship_port VALUES (211331612, 9);
 INSERT INTO ship_port VALUES (211331613, 10);
-
-SELECT * FROM ship_port;
+INSERT INTO ship_port VALUES (211311111, 10);
+INSERT INTO ship_port VALUES (211311112, 10);
 
 --INSERT MESSAGE--
 INSERT INTO message VALUES (1, 12, 13, 355, 321.5, TO_DATE('01-01-2021 23:45', 'DD-MM-YYYY HH24-MI'), 1, 211331620);
@@ -233,8 +192,6 @@ INSERT INTO message VALUES (8, 12, 13, 355, 321.5, TO_DATE('10-01-2020 18:05', '
 INSERT INTO message VALUES (9, 12, 13, 355, 321.5, TO_DATE('11-09-2020 21:45', 'DD-MM-YYYY HH24-MI'), 9, 211331612);
 INSERT INTO message VALUES (10, 12, 13, 355, 321.5, TO_DATE('21-07-2019 00:35', 'DD-MM-YYYY HH24-MI'), 10, 211331613);
 
-SELECT * FROM message;
-
 --INSERT POS_CONTAINER--
 INSERT INTO pos_container VALUES (1, 0, 0, 0);
 INSERT INTO pos_container VALUES (2, 0, 0, 1);
@@ -246,15 +203,22 @@ INSERT INTO pos_container VALUES (7, 0, 0, 6);
 INSERT INTO pos_container VALUES (8, 0, 0, 7);
 INSERT INTO pos_container VALUES (9, 0, 0, 8);
 INSERT INTO pos_container VALUES (10, 0, 0, 9);
-
-
-SELECT * FROM pos_container;
+INSERT INTO pos_container VALUES (11, 0, 1, 0);
+INSERT INTO pos_container VALUES (12, 0, 1, 1);
+INSERT INTO pos_container VALUES (13, 0, 1, 2);
+INSERT INTO pos_container VALUES (14, 0, 1, 3);
+INSERT INTO pos_container VALUES (15, 0, 1, 4);
+INSERT INTO pos_container VALUES (16, 0, 1, 5);
+INSERT INTO pos_container VALUES (17, 0, 1, 6);
+INSERT INTO pos_container VALUES (18, 0, 1, 7);
+INSERT INTO pos_container VALUES (19, 0, 1, 8);
+INSERT INTO pos_container VALUES (20, 0, 1, 9);
+INSERT INTO pos_container VALUES (21, 0, 2, 0);
+INSERT INTO pos_container VALUES (22, 0, 2, 1);
 
 --INSERT CONTAINER_REFRIGERATED--
 INSERT INTO container_refrigerated VALUES (1, 7);
 INSERT INTO container_refrigerated VALUES (2, -5);
-
-SELECT * FROM container_refrigerated;
 
 --INSERT CONTAINER--
 INSERT INTO container VALUES (1, 124.2, 198.2, 876.4, 9, 1);
@@ -267,8 +231,18 @@ INSERT INTO container VALUES (7, 124.2, 198.2, 876.4, 3, 1);
 INSERT INTO container VALUES (8, 124.2, 198.2, 876.4, 2, 2);
 INSERT INTO container VALUES (9, 124.2, 198.2, 876.4, 1, 2);
 INSERT INTO container VALUES (10, 124.2, 198.2, 876.4, 0, 1);
-
-SELECT * FROM container;
+INSERT INTO container VALUES (11, 124.2, 198.2, 876.4, 9, 1);
+INSERT INTO container VALUES (12, 124.2, 198.2, 876.4, 8, 1);
+INSERT INTO container VALUES (13, 124.2, 198.2, 876.4, 7, 2);
+INSERT INTO container VALUES (14, 124.2, 198.2, 876.4, 6, 1);
+INSERT INTO container VALUES (15, 124.2, 198.2, 876.4, 5, 2);
+INSERT INTO container VALUES (16, 124.2, 198.2, 876.4, 4, 2);
+INSERT INTO container VALUES (17, 124.2, 198.2, 876.4, 3, 1);
+INSERT INTO container VALUES (18, 124.2, 198.2, 876.4, 2, 2);
+INSERT INTO container VALUES (19, 124.2, 198.2, 876.4, 1, 2);
+INSERT INTO container VALUES (20, 124.2, 198.2, 876.4, 0, 1);
+INSERT INTO container VALUES (21, 124.2, 198.2, 876.4, 1, 2);
+INSERT INTO container VALUES (22, 124.2, 198.2, 876.4, 1, 2);
 
 --INSERT CONTAINER_CARGO_MANIFEST--
 INSERT INTO container_cargo_manifest VALUES (1, 10, 1);
@@ -280,21 +254,27 @@ INSERT INTO container_cargo_manifest VALUES (6, 5, 6);
 INSERT INTO container_cargo_manifest VALUES (7, 4, 7);
 INSERT INTO container_cargo_manifest VALUES (8, 3, 8);
 INSERT INTO container_cargo_manifest VALUES (9, 2, 9);
-INSERT INTO container_cargo_manifest VALUES (10, 1, 10);
-
-SELECT * FROM container_cargo_manifest;
+INSERT INTO container_cargo_manifest VALUES (10, 4, 10);
+INSERT INTO container_cargo_manifest VALUES (11, 10, 11);
+INSERT INTO container_cargo_manifest VALUES (12, 10, 12);
+INSERT INTO container_cargo_manifest VALUES (13, 8, 13);
+INSERT INTO container_cargo_manifest VALUES (14, 8, 14);
+INSERT INTO container_cargo_manifest VALUES (15, 10, 15);
+INSERT INTO container_cargo_manifest VALUES (16, 5, 16);
+INSERT INTO container_cargo_manifest VALUES (17, 1, 17);
+INSERT INTO container_cargo_manifest VALUES (18, 3, 18);
+--INSERT INTO container_cargo_manifest VALUES (19, 2, 19);
+INSERT INTO container_cargo_manifest VALUES (20, 1, 20);
+INSERT INTO container_cargo_manifest VALUES (21, 2, 21);
+INSERT INTO container_cargo_manifest VALUES (22, 2, 22);
 
 --INSERT ROLE--
 INSERT INTO role VALUES (1, 'Client');
 INSERT INTO role VALUES (2, 'Administrator');
 
-SELECT * FROM role;
-
 --INSERT USER--
 INSERT INTO "User" VALUES ('jgd', '2dr4', 10, 1);
 INSERT INTO "User" VALUES ('jgv', '2de5', 11, 2);
-
-SELECT * FROM "User";
 
 --INSERT SHIP_CREW--
 INSERT INTO ship_crew VALUES (1, 211331620);
@@ -308,7 +288,6 @@ INSERT INTO ship_crew VALUES (2, 211331683);
 INSERT INTO ship_crew VALUES (1, 211331612);
 INSERT INTO ship_crew VALUES (2, 211331612);
 
-<<<<<<< HEAD
 --INSERT INTO Client--
 INSERT INTO Client VALUES (1, 'Tiago');
 INSERT INTO Client VALUES (2, 'Rui');
@@ -344,6 +323,3 @@ INSERT INTO Container_Client VALUES (20, 1);
 INSERT INTO Container_Client VALUES (21, 2);
 INSERT INTO Container_Client VALUES (21, 3);
 INSERT INTO Container_Client VALUES (22, 1);
-=======
-SELECT * FROM ship_crew;
->>>>>>> fd6f281c7706263a42b29f1b059d86504d6d9ae7
