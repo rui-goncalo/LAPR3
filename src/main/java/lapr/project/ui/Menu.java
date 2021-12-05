@@ -42,6 +42,9 @@ public class Menu {
 
     private static Ship currentShip = null;
 
+    /**
+     * Opens the main menu with all the options for users.
+    */
     public static void mainMenu() {
         try (Scanner sc = new Scanner(System.in)) {
             int choice;
@@ -84,6 +87,11 @@ public class Menu {
         }
     }
 
+    /**
+     * Opens the menu for imports.
+     * 
+     * @param sc scanner to read input from the user
+    */
     private static void menuImport(Scanner sc) {
         int choice;
 
@@ -142,7 +150,11 @@ public class Menu {
         }
     }
 
-
+    /**
+     * Opens the menu for managing Ships.
+     * 
+     * @param sc scanner to read input from the user
+     */
     private static void menuManageShips(Scanner sc) {
         int choice;
 
@@ -232,6 +244,11 @@ public class Menu {
         } while (choice != 0);
     }
 
+    /**
+     * Opens the menu for searching ships.
+     * 
+     * @param sc scanner to read input from the user
+     */
     private static void menuSearch(Scanner sc) {
         int choice;
         Scanner scan = new Scanner(System.in);
@@ -279,6 +296,11 @@ public class Menu {
         } while (choice != 0);
     }
 
+    /**
+     * Opens the menu for acessing ship information.
+     * 
+     * @param sc scanner to read input from the user
+     */
     private static void menuShowShip(Scanner sc) {
         int choice;
 
@@ -306,6 +328,11 @@ public class Menu {
     }
 
 
+    /**
+     * Opens the menu for database queries.
+     * 
+     * @param sc scanner to read input from the user
+     */
     private static void dbQueriesMenu(Scanner sc) {
         int choice;
         Scanner scan = new Scanner(System.in);
@@ -354,6 +381,13 @@ public class Menu {
             } while (choice != 0);
         }
 
+    /**
+     * Utility to print the front menu in an organized manner.
+     * 
+     * @param title menu title to be shown
+     * @param options number of options
+     * @param showExit whether to show exit option or not
+     */
     private static void printFrontMenu(String title, String[] options, boolean showExit) {
 
         System.out.println(
@@ -374,6 +408,13 @@ public class Menu {
 
     }
 
+    /**
+     * Utility to print the menus in an organized manner.
+     * 
+     * @param title menu title to be shown
+     * @param options number of options
+     * @param showExit whether to show exit option or not
+     */
     private static void printMenu(String title, String[] options, boolean showExit) {
 
         System.out.println(
@@ -391,6 +432,13 @@ public class Menu {
 
     }
 
+    /**
+     * Prompts for and veriies the user input.
+     * 
+     * @param prompt Prompt to be shown to the user
+     * @param optionCount user input
+     * @return user input
+     */
     private static int getInput(String prompt, Scanner optionCount) {
         System.out.print(prompt);
         while (!optionCount.hasNextInt()) {
@@ -402,6 +450,9 @@ public class Menu {
         return optionCount.nextInt();
     }
 
+    /**
+     * Inserts the ships from shipArray into the trees.
+     */
     private static void insertShips() {
         for (Ship ship : Menu.shipArray) {
             Menu.mmsiAVL.insert(new ShipMMSI(ship));
@@ -410,6 +461,9 @@ public class Menu {
         }
     }
 
+    /**
+     * Generates ship summaries.
+     */
     private static void generateSummaries() {
         for (Ship ship : shipArray) {
             ship.setSummary(new Summary(ship));
@@ -418,6 +472,11 @@ public class Menu {
         System.out.println("Summaries created.");
     }
 
+    /**
+     * Returns the top n ships in most distance travelled.
+     * 
+     * @param n number of ships to return.
+     */
     private static void getTopNShips(int n) {
         if (n > shipArray.size()) {
             System.out.println("The chosen number is great than the amount of ships available.");
@@ -430,6 +489,11 @@ public class Menu {
         }
     }
 
+    /**
+     * Inserts ports from the portsArray into the KDtree.
+     * 
+     * @return false if collection is empty or true if it sucessfully inserted
+     */
     private static boolean insertPorts() {
 
         if (portsArray == null) return false;
@@ -442,7 +506,12 @@ public class Menu {
         portTree.buildTree(nodesPorts);
         return true;
     }
-
+    
+    /**
+     * Prints a ship's summary.
+     * 
+     * @param summaryShip ship summary to be printed
+     */
     private static void printSummary(Summary summaryShip) {
         System.out.println("\nDeparture Latitude: " + summaryShip.getDepartLat() + "\nDeparture Longitude: " + summaryShip.getDepartLon() +
                 "\nArrival Latitude: " + summaryShip.getArrLat() + "\nArrival Longitude: " + summaryShip.getArrLon());
