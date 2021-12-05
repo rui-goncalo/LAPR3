@@ -7,6 +7,7 @@ import lapr.project.utils.*;
 
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -16,6 +17,14 @@ import java.util.Scanner;
  * @author João Teixeira - 1180590
  */
 public class Menu {
+
+    // Declaring ANSI_RESET so that we can reset the color
+    public static final String ANSI_RESET = "\u001B[0m";
+
+    // Declaring the color
+    // Custom declaration
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_RED_BACKGROUND = "\u001B[41m";
 
     private static final String BIG_SHIP_FILE = "src/data/bships.csv";
     private static final String SMALL_SHIP_FILE = "src/data/sships.csv";
@@ -34,36 +43,54 @@ public class Menu {
     private static Ship currentShip = null;
 
     public static void mainMenu() {
-        int choice;
-        do {
-            String[] options = {"Exit\n", "Imports", "Manages"};
-            printMenu("Main Menu", options, true);
-            choice = getInput("Please make a selection", 3);
+        try (Scanner sc = new Scanner(System.in)) {
+            int choice;
+            do {
+                String[] options = {"Exit\n", "Imports", "Management"};
+                printFrontMenu("Main Menu", options, true);
 
-            switch (choice) {
-                case 0:
-                    break;
-                case 1:
-                    menuImport();
-                    break;
-                case 2:
-                    if (shipArray.isEmpty()) {
-                        System.out.println("Please import Ships and Ports first.");
+                choice = getInput("Please make a selection: ", sc);
+
+                switch (choice) {
+                    case 0:
                         break;
-                    }
-                    menuManageShips();
-                    break;
-            }
+                    case 1:
+                        menuImport(sc);
+                        break;
+                    case 2:
+                        if (shipArray.isEmpty() && portsArray.isEmpty()) {
+                            System.out.println(ANSI_RED_BACKGROUND
+                                    + "Please import Ships and Ports first."
+                                    + ANSI_RESET);
+                            break;
+                        }
+                        if (shipArray.isEmpty()) {
+                            System.out.println(ANSI_RED_BACKGROUND
+                                    + "Please import Ships first."
+                                    + ANSI_RESET);
+                            break;
+                        }
+                        if (portsArray.isEmpty()) {
+                            System.out.println(ANSI_RED_BACKGROUND
+                                    + "Please import Ports first."
+                                    + ANSI_RESET);
+                            break;
+                        }
+                        menuManageShips(sc);
+                        break;
+                }
 
-        } while (choice != 0);
+            } while (choice != 0);
+        }
     }
 
-    private static void menuImport() {
+    private static void menuImport(Scanner sc) {
         int choice;
 
-        String[] options = {"Go Back\n", "Small Ship File", "Big Ship File", "Small Ports File", "Big Ports File", "Custom File"};
+        String[] options = {"Go Back\n", "Small Ship File CSV", "Big Ship File CSV\n", "Small Ports File CSV", "Big Ports File CSV",};
         printMenu("Import Ships", options, true);
-        choice = getInput("Please make a selection", 3);
+
+        choice = getInput("Please make a selection: ", sc);
 
         switch (choice) {
             case 0:
@@ -112,39 +139,19 @@ public class Menu {
                     e.printStackTrace();
                 }
                 break;
-            case 5:
-                retrieveFilePath();
-                break;
         }
     }
 
-    private static void insertPorts() {
-        if (!portsArray.isEmpty()) {
-            portsArray.clear();
-        }
 
-        if (portsArray == null) menuImport();
-
-        List<KDTree.Node<Port>> nodesPorts = new ArrayList<>();
-        for (Port port : portsArray) {
-            KDTree.Node<Port> node = new KDTree.Node<>(port.getLat(), port.getLon(), port);
-            nodesPorts.add(node);
-        }
-        portTree.buildTree(nodesPorts);
-    }
-
-
-    private static void menuManageShips() {
+    private static void menuManageShips(Scanner sc) {
         int choice;
 
         do {
 
-            String[] options = {"Go Back\n", "Show all Ships", "Search by Ship", "Search Ship Pairs",
-                    "Create Summary of Ships", "Get TOP N Ships", "Get Nearest Port", "Querys DV"};
+            String[] options = {"Go Back\n", "Show all Ships", "Search by Ship", "Search Ship Pairs\n",
+                    "Create Summary of Ships", "View Summaries by Ship" ,"Get TOP N Ships\n", "Get Nearest Port", "Querys DB"};
             printMenu("Manage Ships", options, true);
-            choice = getInput("Please make a selection", 3);
-
-            Scanner sc = new Scanner(System.in);
+            choice = getInput("Please make a selection: ", sc);
 
             switch (choice) {
                 case 0:
@@ -155,7 +162,7 @@ public class Menu {
                     }
                     break;
                 case 2:
-                    menuSearch();
+                    menuSearch(sc);
                     break;
                 case 3:
                     ArrayList<Calculator.ShipPair> pairs = Calculator.searchShipPairs(shipArray);
@@ -164,52 +171,75 @@ public class Menu {
                     }
                     break;
                 case 4:
-                    generateReports();
+                    generateSummaries();
                     break;
                 case 5:
-                    if (shipArray.get(0).getSummary() == null) {
-                        System.out.println("Reports must be created first.");
-                        break;
+                    Ship currentShip = null;
+                    choice = getInput("Ship's MMSI: ", sc);
+                    for (Ship ship: shipArray) {
+                        if (ship.getMmsi() == choice) {
+                            currentShip = ship;
+                        }
                     }
-                    int option = readInt(sc, "TOP N Ships:\nN = ");
-                    getTopNShips(option);
+
+                    if (currentShip != null) {
+                        if (currentShip.getSummary() != null) {
+                            printSummary(currentShip.getSummary());
+                        } else {
+                            System.out.println(ANSI_RED_BACKGROUND
+                                    + "Please import Summaries first."
+                                    + ANSI_RESET);
+                        }
+                    } else {
+                        System.out.println(ANSI_RED_BACKGROUND
+                                + "Sorry, no Ship found with this MMSI."
+                                + ANSI_RESET);
+                    }
                     break;
                 case 6:
-                    LocalDateTime date;
+                    if (shipArray.get(0).getSummary() == null) {
+                        System.out.println("Summaries must be created first.");
+                        break;
+                    }
+                    choice = getInput("TOP N Ships:\nN = ", sc);
+                    getTopNShips(choice);
+                    break;
+                case 7:
+                    Scanner scanner = new Scanner(System.in);
+                    System.out.print(" > Please insert ship's CallSign: ");
+                    String callSign = scanner.nextLine();
 
-                    System.out.print(" > Please insert ship's CallSign:");
-                    String callSign = sc.nextLine();
                     if (csAVL.find(new ShipCallSign(callSign)) != null) {
                         currentShip = csAVL.find(new ShipCallSign(callSign));
-                        date = DateMenu.readDate(sc, "Insert date: ");
+                        LocalDateTime date = DateMenu.readDate(scanner, "Insert date: ");
                         ShipData data = currentShip.getDataByDate(date);
+
                         if (data != null) {
                             Port nearestPort = portTree.findNearestNeighbour(
                                     data.getLatitude(),
                                     data.getLongitude());
-                            System.out.println(nearestPort.getName());
+                            System.out.println("Nearest Port: " + nearestPort.getName());
                         }
-
                     } else {
                         System.out.println("Ship not found");
                     }
                     break;
-                case 7:
-                    dbQueriesMenu();
+                case 8:
+                    dbQueriesMenu(sc);
                     break;
             }
 
         } while (choice != 0);
     }
 
-    private static void menuSearch() {
+    private static void menuSearch(Scanner sc) {
         int choice;
         Scanner scan = new Scanner(System.in);
 
         do {
-            String[] options = {"Go Back\n", "> Search by MMSI", "> Search by IMO", "> Search by Call Sign"};
+            String[] options = {"Go Back\n", "Search by MMSI", "Search by IMO", "Search by Call Sign"};
             printMenu("Search Ship", options, true);
-            choice = getInput("Please make a selection", 4);
+            choice = getInput("Please make a selection: ", sc);
 
             switch (choice) {
                 case 0:
@@ -219,7 +249,7 @@ public class Menu {
                     String mmsi = scan.nextLine();
                     if (mmsiAVL.find(new ShipMMSI(Integer.parseInt(mmsi))) != null) {
                         Menu.currentShip = mmsiAVL.find(new ShipMMSI(Integer.parseInt(mmsi)));
-                        menuShowShip();
+                        menuShowShip(sc);
                     } else {
                         System.out.println("Ship not found");
                     }
@@ -229,7 +259,7 @@ public class Menu {
                     String imo = scan.nextLine();
                     if (imoAVL.find(new ShipIMO(Integer.parseInt(imo))) != null) {
                         Menu.currentShip = imoAVL.find(new ShipIMO(Integer.parseInt(imo)));
-                        menuShowShip();
+                        menuShowShip(sc);
                     } else {
                         System.out.println("Ship not found");
                     }
@@ -239,7 +269,7 @@ public class Menu {
                     String callSign = scan.nextLine();
                     if (csAVL.find(new ShipCallSign(callSign)) != null) {
                         Menu.currentShip = csAVL.find(new ShipCallSign(callSign));
-                        menuShowShip();
+                        menuShowShip(sc);
                     } else {
                         System.out.println("Ship not found");
                     }
@@ -249,14 +279,14 @@ public class Menu {
         } while (choice != 0);
     }
 
-    private static void menuShowShip() {
+    private static void menuShowShip(Scanner sc) {
         int choice;
 
         do {
 
-            String[] options = {"Go Back\n", "> Current Ship Information", "> Current Ship Records"};
+            String[] options = {"Go Back\n", "Current Ship Information", "Current Ship Records"};
             printMenu("Show Ship", options, true);
-            choice = getInput("Please make a selection", 3);
+            choice = getInput("Please make a selection: ", sc);
 
 
             switch (choice) {
@@ -276,24 +306,22 @@ public class Menu {
     }
 
 
-    private static void dbQueriesMenu() {
+    private static void dbQueriesMenu(Scanner sc) {
         int choice;
         Scanner scan = new Scanner(System.in);
 
             do {
-                String[] options = {"Go Back\n", "> US204", "> SELECT * FROM SHIP"};
+                String[] options = {"Go Back\n", "Current situation of a specific container", "Containers to be offloaded in the next Port"};
                 printMenu("Show Ships", options, true);
-                choice = getInput("Please make a selection", 3);
+                choice = getInput("Please make a selection: ", sc);
 
                 switch (choice) {
                     case 1:
-                        System.out.println("Número do Container: ");
+                        System.out.println("Container Number: ");
 
                         DBUtils.getCurrentContainerInfo(scan.nextInt());
                         break;
                     case 2:
-
-                    case 3:
                         System.out.print("Please insert ship mmsi: ");
 
                         int mmsi = scan.nextInt();
@@ -301,37 +329,16 @@ public class Menu {
                         if (mmsiAVL.find(new ShipMMSI(mmsi)) != null) {
                             currentShip = mmsiAVL.find(new ShipMMSI(mmsi));
 
-                            Port nearestPort = null;
                             ShipData data = currentShip.getLastDynamicData();
                             if (data != null) {
-                                nearestPort = portTree.findNearestNeighbour(
+                                Port nearestPort = portTree.findNearestNeighbour(
                                         data.getLatitude(),
                                         data.getLongitude());
-                                System.out.println(nearestPort.getName());
+                                System.out.println("Nearest Port: " + nearestPort.getName());
                             }
-
-
                         } else {
                             System.out.println("Ship not found");
                         }
-                        break;
-                    case 4:
-                        //TODO: US205
-                        break;
-                    case 5:
-                        //TODO: US206
-                        break;
-                    case 6:
-                        //TODO: US207
-                        break;
-                    case 7:
-                        //TODO: US208
-                        break;
-                    case 8:
-                        //TODO: US209
-                        break;
-                    case 9:
-                        //TODO: US210
                         break;
                     case 0:
 //                        try {
@@ -341,42 +348,58 @@ public class Menu {
 //                        }
                         break;
                     default:
-                        System.out.println("Invalid option, choose again.");
+                        System.out.println("Sorry, this option is invalid.");
                         break;
                 }
             } while (choice != 0);
         }
 
+    private static void printFrontMenu(String title, String[] options, boolean showExit) {
 
-    private static int getInput(String prompt, int optionCount) {
-        Scanner scan = new Scanner(System.in);
-        int choice = -1;
-        while (choice < 1 || choice > optionCount) {
-            try {
-                System.out.print(" > " + prompt + ": ");
-                choice = Integer.parseInt(scan.nextLine());
-                break;
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid selection. Please try again.");
+        System.out.println(
+                "\n+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+\n" +
+                        "           CARGO APP 103 > " + title +
+                        "\n+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+");
+
+        for (int i = 0; i < options.length; i++) {
+            if (i == 0 && showExit || i > 0) {
+                System.out.println("  " + i + " > " + options[i]);
             }
         }
-        return choice;
+
+        System.out.println(ANSI_YELLOW
+                + "\n   Note: Please import ships and ports first."
+                + ANSI_RESET);
+        System.out.println("+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+");
+
     }
 
-    private static void retrieveFilePath() {
-        if (!shipArray.isEmpty()) {
-            shipArray.clear();
+    private static void printMenu(String title, String[] options, boolean showExit) {
+
+        System.out.println(
+                "\n+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+\n" +
+                        "  CARGO APP 103 > " + title +
+                        "\n+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+");
+
+        for (int i = 0; i < options.length; i++) {
+            if (i == 0 && showExit || i > 0) {
+                System.out.println("  " + i + " > " + options[i]);
+            }
         }
-        System.out.print(" > Please insert file path: ");
-        Scanner scan = new Scanner(System.in);
-        String path = scan.nextLine();
-        try {
-            Menu.shipArray = CSVReaderUtils.readShipCSV(path);
-            insertShips();
-        } catch (Exception e) {
-            System.out.println("> Invalid path, please try again.");
-            retrieveFilePath();
+
+        System.out.println("+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+");
+
+    }
+
+    private static int getInput(String prompt, Scanner optionCount) {
+        System.out.print(prompt);
+        while (!optionCount.hasNextInt()) {
+            System.out.println("Invalid input.");
+            optionCount.next();
+            System.out.print(prompt);
         }
+
+        return optionCount.nextInt();
     }
 
     private static void insertShips() {
@@ -387,40 +410,12 @@ public class Menu {
         }
     }
 
-    private static void printMenu(String title, String[] options, boolean showExit) {
-
-        System.out.println(
-                "\n\n\n+-------------------------------+\n" +
-                        "  CARGO APP 103 > " + title +
-                        "\n+-----------------------------+");
-
-        for (int i = 0; i < options.length; i++) {
-            if (i == 0 && showExit || i > 0) {
-                System.out.println("  " + i + " > " + options[i]);
-            }
-        }
-
-        System.out.println("+-----------------------------+");
-
-    }
-
-    public static int readInt(Scanner sc, String msg) {
-        System.out.print(msg);
-        while (!sc.hasNextInt()) {
-            System.out.println("Invalid input.");
-            sc.next();
-            System.out.print(msg);
-        }
-
-        return sc.nextInt();
-    }
-
-    private static void generateReports() {
+    private static void generateSummaries() {
         for (Ship ship : shipArray) {
             ship.setSummary(new Summary(ship));
         }
         shipArray.sort(new ShipCompare().reversed());
-        System.out.println("Reports created.");
+        System.out.println("Summaries created.");
     }
 
     private static void getTopNShips(int n) {
@@ -428,11 +423,36 @@ public class Menu {
             System.out.println("The chosen number is great than the amount of ships available.");
             return;
         }
-
         System.out.println();
         for (int i = 0; i < n; i++) {
             Ship current = shipArray.get(i);
             System.out.printf("- %.5fkm - %s\n", current.getSummary().getTravelledDistance(), current.getName());
         }
+    }
+
+    private static boolean insertPorts() {
+
+        if (portsArray == null) return false;
+
+        List<KDTree.Node<Port>> nodesPorts = new ArrayList<>();
+        for (Port port : portsArray) {
+            KDTree.Node<Port> node = new KDTree.Node<>(port.getLat(), port.getLon(), port);
+            nodesPorts.add(node);
+        }
+        portTree.buildTree(nodesPorts);
+        return true;
+    }
+
+    private static void printSummary(Summary summaryShip) {
+        System.out.println("\nDeparture Latitude: " + summaryShip.getDepartLat() + "\nDeparture Longitude: " + summaryShip.getDepartLon() +
+                "\nArrival Latitude: " + summaryShip.getArrLat() + "\nArrival Longitude: " + summaryShip.getArrLon());
+
+        System.out.print("Departure time: " + summaryShip.getDepartureTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) +
+                "\nArrival time: " + summaryShip.getArrivalTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+
+        System.out.print("\nTravel's Time: " + summaryShip.getDays() + " days " + summaryShip.getHours() + " hours " + summaryShip.getMinutes() + " minutes" +
+                "\nMax | Mean SOG: " + summaryShip.getMaxSog() + " | " + summaryShip.getMeanSog() +
+                "\nMax | Mean COG: " + summaryShip.getMaxCog() + " | " + summaryShip.getMeanCog());
+        System.out.printf("\nTravelled distance: %.2fkm\nDelta distance: %.2fkm\n", summaryShip.getTravelledDistance(), summaryShip.getDeltaDistance());
     }
 }
