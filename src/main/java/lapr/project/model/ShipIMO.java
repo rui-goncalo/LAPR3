@@ -33,6 +33,13 @@ public class ShipIMO extends Ship implements Comparable<ShipIMO> {
         super(0, null, null, imo, null, 0, 0, 0, 0, 0);
     }
 
+    /**
+     * Override of Object compareTo method
+     * @param o ShipImo to compare to
+     * @return a value greater than 0 if the first IMO is greater than the other;
+     *         a value less than 0 if the the first IMO is less than the other
+     *         0 if both values are equal
+     */
     @Override
     public int compareTo(ShipIMO o) {
         return Integer.compare(this.getImo(), o.getImo());

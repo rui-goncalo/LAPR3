@@ -1,10 +1,11 @@
-package lapr.project.utils;
+package lapr.project.ui;
+
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
-public class DateUtils {
+public class DateMenu {
     /**
      * Reads a Date from user input with error checking
      *

@@ -33,6 +33,14 @@ public class ShipCallSign extends Ship implements Comparable<ShipCallSign> {
         super(0, null, null, 0, callSign, 0, 0, 0, 0, 0);
     }
 
+    /**
+     * Override of Object compareTo method
+     * 
+     * @param o ShipCallSign to compare to
+     * @return returns a positive integer if the first CallSign is lexicographically greater than the other;
+     *         returns a negative integer for the opposite
+     *         returns 0 if they're lexicographically equal
+     */
     @Override
     public int compareTo(ShipCallSign o) {
         return this.getCallSign().compareTo(o.getCallSign());

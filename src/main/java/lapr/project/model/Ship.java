@@ -268,13 +268,12 @@ public class Ship {
     }
 
     public ShipData getDataByDate(LocalDateTime date) {
-        ShipData foundData = null;
         for (ShipData data : this.dynamicShip) {
             LocalDateTime currentDate = data.getDateTime();
             if (currentDate.isEqual(date)) {
-                foundData = data;
+                return data;
             }
         }
-        return foundData;
+        return null;
     }
 }

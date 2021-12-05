@@ -7,7 +7,11 @@ import lapr.project.model.ShipData;
 import java.util.ArrayList;
 
 public class Calculator {
-
+    
+    private static final double MINUTES_IN_A_DEGREE = 60;
+    private static final double NAUTICAL_MILES_TO_STATUTE_MILES = 1.1515;
+    private static final double STATUTE_MILES_TO_KILOMETERS = 1.609344;
+    
     /**
      * Calculates distance between two latitude and longitude points and
      * convert it to a distance in kilometers. Uses Haversine method as its base.
@@ -27,8 +31,8 @@ public class Calculator {
             double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
             dist = Math.acos(dist);
             dist = Math.toDegrees(dist);
-            dist = dist * 60 * 1.1515;
-            dist = dist * 1.609344;
+            dist = dist * MINUTES_IN_A_DEGREE * NAUTICAL_MILES_TO_STATUTE_MILES;
+            dist = dist * STATUTE_MILES_TO_KILOMETERS;
             return dist;
         }
     }

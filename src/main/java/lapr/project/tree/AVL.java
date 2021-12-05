@@ -1,25 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lapr.project.tree;
 
-/**
- *
- * @author DEI-ESINF
- * @param <E>
- */
 public class AVL <E extends Comparable<E>> extends BST<E> {
 
     private int balanceFactor(Node<E> node){
-        int heightLeft = 0;
-        int heightRight = 0;
-
-        if (node.getLeft() != null) heightLeft = height(node.getLeft());
-        if (node.getRight() != null) heightRight = height(node.getRight());
-        int balanceFactor = heightRight - heightLeft;
-        return balanceFactor;
+        return height(node.getRight()) - height(node.getLeft());
     }
 
     private Node<E> rightRotation(Node<E> node){
@@ -71,14 +55,18 @@ public class AVL <E extends Comparable<E>> extends BST<E> {
     public void insert(E element){
         root = insert(element, root);
     }
-    private Node<E> insert(E element, Node<E> node){
-        if (node == null) return new Node(element, null, null);
-        if (node.getElement() != element){
-            if (element.compareTo(node.getElement()) > 0){
+
+
+    private Node<E> insert(E element, Node<E> node) {
+        if (node == null) {
+            return new Node<>(element, null, null);
+        }
+        if (node.getElement() != element) {
+            if (element.compareTo(node.getElement()) > 0) {
                 node.setRight(insert(element, node.getRight()));
-                node = balanceNode(node);
+                node=balanceNode(node);
             }
-            if (element.compareTo(node.getElement()) < 0){
+            if (element.compareTo(node.getElement()) < 0) {
                 node.setLeft(insert(element, node.getLeft()));
                 node = balanceNode(node);
             }
