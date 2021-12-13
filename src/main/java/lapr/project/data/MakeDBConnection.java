@@ -27,12 +27,11 @@ public class MakeDBConnection {
             System.out.println("Failed initialize inputStream for application.properties: " + e);
         }
 
-        String url = System.getProperty("database.url");
-        String username = System.getProperty("database.username");
-        String password = System.getProperty("database.password");
-
         try {
-            Connection connection = DriverManager.getConnection(url, username, password);
+            Connection connection = DriverManager.getConnection(
+                    System.getProperty("database.url"),
+                    System.getProperty("database.username"),
+                    System.getProperty("database.password"));
             connection.setAutoCommit(false);
             return connection;
         } catch (SQLException e) {
