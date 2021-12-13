@@ -35,11 +35,11 @@ public class PortTest {
 
         @Test
         public void testGetLat() {
-            assertEquals(53.46666667, newPort.getLat());
+            assertEquals(53.46666667, newPort.getLatitude());
         }
 
         @Test
         public void testGetLon() {
-            assertEquals(-3.033333333, newPort.getLon());
+            assertEquals(-3.033333333, newPort.getLongitude());
         }
 }

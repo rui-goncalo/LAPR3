@@ -1,8 +1,6 @@
 package lapr.project.utils;
 
-import lapr.project.model.Port;
-import lapr.project.model.Ship;
-import lapr.project.model.ShipData;
+import lapr.project.model.*;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -17,6 +15,8 @@ import java.util.stream.Collectors;
  */
 public final class CSVReaderUtils {
 
+    private static final String COUNTRIES_FILE = "src/data/countries.csv";
+
     /**
      * Private constructor of CSVReaderUtils.
      */
@@ -24,7 +24,7 @@ public final class CSVReaderUtils {
     }
 
     /**
-     * Read a CSV file and creates an ArrayList of ships.
+     * Reads a CSV file and creates an ArrayList of ships.
      *
      * @param path - CSV file.
      * @return an ArrayList filled with ships and their dynamic data.
@@ -81,7 +81,13 @@ public final class CSVReaderUtils {
         return sortByDate(shipArray);
     }
 
-
+    /**
+     * Reads a CSV file and creates an ArrayList of Ports.
+     *
+     * @param path - CSV file.
+     * @return an ArrayList filled with ports data.
+     * @throws Exception if the file path doesn't exist.
+     */
     public static ArrayList<Port> readPortCSV(String path) {
         ArrayList<Port> portArrayList = new ArrayList<>();
 
@@ -103,6 +109,112 @@ public final class CSVReaderUtils {
             return portArrayList;
         } catch (Exception e) {
             System.out.println("No ports were imported - Try again.\n");
+            return null;
+        }
+    }
+
+    /**
+     * Reads a CSV file and creates an ArrayList of Countries.
+     * Note: Added an ID for each Country.
+     *
+     * @param path - CSV file.
+     * @return an ArrayList filled with countries data.
+     * @throws Exception if the file path doesn't exist.
+     */
+    public static ArrayList<Country> readCountryCSV(String path) {
+        ArrayList<Country> countryArrayList = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            String line = br.readLine();
+            int counter = 0; // Country id counter
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+
+                Country newCountry = new Country(
+                        counter,
+                        values[3],
+                        values[1],
+                        values[2],
+                        values[0],
+                        values[5],
+                        Double.parseDouble(values[4]),
+                        Double.parseDouble(values[6]),
+                        Double.parseDouble(values[7]));
+
+                countryArrayList.add(newCountry);
+                counter++;
+            }
+            return countryArrayList;
+        } catch (Exception e) {
+            System.out.println("No countries were imported - Try again.\n");
+            return null;
+        }
+    }
+
+    /**
+     * Reads a CSV file and creates an ArrayList of Borders.
+     *
+     * @param path - CSV file.
+     * @return an ArrayList filled with borders data.
+     * @throws Exception if the file path doesn't exist.
+     */
+    public static ArrayList<Border> readBordersCSV(String path) {
+        ArrayList<Border> borderArrayList = new ArrayList<>();
+        ArrayList<Country> countryArrayList = readCountryCSV(COUNTRIES_FILE);
+
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            String line = br.readLine();
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+                Country country1 = null;
+                Country country2 = null;
+                for (Country country : countryArrayList) {
+
+                    if (country.getName().equals(values[0])) {
+                        country1 = country;
+                    } if (country.getName().equals(values[1].replaceFirst(" ", ""))) {
+                        country2 = country;
+
+                    }
+                }
+
+                Border newBorder = new Border(country1, country2);
+                borderArrayList.add(newBorder);
+            }
+            return borderArrayList;
+        } catch (Exception e) {
+            System.out.println("No borders were imported - Try again.\n");
+            return null;
+        }
+    }
+
+    /**
+     * Reads a CSV file and creates an ArrayList of Seadists.
+     *
+     * @param path - CSV file.
+     * @return an ArrayList filled with sea distances data.
+     * @throws Exception if the file path doesn't exist.
+     */
+    public static ArrayList<Seadists> readSeadistsCSV(String path) {
+        ArrayList<Seadists> seadistsArrayList = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            String line = br.readLine();
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+                Seadists newBorders = new Seadists(
+                        values[0],
+                        Integer.parseInt(values[1]),
+                        values[2],
+                        values[3],
+                        Integer.parseInt(values[4]),
+                        values[5],
+                        Integer.parseInt(values[6]));
+                seadistsArrayList.add(newBorders);
+            }
+            return seadistsArrayList;
+        } catch (Exception e) {
+            System.out.println("No seadists were imported - Try again.\n");
             return null;
         }
     }

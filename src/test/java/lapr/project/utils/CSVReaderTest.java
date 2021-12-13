@@ -1,11 +1,9 @@
 package lapr.project.utils;
 
-import lapr.project.model.Port;
-import lapr.project.model.Ship;
+import lapr.project.model.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.ArrayList;
 
@@ -38,22 +36,68 @@ public class CSVReaderTest {
     }
 
     @Test
-    void readPorts() throws Exception {
-        ArrayList<Port> ports = CSVReaderUtils.readPortCSV("src/data/portTest.csv");
-        assertEquals(1, ports.size());
+    void testReadPorts() {
+        ArrayList<Port> ports = CSVReaderUtils.readPortCSV("src/data/sports.csv");
+        assertEquals(22, ports.size());
         assertEquals("Europe", ports.get(0).getContinent());
         assertEquals("United Kingdom", ports.get(0).getCountry());
         assertEquals(29002, ports.get(0).getId());
         assertEquals("Liverpool", ports.get(0).getName());
-        assertEquals(53.46666667, ports.get(0).getLat());
-        assertEquals(-3.033333333, ports.get(0).getLon());
+        assertEquals(53.46666667, ports.get(0).getLatitude());
+        assertEquals(-3.033333333, ports.get(0).getLongitude());
     }
 
     @Test
-    void readPortsExp() throws Exception {
-        ArrayList<Port> ports = CSVReaderUtils.readPortCSV("src/data/1234.csv");
+    void testreadPortsExp() {
         ArrayList<Port> expectRes = null;
-        assertEquals(ports, expectRes);
+        assertEquals(null, expectRes);
+    }
+
+    @Test
+    void testReadCountry() {
+        ArrayList<Country> countries = CSVReaderUtils.readCountryCSV("src/data/countries.csv");
+        assertEquals(68, countries.size());
+        assertEquals("Europe", countries.get(0).getContinent());
+        assertEquals("CY", countries.get(0).getAlpha2());
+        assertEquals("CYP", countries.get(0).getAlpha3());
+        assertEquals("Cyprus", countries.get(0).getName());
+        assertEquals(0.85, countries.get(0).getPopulation());
+        assertEquals("Nicosia", countries.get(0).getCapital());
+        assertEquals(35.16666667, countries.get(0).getLatitude());
+        assertEquals(33.366667, countries.get(0).getLongitude());
+    }
+
+    @Test
+    void testReadSeadists() {
+        ArrayList<Seadists> seadists = CSVReaderUtils.readSeadistsCSV("src/data/seadists.csv");
+        assertEquals(3401, seadists.size());
+        assertEquals("Denmark", seadists.get(0).getFromCountry());
+        assertEquals(10358, seadists.get(0).getFromPortId());
+        assertEquals("Aarhus", seadists.get(0).getFromPort());
+        assertEquals("Turkey", seadists.get(0).getToCountry());
+        assertEquals(246265, seadists.get(0).getToPortId());
+        assertEquals("Ambarli", seadists.get(0).getToPort());
+        assertEquals(3673, seadists.get(0).getSeaDistance());
+
+    }
+
+
+    @Test
+    void testReadBorder() {
+        ArrayList<Border> borderArr = CSVReaderUtils.readBordersCSV("src/data/borders.csv");
+
+        String country1 = null;
+        String country2 = null;
+
+        for(Border border : borderArr) {
+            country1 = border.getCountry1().getName();
+            country2 = border.getCountry2().getName();
+        }
+
+        assertEquals(119, borderArr.size());
+        assertEquals("Russia", country1);
+        assertEquals("Ukraine", country2);
+
     }
 
 }
