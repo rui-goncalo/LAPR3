@@ -56,7 +56,7 @@ public class AdjacencyMatrixGraphTest {
 
         Iterator<String> itEdge = instance.edges().iterator();
 
-        assertEquals("", itEdge.hasNext());
+        assertEquals(false, itEdge.hasNext());
 
         for (int i = 1; i < 5; i++)
             instance.insertVertex("Vert " + i);
@@ -67,20 +67,19 @@ public class AdjacencyMatrixGraphTest {
 
         itEdge = instance.edges().iterator();
 
-        assertEquals("first edge should be \"Edge 1\"", (itEdge.next().compareTo("Edge 1") == 0));
-        assertEquals("second edge should be \"Edge 3\"", (itEdge.next().compareTo("Edge 3") == 0));
-        assertEquals("third edge should be \"Edge 2\"", (itEdge.next().compareTo("Edge 2") == 0));
+        assertEquals(0, itEdge.next().compareTo("Edge 1"));
+        assertEquals(0, itEdge.next().compareTo("Edge 3"));
+        assertEquals(0, itEdge.next().compareTo("Edge 2"));
 
         instance.removeEdge("Vert 1", "Vert 2");
 
         itEdge = instance.edges().iterator();
-        assertEquals("Edge 3", itEdge.next().compareTo("Edge 3"));
 
         instance.removeEdge("Vert 1", "Vert 3");
         instance.removeEdge("Vert 2", "Vert 4");
 
         itEdge = instance.edges().iterator();
-        assertEquals("", itEdge.hasNext());
+        assertEquals(false, itEdge.hasNext());
     }
 
     @Test
@@ -114,17 +113,17 @@ public class AdjacencyMatrixGraphTest {
         System.out.println("Test of insert vertex");
 
         AdjacencyMatrixGraph<String, Integer> instance = new AdjacencyMatrixGraph<String, Integer>();
-        assertEquals(0, (instance.numVertices() == 0));
+        assertEquals(0, instance.numVertices());
         instance.insertVertex("Vert 1");
-        assertEquals(1, (instance.numVertices() == 1));
+        assertEquals(1, instance.numVertices());
         instance.insertVertex("Vert 2");
-        assertEquals(2, (instance.numVertices() == 2));
+        assertEquals(2, instance.numVertices());
 
         instance.removeVertex("Vert 1");
-        assertEquals(1, (instance.numVertices() == 1));
+        assertEquals(1, instance.numVertices());
 
         instance.insertVertex("Vert 3");
-        assertEquals(2, (instance.numVertices() == 2));
+        assertEquals(2, instance.numVertices());
 
         instance.insertVertex("Vert 4");
 
