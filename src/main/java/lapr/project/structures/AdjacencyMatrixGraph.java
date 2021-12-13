@@ -1,7 +1,7 @@
 package lapr.project.structures;
 
-        import java.util.ArrayList;
-        import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
@@ -78,14 +78,6 @@ public class AdjacencyMatrixGraph<V, E> implements BasicGraphInterface<V, E>, Cl
         return numEdges;
     }
 
-    /**
-     * Checks if a vertex exist
-     * @param vertex
-     * @return true if exists
-     */
-    public boolean checkVertex(V vertex) {
-        return (vertices.indexOf(vertex)!=-1);
-    }
 
     /**
      * Returns the actual vertices of the graph
@@ -113,107 +105,6 @@ public class AdjacencyMatrixGraph<V, E> implements BasicGraphInterface<V, E>, Cl
                     edges.add(edgeMatrix[i][j]);
 
         return edges;
-    }
-
-    /**
-     * Returns the number of edges leaving vertex, -1 if vertex doesn't exist
-     * This is the same result returned by inDegree
-     * @param vertex
-     * @return number of edges leaving vertex v,
-     */
-    public int outDegree(V vertex) {
-        int index = toIndex(vertex);
-        if (index == -1)
-            return -1;
-
-        int edgeCount = 0;
-        for (int i = 0; i < numVertices; i++)
-            if (edgeMatrix[index][i] != null)
-                edgeCount++;
-
-        return edgeCount;
-    }
-
-    /**
-     * Returns the number of edges reaching vertex. This is the same result
-     * returned by outDegree
-     * @param vertex
-     * @return number of edges reaching vertex v
-     */
-    public int inDegree(V vertex) {
-        return outDegree(vertex);
-    }
-
-    /**
-     * Returns an iterable collection of vertices directly connected to vertex
-     * @param vertex
-     * @return collection of vertices connected to vertex, null if vertex
-     * does not exist in the graph
-     */
-    public Iterable<V> directConnections(V vertex) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-
-    /**
-     * Returns an iterable collection of edges for which vertex is the origin.
-     * This is the same result as returned by incomingEdges.
-     * @param vertex
-     * @return collection of edges leaving vertex, null if vertex does
-     * not exist in the graph
-     */
-    public Iterable<E> outgoingEdges(V vertex) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /**
-     * Returns an iterable collection of edges for which vertex v is the
-     * destination. This is the same result as returned by incomingEdges.
-     * @param vertex
-     * @return collection of edges reaching vertex, null if vertex does not
-     * exist in the graph
-     */
-    public Iterable<E> incomingEdges(V vertex) {
-        return outgoingEdges(vertex);
-    }
-
-    /**
-     * Returns the edge between two vertices
-     * @param vertexA
-     * @param vertexB
-     * @return the edge or null if source and dest are not adjacent or do not
-     *         exist in the graph.
-     */
-    public E getEdge(V vertexA, V vertexB) {
-        int indexA = toIndex(vertexA);
-        if (indexA == -1)
-            return null;
-
-        int indexB = toIndex(vertexB);
-        if (indexB == -1)
-            return null;
-
-        return edgeMatrix[indexA][indexB];
-    }
-
-    /**
-     * Returns the vertices of an edge, as an array of length two.
-     * @param edge
-     * @return array of two vertices or null if edge does not exist in the
-     *         graph.
-     */
-    public V[] endVertices(E edge) {
-        for (int i = 0; i < numVertices - 1; i++)
-            for (int j = i + 1; j < numVertices; j++)
-                if (edgeMatrix[i][j] != null)
-                    if (edgeMatrix[i][j].equals(edge)) {
-                        @SuppressWarnings("unchecked")
-                        V[] result = (V[]) new Object[2];
-                        result[0] = vertices.get(i);
-                        result[1] = vertices.get(j);
-                        return result;
-                    }
-        return null;
     }
 
     /**
