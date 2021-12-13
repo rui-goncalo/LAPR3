@@ -1,4 +1,4 @@
-package lapr.project.tree;
+package lapr.project.structures;
 
 import java.util.Arrays;
 import java.util.Collections;

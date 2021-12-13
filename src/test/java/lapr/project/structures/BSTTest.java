@@ -1,4 +1,4 @@
-package lapr.project.tree;
+package lapr.project.structures;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

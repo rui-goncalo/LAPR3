@@ -1,4 +1,4 @@
-package lapr.project.tree;
+package lapr.project.structures;
 
 import lapr.project.model.Port;
 import lapr.project.model.ShipData;
@@ -24,7 +24,7 @@ public class KDTreeTest {
 
         List<KDTree.Node<Port>> nodes = new ArrayList<>();
         for (Port port : portsArray) {
-            KDTree.Node<Port> node = new KDTree.Node<>(port.getLat(), port.getLon(), port);
+            KDTree.Node<Port> node = new KDTree.Node<>(port.getLatitude(), port.getLongitude(), port);
             nodes.add(node);
         }
         portTree.buildTree(nodes);

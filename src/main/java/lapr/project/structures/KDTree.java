@@ -1,4 +1,4 @@
-package lapr.project.tree;
+package lapr.project.structures;
 
 import java.awt.geom.Point2D;
 import java.util.Comparator;
