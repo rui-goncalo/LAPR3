@@ -8,8 +8,8 @@ public class Port {
     private final String country;
     private final int id;
     private final String name;
-    private final double lat;
-    private final double lon;
+    private final double latitude;
+    private final double longitude;
 
     /**
      * Creates a Port with the attributes below.
@@ -17,16 +17,16 @@ public class Port {
      * @param country
      * @param id
      * @param name
-     * @param lat
-     * @param lon 
+     * @param latitude
+     * @param longitude
      */
-    public Port(String continent, String country, int id, String name, double lat, double lon) {
+    public Port(String continent, String country, int id, String name, double latitude, double longitude) {
         this.continent = continent;
         this.country = country;
         this.id = id;
         this.name = name;
-        this.lat = lat;
-        this.lon = lon;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     /**
@@ -66,15 +66,15 @@ public class Port {
      * 
      * @return Port latitude
      */
-    public double getLat() {
-        return lat;
+    public double getLatitude() {
+        return latitude;
     }
 
     /**
      * 
      * @return Port longitude
      */
-    public double getLon() {
-        return lon;
+    public double getLongitude() {
+        return longitude;
     }
 }

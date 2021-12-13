@@ -1,16 +1,22 @@
 package lapr.project.ui;
 
+import lapr.project.data.MakeDBConnection;
 import lapr.project.model.*;
-import lapr.project.tree.AVL;
-import lapr.project.tree.KDTree;
+import lapr.project.structures.AVL;
+import lapr.project.structures.AdjacencyMatrixGraph;
+import lapr.project.structures.KDTree;
 import lapr.project.utils.*;
 
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 /**
  * @author Rui Gonçalves - 1191831
@@ -30,9 +36,14 @@ public class Menu {
     private static final String SMALL_SHIP_FILE = "src/data/sships.csv";
     private static final String BIG_PORTS_FILE = "src/data/bports.csv";
     private static final String SMALL_PORTS_FILE = "src/data/sports.csv";
+    private static final String BORDERS_FILE = "src/data/borders.csv";
+    private static final String COUNTRIES_FILE = "src/data/countries.csv";
+    private static final String SEADISTS_FILE = "src/data/seadists.csv";
 
     private static ArrayList<Ship> shipArray = new ArrayList<>();
     private static ArrayList<Port> portsArray = new ArrayList<>();
+    private static ArrayList<Country> countriesArray = new ArrayList<>();
+    private static ArrayList<Border> borderArray = new ArrayList<>();
 
     private static final AVL<ShipMMSI> mmsiAVL = new AVL<>();
     private static final AVL<ShipIMO> imoAVL = new AVL<>();
@@ -42,16 +53,20 @@ public class Menu {
 
     private static Ship currentShip = null;
 
+    private static AdjacencyMatrixGraph<String, Integer> capitalMatrix = new AdjacencyMatrixGraph<>();
+    private static AdjacencyMatrixGraph<Port, Integer> portMatrix = new AdjacencyMatrixGraph<>();
+
+
     /**
      * Opens the main menu with all the options for users.
-    */
+     */
     public static void mainMenu() {
         try (Scanner sc = new Scanner(System.in)) {
             int choice;
             do {
-                String[] options = {"Exit\n", "Imports", "Management"};
+                String[] options = {"Exit\n", "Imports", "Management", "DataBase Query"};
                 printFrontMenu("Main Menu", options, true);
-
+                insertPortsIntoMatrix();
                 choice = getInput("Please make a selection: ", sc);
 
                 switch (choice) {
@@ -81,6 +96,9 @@ public class Menu {
                         }
                         menuManageShips(sc);
                         break;
+                    case 3:
+                        dbQueriesMenu(sc);
+                        break;
                 }
 
             } while (choice != 0);
@@ -89,9 +107,9 @@ public class Menu {
 
     /**
      * Opens the menu for imports.
-     * 
+     *
      * @param sc scanner to read input from the user
-    */
+     */
     private static void menuImport(Scanner sc) {
         int choice;
 
@@ -152,7 +170,7 @@ public class Menu {
 
     /**
      * Opens the menu for managing Ships.
-     * 
+     *
      * @param sc scanner to read input from the user
      */
     private static void menuManageShips(Scanner sc) {
@@ -161,7 +179,7 @@ public class Menu {
         do {
 
             String[] options = {"Go Back\n", "Show all Ships", "Search by Ship", "Search Ship Pairs\n",
-                    "Create Summary of Ships", "View Summaries by Ship" ,"Get TOP N Ships\n", "Get Nearest Port", "Querys DB"};
+                    "Create Summary of Ships", "View Summaries by Ship", "Get TOP N Ships\n", "Get Nearest Port", "Querys DB"};
             printMenu("Manage Ships", options, true);
             choice = getInput("Please make a selection: ", sc);
 
@@ -188,7 +206,7 @@ public class Menu {
                 case 5:
                     Ship currentShip = null;
                     choice = getInput("Ship's MMSI: ", sc);
-                    for (Ship ship: shipArray) {
+                    for (Ship ship : shipArray) {
                         if (ship.getMmsi() == choice) {
                             currentShip = ship;
                         }
@@ -237,7 +255,8 @@ public class Menu {
                     }
                     break;
                 case 8:
-                    dbQueriesMenu(sc);
+                    //queriesBDDAD(sc);
+                    //dbQueriesMenu(sc);
                     break;
             }
 
@@ -246,7 +265,7 @@ public class Menu {
 
     /**
      * Opens the menu for searching ships.
-     * 
+     *
      * @param sc scanner to read input from the user
      */
     private static void menuSearch(Scanner sc) {
@@ -298,7 +317,7 @@ public class Menu {
 
     /**
      * Opens the menu for acessing ship information.
-     * 
+     *
      * @param sc scanner to read input from the user
      */
     private static void menuShowShip(Scanner sc) {
@@ -330,67 +349,88 @@ public class Menu {
 
     /**
      * Opens the menu for database queries.
-     * 
+     *
      * @param sc scanner to read input from the user
      */
     private static void dbQueriesMenu(Scanner sc) {
         int choice;
         Scanner scan = new Scanner(System.in);
 
-            do {
-                String[] options = {"Go Back\n", "Current situation of a specific container", "Containers to be offloaded in the next Port"};
-                printMenu("Show Ships", options, true);
-                choice = getInput("Please make a selection: ", sc);
+        do {
+            String[] options = {"Go Back\n", "Current situation of a specific container", "Containers to be offloaded in the next Port"};
+            printMenu("Show Ships", options, true);
+            choice = getInput("Please make a selection: ", sc);
 
-                switch (choice) {
-                    case 1:
-                        System.out.println("Container Number: ");
+            switch (choice) {
+                case 1:
+                    System.out.println("Container Number: ");
 
-                        DBFunctions.getCurrentContainerInfo(scan.nextInt());
-                        break;
-                    case 2:
-                        System.out.print("Please insert ship mmsi: ");
-
-                        int mmsi = scan.nextInt();
-
-                        if (mmsiAVL.find(new ShipMMSI(mmsi)) != null) {
-                            currentShip = mmsiAVL.find(new ShipMMSI(mmsi));
-
-                            ShipData data = currentShip.getLastDynamicData();
-                            if (data != null) {
-                                Port nearestPort = portTree.findNearestNeighbour(
-                                        data.getLatitude(),
-                                        data.getLongitude());
-                                System.out.println("Nearest Port: " + nearestPort.getName());
-                                DBFunctions.getGetContainersOffloaded(currentShip);
-                            }
-                        } else {
-                            System.out.println("Ship not found");
-                        }
-                        break;
-                    case 3:
-                        Scanner scanner = new Scanner(System.in);
-                        int date = Integer.parseInt(scanner.nextLine());
-                        DBFunctions.us207(date);
-                    case 0:
+                    FunctionsDB.getCurrentContainerInfo(scan.nextInt());
+                    break;
+                case 2:
+                    int mmsi = getInput("Insert Ship's MMSI: ", sc);
+                    if (mmsiAVL.find(new ShipMMSI(mmsi)) != null) {
+                        currentShip = mmsiAVL.find(new ShipMMSI(mmsi));
+                        FunctionsDB.getGetContainersOffloaded(currentShip);
+                    }
+                    break;
+                case 0:
 //                        try {
 //                            connection.close();
 //                        } catch (SQLException e) {
 //                            System.out.println("An error occurred: " + e);
 //                        }
-                        break;
-                    default:
-                        System.out.println("Sorry, this option is invalid.");
+                    break;
+                default:
+                    System.out.println("Sorry, this option is invalid.");
+                    break;
+            }
+        } while (choice != 0);
+    }
+
+
+    private static void queriesBDDAD(Scanner sc) {
+        int choice;
+        Connection connection = MakeDBConnection.makeConnection();
+        if (connection != null) {
+            do {
+                choice = getInput("Option: ", sc);
+
+                switch (choice) {
+                    case 1:
+                        try (Statement statement = connection.createStatement()) {
+                            ResultSet rs = statement.executeQuery(FunctionsDB.us205(sc));
+                            while (rs.next()) {
+                                System.out.println("Container ID: " + rs.getInt(1) +
+                                        ", Payload: " + rs.getDouble(2) +
+                                        ", Tare: " + rs.getDouble(3) +
+                                        ", Gross: " + rs.getDouble(4) +
+                                        ", ISO Code: " + rs.getInt(5) +
+                                        ", Container Type: " + rs.getInt(6) +
+                                        ", Container Position X: " + rs.getInt(7) +
+                                        ", Container Position Y: " + rs.getInt(8) +
+                                        ", Container Position Z: " + rs.getInt(9) +
+                                        ", Port Name: " + rs.getString(10) +
+                                        ", Country: " + rs.getString(11));
+                                if (rs.getInt(12) != 0) {
+                                    System.out.println(", Temperature: " + rs.getInt(12));
+                                }
+                            }
+                        } catch (SQLException e) {
+                            System.out.println("Failed to access database: " + e);
+                        }
                         break;
                 }
             } while (choice != 0);
         }
+    }
+
 
     /**
      * Utility to print the front menu in an organized manner.
-     * 
-     * @param title menu title to be shown
-     * @param options number of options
+     *
+     * @param title    menu title to be shown
+     * @param options  number of options
      * @param showExit whether to show exit option or not
      */
     private static void printFrontMenu(String title, String[] options, boolean showExit) {
@@ -415,9 +455,9 @@ public class Menu {
 
     /**
      * Utility to print the menus in an organized manner.
-     * 
-     * @param title menu title to be shown
-     * @param options number of options
+     *
+     * @param title    menu title to be shown
+     * @param options  number of options
      * @param showExit whether to show exit option or not
      */
     private static void printMenu(String title, String[] options, boolean showExit) {
@@ -439,20 +479,20 @@ public class Menu {
 
     /**
      * Prompts for and veriies the user input.
-     * 
+     *
      * @param prompt Prompt to be shown to the user
-     * @param optionCount user input
+     * @param sc     user input
      * @return user input
      */
-    private static int getInput(String prompt, Scanner optionCount) {
+    public static int getInput(String prompt, Scanner sc) {
         System.out.print(prompt);
-        while (!optionCount.hasNextInt()) {
+        while (!sc.hasNextInt()) {
             System.out.println("Invalid input.");
-            optionCount.next();
+            sc.next();
             System.out.print(prompt);
         }
 
-        return optionCount.nextInt();
+        return sc.nextInt();
     }
 
     /**
@@ -479,7 +519,7 @@ public class Menu {
 
     /**
      * Returns the top n ships in most distance travelled.
-     * 
+     *
      * @param n number of ships to return.
      */
     private static void getTopNShips(int n) {
@@ -490,13 +530,13 @@ public class Menu {
         System.out.println();
         for (int i = 0; i < n; i++) {
             Ship current = shipArray.get(i);
-            System.out.printf("- %.5fkm - %s\n", current.getSummary().getTravelledDistance(), current.getName());
+            System.out.printf("- %.2fkm > %s\n", current.getSummary().getTravelledDistance(), current.getName());
         }
     }
 
     /**
      * Inserts ports from the portsArray into the KDtree.
-     * 
+     *
      * @return false if collection is empty or true if it sucessfully inserted
      */
     private static boolean insertPorts() {
@@ -505,28 +545,129 @@ public class Menu {
 
         List<KDTree.Node<Port>> nodesPorts = new ArrayList<>();
         for (Port port : portsArray) {
-            KDTree.Node<Port> node = new KDTree.Node<>(port.getLat(), port.getLon(), port);
+            KDTree.Node<Port> node = new KDTree.Node<>(port.getLatitude(), port.getLongitude(), port);
             nodesPorts.add(node);
         }
         portTree.buildTree(nodesPorts);
         return true;
     }
-    
+
     /**
      * Prints a ship's summary.
-     * 
+     *
      * @param summaryShip ship summary to be printed
      */
     private static void printSummary(Summary summaryShip) {
-        System.out.println("\nDeparture Latitude: " + summaryShip.getDepartLat() + "\nDeparture Longitude: " + summaryShip.getDepartLon() +
-                "\nArrival Latitude: " + summaryShip.getArrLat() + "\nArrival Longitude: " + summaryShip.getArrLon());
-
-        System.out.print("Departure time: " + summaryShip.getDepartureTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) +
-                "\nArrival time: " + summaryShip.getArrivalTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
-
-        System.out.print("\nTravel's Time: " + summaryShip.getDays() + " days " + summaryShip.getHours() + " hours " + summaryShip.getMinutes() + " minutes" +
-                "\nMax | Mean SOG: " + summaryShip.getMaxSog() + " | " + summaryShip.getMeanSog() +
-                "\nMax | Mean COG: " + summaryShip.getMaxCog() + " | " + summaryShip.getMeanCog());
-        System.out.printf("\nTravelled distance: %.2fkm\nDelta distance: %.2fkm\n", summaryShip.getTravelledDistance(), summaryShip.getDeltaDistance());
+        System.out.println(
+                "\nDeparture Latitude: " + summaryShip.getDepartLat() +
+                        "\nDeparture Longitude: " + summaryShip.getDepartLon() +
+                        "\nArrival Latitude: " + summaryShip.getArrLat() +
+                        "\nArrival Longitude: " + summaryShip.getArrLon() +
+                        "\nDeparture Time: " + summaryShip.getDepartureTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) +
+                        "\nArrival Schedule: " + summaryShip.getArrivalTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) +
+                        "\nTravel's Time: " + summaryShip.getDays() + " days " + summaryShip.getHours() + " hours " + summaryShip.getMinutes() + " minutes" +
+                        "\nMax SOG: " + summaryShip.getMaxSog() +
+                        "\nMean SOG: " + summaryShip.getMeanSog() +
+                        "\nMax COG: " + summaryShip.getMaxCog() +
+                        "\nMean COG: " + summaryShip.getMeanCog() +
+                        "\nTravelled distance: " + summaryShip.getTravelledDistance() +
+                        "\nDelta distance: " + summaryShip.getDeltaDistance()
+        );
     }
+
+    private static void insertCapitalsIntoMatrix() {
+        countriesArray = CSVReaderUtils.readCountryCSV(COUNTRIES_FILE);
+        borderArray = CSVReaderUtils.readBordersCSV(BORDERS_FILE);
+
+        for (Country country : countriesArray) {
+            capitalMatrix.insertVertex(country.getCapital());
+        }
+
+        for(Border border : borderArray) {
+            String capital1 = border.getCountry1().getCapital();
+            String capital2 = border.getCountry2().getCapital();
+
+            capitalMatrix.insertEdge(capital1, capital2, 1);
+        }
+        System.out.println("Matriz criada");
+
+    }
+
+    private static void insertPortsIntoMatrix() {
+        portsArray = CSVReaderUtils.readPortCSV(SMALL_PORTS_FILE);
+        countriesArray = CSVReaderUtils.readCountryCSV(COUNTRIES_FILE);
+
+        for (Port port : portsArray) {
+            portMatrix.insertVertex(port);
+        }
+        HashMap<String, Double> distanceMap = new HashMap<>();
+        for (int i = 0; i < portsArray.size() - 1; i++) { // sempre que for um porto diferente, é criado um novo HashMap
+            distanceMap = new HashMap<>();
+            for (int j = i + 1; j < portsArray.size(); j++) {
+                Port firstPort = portsArray.get(i);
+                Port secondPort = portsArray.get(j);
+                if (firstPort.getCountry().equals(secondPort.getCountry())) {
+                    portMatrix.insertEdge(firstPort, secondPort, 1);
+                } else {
+                    double distanceToPort = Calculator.getDistance(firstPort.getLatitude(), firstPort.getLongitude(),
+                            secondPort.getLatitude(), secondPort.getLongitude());
+                    distanceMap.put(secondPort.getName(), distanceToPort);
+                }
+            }
+            ArrayList<Double> distanceArray = new ArrayList<>();
+
+            HashMap<String, Double> orderedDistance = distanceMap
+                    .entrySet()
+                    .stream().sorted(Comparator.comparingDouble(e -> e.getValue()))
+                    .collect(Collectors.toMap(Map.Entry::getKey,
+                            Map.Entry::getValue,
+                            (a, b) -> {
+                                throw new AssertionError();
+                            },
+                            LinkedHashMap::new));
+
+            orderedDistance.entrySet().forEach(System.out::println);
+
+            for (Double distance : distanceArray) {
+                for (Entry<String, Double> entry : distanceMap.entrySet()) {
+                    if (entry.getValue() == distance) {
+                        orderedDistance.put(entry.getKey(), distance);
+                    }
+                }
+            }
+            for (Entry<String, Double> entry : orderedDistance.entrySet()) {
+                System.out.println(entry.getKey() + " " + entry.getValue());
+            }
+
+            System.out.println("fggfdgfd");
+        }
+
+        Port nearestPort = null;
+        double distance = 0.0;
+        for(Country country : countriesArray) {
+            for (Port port : portsArray) {
+                if(port.getCountry().equals(country.getName())) {
+                    if (distance == 0.0) {
+                        distance = Calculator.getDistance(country.getLatitude(), country.getLongitude(),
+                                port.getLatitude(), port.getLongitude());
+                        nearestPort = port;
+                    } else {
+                        double distanceToCapital = Calculator.getDistance(country.getLatitude(), country.getLongitude(),
+                                port.getLatitude(), port.getLongitude());
+                        if (distanceToCapital < distance) {
+                            distance = distanceToCapital;
+                            nearestPort = port;
+                        }
+                    }
+                }
+            }
+            if (nearestPort != null) {
+                portMatrix.insertEdge(nearestPort, nearestPort, 1);
+            }
+        }
+
+        System.out.println("Matriz criada");
+
+    }
+
 }
