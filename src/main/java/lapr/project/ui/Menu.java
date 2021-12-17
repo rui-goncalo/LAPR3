@@ -379,6 +379,7 @@ public class Menu {
                     "Containers to be loaded in the next Port",
                     "C.Manifest transported during a given year and the average number of Containers per Manifest",
                     "Occupancy rate of a given Ship for a given Cargo Manifest.",
+                    "Occupancy rate of a given Ship for a given Cargo Manifest.",
                     "Ships will be available on Monday next week"};
             printMenu("Show Ships", options, true);
             choice = getInput("Please make a selection: ", sc);
@@ -457,7 +458,28 @@ public class Menu {
                     }
                     break;
                 case 6:
+                    int idShip = getInput("Insert Ship's MMSI: \n", sc);
+                    int idContainer = getInput("Insert Cargo Manifest: \n", sc);
+                    String us209 = "{? = call func_ratio_moment(" + idContainer + " , "+ idShip +")}";
+
+
+                    try (CallableStatement callableStatement = connection.prepareCall(us209)) {
+                        callableStatement.registerOutParameter(1, Types.VARCHAR);
+                        callableStatement.execute();
+                        System.out.println(callableStatement.getString(1));
+                    } catch (SQLException e) {
+                        System.out.println("Failed to create a statement: " + e);
+                    } finally {
+                        try {
+                            connection.close();
+                        } catch (SQLException e) {
+                            System.out.println("Failed to access database: " + e);
+                        }
+                    }
+                    break;
+                case 7:
                     FunctionsDB.shipsAvailableMonday();
+                    break;
                 case 0:
                     break;
                 default:
