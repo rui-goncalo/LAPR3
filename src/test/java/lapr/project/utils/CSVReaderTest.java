@@ -69,7 +69,7 @@ public class CSVReaderTest {
 
     @Test
     void testReadSeadists() {
-        ArrayList<Seadists> seadists = CSVReaderUtils.readSeadistsCSV("src/data/seadists.csv");
+        ArrayList<Seadist> seadists = CSVReaderUtils.readSeadistsCSV("src/data/seadists.csv");
         assertEquals(3401, seadists.size());
         assertEquals("Denmark", seadists.get(0).getFromCountry());
         assertEquals(10358, seadists.get(0).getFromPortId());
