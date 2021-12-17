@@ -14,7 +14,7 @@ public class Ship {
     /**
      * Instance variables of a Ship.
      * <b>Note:</b> We don't use the variables that are
-     *              commented out in this Sprint 1.
+     *              commented out in this Sprint.
      */
     private final int mmsi;
     private ArrayList<ShipData> dynamicShip;

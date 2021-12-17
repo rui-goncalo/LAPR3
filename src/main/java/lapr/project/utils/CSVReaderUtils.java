@@ -195,14 +195,14 @@ public final class CSVReaderUtils {
      * @return an ArrayList filled with sea distances data.
      * @throws Exception if the file path doesn't exist.
      */
-    public static ArrayList<Seadists> readSeadistsCSV(String path) {
-        ArrayList<Seadists> seadistsArrayList = new ArrayList<>();
+    public static ArrayList<Seadist> readSeadistsCSV(String path) {
+        ArrayList<Seadist> seadistArrayList = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String line = br.readLine();
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
-                Seadists newBorders = new Seadists(
+                Seadist newSeadist = new Seadist(
                         values[0],
                         Integer.parseInt(values[1]),
                         values[2],
@@ -210,9 +210,9 @@ public final class CSVReaderUtils {
                         Integer.parseInt(values[4]),
                         values[5],
                         Integer.parseInt(values[6]));
-                seadistsArrayList.add(newBorders);
+                seadistArrayList.add(newSeadist);
             }
-            return seadistsArrayList;
+            return seadistArrayList;
         } catch (Exception e) {
             System.out.println("No seadists were imported - Try again.\n");
             return null;

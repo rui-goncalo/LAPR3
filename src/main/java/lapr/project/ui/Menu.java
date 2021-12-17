@@ -1,5 +1,6 @@
 package lapr.project.ui;
 
+import lapr.project.data.LoadDBFiles;
 import lapr.project.data.MakeDBConnection;
 import lapr.project.model.*;
 import lapr.project.structures.AVL;
@@ -36,26 +37,19 @@ public class Menu {
     private static final String SMALL_SHIP_FILE = "src/data/sships.csv";
     private static final String BIG_PORTS_FILE = "src/data/bports.csv";
     private static final String SMALL_PORTS_FILE = "src/data/sports.csv";
-    private static final String BORDERS_FILE = "src/data/borders.csv";
-    private static final String COUNTRIES_FILE = "src/data/countries.csv";
-    private static final String SEADISTS_FILE = "src/data/seadists.csv";
 
     private static ArrayList<Ship> shipArray = new ArrayList<>();
     private static ArrayList<Port> portsArray = new ArrayList<>();
-    private static ArrayList<Country> countriesArray = new ArrayList<>();
-    private static ArrayList<Border> borderArray = new ArrayList<>();
 
     private static final AVL<ShipMMSI> mmsiAVL = new AVL<>();
     private static final AVL<ShipIMO> imoAVL = new AVL<>();
     private static final AVL<ShipCallSign> csAVL = new AVL<>();
 
     private static final KDTree<Port> portTree = new KDTree<>();
-
     private static Ship currentShip = null;
 
-    private static AdjacencyMatrixGraph<String, Integer> capitalMatrix = new AdjacencyMatrixGraph<>();
-    private static AdjacencyMatrixGraph<Port, Integer> portMatrix = new AdjacencyMatrixGraph<>();
-
+    private static AdjacencyMatrixGraph<String, Integer> capitalMatrix = null;
+    private static AdjacencyMatrixGraph<Port, Integer> portMatrix = null;
 
     /**
      * Opens the main menu with all the options for users.
@@ -64,9 +58,8 @@ public class Menu {
         try (Scanner sc = new Scanner(System.in)) {
             int choice;
             do {
-                String[] options = {"Exit\n", "Imports", "Management", "DataBase Query"};
+                String[] options = {"Exit\n", "Imports", "Management", "DataBase Queries"};
                 printFrontMenu("Main Menu", options, true);
-                insertPortsIntoMatrix();
                 choice = getInput("Please make a selection: ", sc);
 
                 switch (choice) {
@@ -96,9 +89,6 @@ public class Menu {
                         }
                         menuManageShips(sc);
                         break;
-                    case 3:
-                        dbQueriesMenu(sc);
-                        break;
                 }
 
             } while (choice != 0);
@@ -113,7 +103,7 @@ public class Menu {
     private static void menuImport(Scanner sc) {
         int choice;
 
-        String[] options = {"Go Back\n", "Small Ship File CSV", "Big Ship File CSV\n", "Small Ports File CSV", "Big Ports File CSV",};
+        String[] options = {"Go Back\n", "Small Ship File CSV", "Big Ship File CSV", "Small Ports File CSV", "Big Ports File CSV", "Load Matrices\n", "Load Ships from Database", "Load Ports from Database"};
         printMenu("Import Ships", options, true);
 
         choice = getInput("Please make a selection: ", sc);
@@ -165,6 +155,31 @@ public class Menu {
                     e.printStackTrace();
                 }
                 break;
+            case 5:
+                if(capitalMatrix == null || portMatrix == null) {
+                    loadMatrices();
+                }
+
+                break;
+            case 6:
+                if(!shipArray.isEmpty()) {
+                    shipArray.clear();
+                }
+                shipArray = LoadDBFiles.readShipDB();
+                break;
+            case 7:
+                if(!portsArray.isEmpty()) {
+                    portsArray.clear();
+                }
+                portsArray = LoadDBFiles.readPortDB();
+                break;
+            case 8:
+               /* for (int i = 0; i < shipArray.size(); i++) {
+                    System.out.println("INSERT INTO Ship VALUES(" + (i + 1) + ", '" + shipArray.get(i).getShipName() + "', " + shipArray.get(i).getMMSICode() + ", " + shipArray.get(i).getIMOCode() + ", '" + shipArray.get(i).getCallSign() + "', " + shipArray.get(i).getVesselType() + ", " + shipArray.get(i).getLength() + ", " + shipArray.get(i).getWidth() + ", " + shipArray.get(i).getDraft() + ", " + (int) Math.floor(Math.random() * (500 - 250 + 1) + 250) + ", " + (int) Math.floor(Math.random() * (20 - 10 + 1) + 10) + ", " + (int) Math.floor(Math.random() * (20 - 10 + 1) + 10) + ");");
+                    for (ShipDynamic dynamic : shipArray.get(i).getDynamicData())
+                        System.out.println("INSERT INTO ShipDynamic VALUES(" + (i + 1) + ", TO_DATE('" + dynamic.getBaseDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + "', 'DD/MM/YYYY HH24:MI'), " + dynamic.getLat() + ", " + dynamic.getLon() + ", " + dynamic.getSog() + ", " + dynamic.getCog() + ", " + dynamic.getHeading() + ", '" + dynamic.getTransceiverClass() + "');");
+                }
+                break;*/
         }
     }
 
@@ -179,7 +194,8 @@ public class Menu {
         do {
 
             String[] options = {"Go Back\n", "Show all Ships", "Search by Ship", "Search Ship Pairs\n",
-                    "Create Summary of Ships", "View Summaries by Ship", "Get TOP N Ships\n", "Get Nearest Port", "Querys DB"};
+                    "Create Summary of Ships", "View Summaries by Ship", "Get TOP N Ships\n",
+                    "Get Nearest Port", "Querys DB"};
             printMenu("Manage Ships", options, true);
             choice = getInput("Please make a selection: ", sc);
 
@@ -346,7 +362,6 @@ public class Menu {
         } while (choice != 0);
     }
 
-
     /**
      * Opens the menu for database queries.
      *
@@ -355,7 +370,6 @@ public class Menu {
     private static void dbQueriesMenu(Scanner sc) {
         int choice;
         Scanner scan = new Scanner(System.in);
-
         do {
             String[] options = {"Go Back\n", "Current situation of a specific container", "Containers to be offloaded in the next Port"};
             printMenu("Show Ships", options, true);
@@ -387,7 +401,6 @@ public class Menu {
             }
         } while (choice != 0);
     }
-
 
     private static void queriesBDDAD(Scanner sc) {
         int choice;
@@ -424,7 +437,6 @@ public class Menu {
             } while (choice != 0);
         }
     }
-
 
     /**
      * Utility to print the front menu in an organized manner.
@@ -575,99 +587,10 @@ public class Menu {
         );
     }
 
-    private static void insertCapitalsIntoMatrix() {
-        countriesArray = CSVReaderUtils.readCountryCSV(COUNTRIES_FILE);
-        borderArray = CSVReaderUtils.readBordersCSV(BORDERS_FILE);
-
-        for (Country country : countriesArray) {
-            capitalMatrix.insertVertex(country.getCapital());
-        }
-
-        for(Border border : borderArray) {
-            String capital1 = border.getCountry1().getCapital();
-            String capital2 = border.getCountry2().getCapital();
-
-            capitalMatrix.insertEdge(capital1, capital2, 1);
-        }
-        System.out.println("Matriz criada");
-
-    }
-
-    private static void insertPortsIntoMatrix() {
-        portsArray = CSVReaderUtils.readPortCSV(SMALL_PORTS_FILE);
-        countriesArray = CSVReaderUtils.readCountryCSV(COUNTRIES_FILE);
-
-        for (Port port : portsArray) {
-            portMatrix.insertVertex(port);
-        }
-        HashMap<String, Double> distanceMap = new HashMap<>();
-        for (int i = 0; i < portsArray.size() - 1; i++) { // sempre que for um porto diferente, é criado um novo HashMap
-            distanceMap = new HashMap<>();
-            for (int j = i + 1; j < portsArray.size(); j++) {
-                Port firstPort = portsArray.get(i);
-                Port secondPort = portsArray.get(j);
-                if (firstPort.getCountry().equals(secondPort.getCountry())) {
-                    portMatrix.insertEdge(firstPort, secondPort, 1);
-                } else {
-                    double distanceToPort = Calculator.getDistance(firstPort.getLatitude(), firstPort.getLongitude(),
-                            secondPort.getLatitude(), secondPort.getLongitude());
-                    distanceMap.put(secondPort.getName(), distanceToPort);
-                }
-            }
-            ArrayList<Double> distanceArray = new ArrayList<>();
-
-            HashMap<String, Double> orderedDistance = distanceMap
-                    .entrySet()
-                    .stream().sorted(Comparator.comparingDouble(e -> e.getValue()))
-                    .collect(Collectors.toMap(Map.Entry::getKey,
-                            Map.Entry::getValue,
-                            (a, b) -> {
-                                throw new AssertionError();
-                            },
-                            LinkedHashMap::new));
-
-            orderedDistance.entrySet().forEach(System.out::println);
-
-            for (Double distance : distanceArray) {
-                for (Entry<String, Double> entry : distanceMap.entrySet()) {
-                    if (entry.getValue() == distance) {
-                        orderedDistance.put(entry.getKey(), distance);
-                    }
-                }
-            }
-            for (Entry<String, Double> entry : orderedDistance.entrySet()) {
-                System.out.println(entry.getKey() + " " + entry.getValue());
-            }
-
-            System.out.println("fggfdgfd");
-        }
-
-        Port nearestPort = null;
-        double distance = 0.0;
-        for(Country country : countriesArray) {
-            for (Port port : portsArray) {
-                if(port.getCountry().equals(country.getName())) {
-                    if (distance == 0.0) {
-                        distance = Calculator.getDistance(country.getLatitude(), country.getLongitude(),
-                                port.getLatitude(), port.getLongitude());
-                        nearestPort = port;
-                    } else {
-                        double distanceToCapital = Calculator.getDistance(country.getLatitude(), country.getLongitude(),
-                                port.getLatitude(), port.getLongitude());
-                        if (distanceToCapital < distance) {
-                            distance = distanceToCapital;
-                            nearestPort = port;
-                        }
-                    }
-                }
-            }
-            if (nearestPort != null) {
-                portMatrix.insertEdge(nearestPort, nearestPort, 1);
-            }
-        }
-
-        System.out.println("Matriz criada");
-
+    private static void loadMatrices() {
+        capitalMatrix = GraphUtils.getCapitalMatrix();
+        // TODO Pedir n ao utilizador
+        portMatrix = GraphUtils.getPortMatrix(5);
     }
 
 }

@@ -151,6 +151,7 @@ public class FunctionsDB {
                     }
                 }
             }
+            System.out.println("Nearest Port: " + nearestPort);
 
             statement = connection.prepareStatement(GET_CONTAINERS_OFFLOADED);
             statement.setString(1, String.valueOf(ship.getMmsi()));
