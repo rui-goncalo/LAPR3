@@ -9,15 +9,10 @@ import lapr.project.structures.KDTree;
 import lapr.project.utils.*;
 
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 /**
  * @author Rui Gonçalves - 1191831
@@ -33,10 +28,10 @@ public class Menu {
     public static final String ANSI_YELLOW = "\u001B[33m";
     public static final String ANSI_RED_BACKGROUND = "\u001B[41m";
 
-    private static final String BIG_SHIP_FILE = "src/data/bships.csv";
-    private static final String SMALL_SHIP_FILE = "src/data/sships.csv";
-    private static final String BIG_PORTS_FILE = "src/data/bports.csv";
-    private static final String SMALL_PORTS_FILE = "src/data/sports.csv";
+    private static final String BIG_SHIP_FILE = "data/bships.csv";
+    private static final String SMALL_SHIP_FILE = "data/sships.csv";
+    private static final String BIG_PORTS_FILE = "data/bports.csv";
+    private static final String SMALL_PORTS_FILE = "data/sports.csv";
 
     private static ArrayList<Ship> shipArray = new ArrayList<>();
     private static ArrayList<Port> portsArray = new ArrayList<>();
@@ -89,6 +84,14 @@ public class Menu {
                         }
                         menuManageShips(sc);
                         break;
+                    case 3:
+                        if (shipArray.isEmpty()) {
+                            System.out.println(ANSI_RED_BACKGROUND
+                                    + "Please import Ships and Ports first."
+                                    + ANSI_RESET);
+                            break;
+                        }
+                        dbQueriesMenu(sc);
                 }
 
             } while (choice != 0);
@@ -156,19 +159,19 @@ public class Menu {
                 }
                 break;
             case 5:
-                if(capitalMatrix == null || portMatrix == null) {
+                if (capitalMatrix == null || portMatrix == null) {
                     loadMatrices();
                 }
 
                 break;
             case 6:
-                if(!shipArray.isEmpty()) {
+                if (!shipArray.isEmpty()) {
                     shipArray.clear();
                 }
                 shipArray = LoadDBFiles.readShipDB();
                 break;
             case 7:
-                if(!portsArray.isEmpty()) {
+                if (!portsArray.isEmpty()) {
                     portsArray.clear();
                 }
                 portsArray = LoadDBFiles.readPortDB();
@@ -371,71 +374,97 @@ public class Menu {
         int choice;
         Scanner scan = new Scanner(System.in);
         do {
-            String[] options = {"Go Back\n", "Current situation of a specific container", "Containers to be offloaded in the next Port"};
+            String[] options = {"Go Back\n", "Current situation of a specific container",
+                    "Containers to be offloaded in the next Port",
+                    "Containers to be loaded in the next Port",
+                    "C.Manifest transported during a given year and the average number of Containers per Manifest",
+                    "Occupancy rate of a given Ship for a given Cargo Manifest.",
+                    "Ships will be available on Monday next week"};
             printMenu("Show Ships", options, true);
             choice = getInput("Please make a selection: ", sc);
+            Connection connection = MakeDBConnection.makeConnection();
 
             switch (choice) {
                 case 1:
-                    System.out.println("Container Number: ");
+                    int containerNumber = getInput("Container Number: \n", sc);
+                    String us204 = "{? = call func_client_container(" + containerNumber + ")}";
 
-                    FunctionsDB.getCurrentContainerInfo(scan.nextInt());
-                    break;
-                case 2:
-                    int mmsi = getInput("Insert Ship's MMSI: ", sc);
-                    if (mmsiAVL.find(new ShipMMSI(mmsi)) != null) {
-                        currentShip = mmsiAVL.find(new ShipMMSI(mmsi));
-                        FunctionsDB.getGetContainersOffloaded(currentShip);
+                    try (CallableStatement callableStatement = connection.prepareCall(us204)) {
+                        callableStatement.registerOutParameter(1, Types.VARCHAR);
+                        callableStatement.execute();
+                        System.out.println(callableStatement.getString(1));
+                    } catch (SQLException e) {
+                        System.out.println("Failed to create a statement: " + e);
+                    } finally {
+                        try {
+                            connection.close();
+                        } catch (SQLException e) {
+                            System.out.println("Failed to access database: " + e);
+                        }
                     }
                     break;
+                case 2:
+                    int mmsiUnloading = getInput("Insert Ship's MMSI: ", sc);
+                    if (mmsiAVL.find(new ShipMMSI(mmsiUnloading)) != null) {
+                        currentShip = mmsiAVL.find(new ShipMMSI(mmsiUnloading));
+                        FunctionsDB.getGetContainersNextPort(currentShip, "unloading");
+                    }
+                    break;
+                case 3:
+                    int mmsiLoading = getInput("Insert Ship's MMSI: ", sc);
+                    if (mmsiAVL.find(new ShipMMSI(mmsiLoading)) != null) {
+                        currentShip = mmsiAVL.find(new ShipMMSI(mmsiLoading));
+                        FunctionsDB.getGetContainersNextPort(currentShip, "loading");
+                    }
+                    break;
+                case 4:
+                    int year = getInput("Select a Year: \n", sc);
+                    String us207 = "{? = call func_avg_cm_container(" + year + ")}";
+
+
+                    try (CallableStatement callableStatement = connection.prepareCall(us207)) {
+                        callableStatement.registerOutParameter(1, Types.VARCHAR);
+                        callableStatement.execute();
+                        System.out.println(callableStatement.getString(1));
+                    } catch (SQLException e) {
+                        System.out.println("Failed to create a statement: " + e);
+                    } finally {
+                        try {
+                            connection.close();
+                        } catch (SQLException e) {
+                            System.out.println("Failed to access database: " + e);
+                        }
+                    }
+                    break;
+                case 5:
+                    int mmsi = getInput("Insert Ship's MMSI: \n", sc);
+                    int container = getInput("Insert Cargo Manifest: \n", sc);
+                    String us208 = "{? = call func_ratio(" + container + " , "+ mmsi +")}";
+
+
+                    try (CallableStatement callableStatement = connection.prepareCall(us208)) {
+                        callableStatement.registerOutParameter(1, Types.VARCHAR);
+                        callableStatement.execute();
+                        System.out.println(callableStatement.getString(1));
+                    } catch (SQLException e) {
+                        System.out.println("Failed to create a statement: " + e);
+                    } finally {
+                        try {
+                            connection.close();
+                        } catch (SQLException e) {
+                            System.out.println("Failed to access database: " + e);
+                        }
+                    }
+                    break;
+                case 6:
+                    FunctionsDB.shipsAvailableMonday();
                 case 0:
-//                        try {
-//                            connection.close();
-//                        } catch (SQLException e) {
-//                            System.out.println("An error occurred: " + e);
-//                        }
                     break;
                 default:
                     System.out.println("Sorry, this option is invalid.");
                     break;
             }
         } while (choice != 0);
-    }
-
-    private static void queriesBDDAD(Scanner sc) {
-        int choice;
-        Connection connection = MakeDBConnection.makeConnection();
-        if (connection != null) {
-            do {
-                choice = getInput("Option: ", sc);
-
-                switch (choice) {
-                    case 1:
-                        try (Statement statement = connection.createStatement()) {
-                            ResultSet rs = statement.executeQuery(FunctionsDB.us205(sc));
-                            while (rs.next()) {
-                                System.out.println("Container ID: " + rs.getInt(1) +
-                                        ", Payload: " + rs.getDouble(2) +
-                                        ", Tare: " + rs.getDouble(3) +
-                                        ", Gross: " + rs.getDouble(4) +
-                                        ", ISO Code: " + rs.getInt(5) +
-                                        ", Container Type: " + rs.getInt(6) +
-                                        ", Container Position X: " + rs.getInt(7) +
-                                        ", Container Position Y: " + rs.getInt(8) +
-                                        ", Container Position Z: " + rs.getInt(9) +
-                                        ", Port Name: " + rs.getString(10) +
-                                        ", Country: " + rs.getString(11));
-                                if (rs.getInt(12) != 0) {
-                                    System.out.println(", Temperature: " + rs.getInt(12));
-                                }
-                            }
-                        } catch (SQLException e) {
-                            System.out.println("Failed to access database: " + e);
-                        }
-                        break;
-                }
-            } while (choice != 0);
-        }
     }
 
     /**
