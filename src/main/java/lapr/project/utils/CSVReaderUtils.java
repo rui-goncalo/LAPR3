@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  */
 public final class CSVReaderUtils {
 
-    private static final String COUNTRIES_FILE = "src/data/countries.csv";
+    private static final String COUNTRIES_FILE = "data/countries.csv";
 
     /**
      * Private constructor of CSVReaderUtils.

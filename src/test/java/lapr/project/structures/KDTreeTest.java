@@ -20,7 +20,7 @@ public class KDTreeTest {
 
     @Test
     public void KDTree() {
-        portsArray = CSVReaderUtils.readPortCSV("src/data/sports.csv");
+        portsArray = CSVReaderUtils.readPortCSV("data/sports.csv");
 
         List<KDTree.Node<Port>> nodes = new ArrayList<>();
         for (Port port : portsArray) {

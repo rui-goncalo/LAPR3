@@ -13,8 +13,8 @@ public class CSVReaderTest {
     @Test
     public void testReadCSV() throws Exception {
 
-        ArrayList<Ship> arrayship = CSVReaderUtils.readShipCSV("src/data/sships.csv");
-        assertEquals(22, arrayship.size());
+        ArrayList<Ship> arrayship = CSVReaderUtils.readShipCSV("data/sships.csv");
+        assertEquals(23, arrayship.size());
         assertEquals(210950000, arrayship.get(0).getMmsi());
         assertEquals("VARAMO", arrayship.get(0).getName());
         assertEquals(9395044, arrayship.get(0).getImo());
@@ -37,7 +37,7 @@ public class CSVReaderTest {
 
     @Test
     void testReadPorts() {
-        ArrayList<Port> ports = CSVReaderUtils.readPortCSV("src/data/sports.csv");
+        ArrayList<Port> ports = CSVReaderUtils.readPortCSV("data/sports.csv");
         assertEquals(22, ports.size());
         assertEquals("Europe", ports.get(0).getContinent());
         assertEquals("United Kingdom", ports.get(0).getCountry());
@@ -55,7 +55,7 @@ public class CSVReaderTest {
 
     @Test
     void testReadCountry() {
-        ArrayList<Country> countries = CSVReaderUtils.readCountryCSV("src/data/countries.csv");
+        ArrayList<Country> countries = CSVReaderUtils.readCountryCSV("data/countries.csv");
         assertEquals(68, countries.size());
         assertEquals("Europe", countries.get(0).getContinent());
         assertEquals("CY", countries.get(0).getAlpha2());
@@ -69,7 +69,7 @@ public class CSVReaderTest {
 
     @Test
     void testReadSeadists() {
-        ArrayList<Seadist> seadists = CSVReaderUtils.readSeadistsCSV("src/data/seadists.csv");
+        ArrayList<Seadist> seadists = CSVReaderUtils.readSeadistsCSV("data/seadists.csv");
         assertEquals(3401, seadists.size());
         assertEquals("Denmark", seadists.get(0).getFromCountry());
         assertEquals(10358, seadists.get(0).getFromPortId());
@@ -83,21 +83,25 @@ public class CSVReaderTest {
 
 
     @Test
-    void testReadBorder() {
-        ArrayList<Border> borderArr = CSVReaderUtils.readBordersCSV("src/data/borders.csv");
+    void testReadBorder() {ArrayList<Country> countries = CSVReaderUtils.readCountryCSV("data/countries.csv");
+        if (countries != null) {
+            assertEquals(68, countries.size());
+            assertEquals("Europe", countries.get(0).getContinent());
+            assertEquals("CY", countries.get(0).getAlpha2());
+            assertEquals("CYP", countries.get(0).getAlpha3());
+            assertEquals("Cyprus", countries.get(0).getName());
+            assertEquals(0.85, countries.get(0).getPopulation());
+            assertEquals("Nicosia", countries.get(0).getCapital());
+            assertEquals(35.16666667, countries.get(0).getLatitude());
+            assertEquals(33.366667, countries.get(0).getLongitude());
 
-        String country1 = null;
-        String country2 = null;
-
-        for(Border border : borderArr) {
-            country1 = border.getCountry1().getName();
-            country2 = border.getCountry2().getName();
+            ArrayList<Border> borderArr = CSVReaderUtils.readBordersCSV("data/borders.csv");
+            if (borderArr != null) {
+                assertEquals(119, borderArr.size());
+                assertEquals("Russia", borderArr.get(borderArr.size() - 1).getCountry1().getName());
+                assertEquals("Ukraine", borderArr.get(borderArr.size() - 1).getCountry2().getName());
+            }
         }
-
-        assertEquals(119, borderArr.size());
-        assertEquals("Russia", country1);
-        assertEquals("Ukraine", country2);
-
     }
 
 }

@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BorderTest {
 
-    ArrayList<Border> borderArrayList = CSVReaderUtils.readBordersCSV("src/data/borders.csv");
+    ArrayList<Border> borderArrayList = CSVReaderUtils.readBordersCSV("data/borders.csv");
 
     Country country1 = borderArrayList.get(0).getCountry1();
     Country country2 = borderArrayList.get(0).getCountry2();
