@@ -169,12 +169,14 @@ public class Menu {
                     shipArray.clear();
                 }
                 shipArray = LoadDBFiles.readShipDB();
+                System.out.println("Ships are imported with success");
                 break;
             case 7:
                 if (!portsArray.isEmpty()) {
                     portsArray.clear();
                 }
                 portsArray = LoadDBFiles.readPortDB();
+                System.out.println("Ports are imported with success");
                 break;
             case 8:
                /* for (int i = 0; i < shipArray.size(); i++) {
@@ -198,7 +200,7 @@ public class Menu {
 
             String[] options = {"Go Back\n", "Show all Ships", "Search by Ship", "Search Ship Pairs\n",
                     "Create Summary of Ships", "View Summaries by Ship", "Get TOP N Ships\n",
-                    "Get Nearest Port", "Querys DB"};
+                    "Get Nearest Port"};
             printMenu("Manage Ships", options, true);
             choice = getInput("Please make a selection: ", sc);
 
@@ -267,15 +269,11 @@ public class Menu {
                             Port nearestPort = portTree.findNearestNeighbour(
                                     data.getLatitude(),
                                     data.getLongitude());
-                            System.out.println("Nearest Port: " + nearestPort.getName());
+                            System.out.println("Nearest Port: " + nearestPort.getName() + "\n" + "Latitude: " + nearestPort.getLatitude() + "\n" + "Longitude: " + nearestPort.getLongitude());
                         }
                     } else {
                         System.out.println("Ship not found");
                     }
-                    break;
-                case 8:
-                    //queriesBDDAD(sc);
-                    //dbQueriesMenu(sc);
                     break;
             }
 
