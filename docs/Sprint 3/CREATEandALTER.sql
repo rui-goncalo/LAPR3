@@ -23,11 +23,12 @@ DROP TABLE Trip CASCADE CONSTRAINTS PURGE;
 DROP TABLE Client CASCADE CONSTRAINTS PURGE;
 DROP TABLE Container_Client CASCADE CONSTRAINTS PURGE;
 DROP TABLE Type_Container CASCADE CONSTRAINTS PURGE;
+DROP TABLE Vehicle CASCADE CONSTRAINTS PURGE;
 
 -- CREATE Tables --
 CREATE TABLE Ship (
     mmsi    INTEGER     CONSTRAINT ship_pk PRIMARY KEY,
-    name  VARCHAR(30) CONSTRAINT ship_nn NOT NULL,
+    name  VARCHAR(30) CONSTRAINT ship_nn_name NOT NULL,
     imo     INTEGER UNIQUE,
     number_energy_gen   INTEGER,
     gen_power_output    DECIMAL(5,2),
@@ -35,15 +36,17 @@ CREATE TABLE Ship (
     vessel INTEGER,
     length    DECIMAL(5,2),
     Width   DECIMAL(5,2),
-    capacity  INTEGER,
+    capacity  INTEGER CONSTRAINT ship_nn_capacity NOT NULL,
     draft   DECIMAL(5,2),
     transceiver_class   VARCHAR(50),
-    code    INTEGER
+    code    INTEGER,
+    vehicleId INTEGER
 );
 
 CREATE TABLE Location (
     id  INTEGER CONSTRAINT location_pk PRIMARY KEY,
-    name VARCHAR(30) CONSTRAINT location_nn NOT NULL,
+    name VARCHAR(30) CONSTRAINT location_nn_name NOT NULL,
+    capacity INTEGER CONSTRAINT location_nn_capacity NOT NULL,
     latitude    DECIMAL(5,2) DEFAULT 91.00,
     longitude   DECIMAL(5,2) DEFAULT 181.00,
     Type_Locationid INTEGER,
@@ -69,7 +72,8 @@ CREATE TABLE Continent (
 
 CREATE TABLE Truck (
     registration_plate  VARCHAR(8) CONSTRAINT truck_pk PRIMARY KEY,
-    EmployeeId_employee INTEGER
+    EmployeeId_employee INTEGER,
+    vehicleId INTEGER
 );
 
 CREATE TABLE Employee (
@@ -129,7 +133,7 @@ CREATE TABLE Cargo_Manifest (
     gross_weight DECIMAL(5,2),
     year INTEGER,
     Type_Cargo_ManifestId INTEGER,
-    Shipmmsi INTEGER
+    VehicleId INTEGER
 );
 
 CREATE TABLE Container_Cargo_Manifest (
@@ -204,6 +208,10 @@ CREATE TABLE Container_Client(
     PRIMARY KEY (ClientId, Containerid, Cargo_Manifestid)
 );
 
+CREATE TABLE Vehicle (
+    id INTEGER CONSTRAINT Vehicle_pk PRIMARY KEY
+);
+
 -- ALTER Tables --
 ALTER TABLE Location ADD CONSTRAINT
 location_type_location_fk FOREIGN KEY (Type_Locationid)
@@ -246,8 +254,8 @@ cargoManifest_typeCargoManifest_fk FOREIGN KEY (Type_Cargo_ManifestId)
 REFERENCES Type_Cargo_Manifest(id);
 
 ALTER TABLE Cargo_Manifest ADD CONSTRAINT
-cargoManifest_ship_fk FOREIGN KEY (Shipmmsi)
-REFERENCES Ship(mmsi);
+cargoManifest_ship_fk FOREIGN KEY (VehicleId)
+REFERENCES Vehicle(id);
 
 ALTER TABLE Container_Cargo_Manifest ADD CONSTRAINT
 containercargomanifest_posContainer_fk FOREIGN KEY (Pos_ContainerId)
@@ -320,3 +328,11 @@ REFERENCES Client(id);
 ALTER TABLE Container_Client ADD CONSTRAINT
 Container_Client_Container_Cargo_ManifestContainerid_fk FOREIGN KEY (Containerid, Cargo_Manifestid)
 REFERENCES Container_Cargo_Manifest(ContainerId, Cargo_Manifestid);
+
+ALTER TABLE Ship ADD CONSTRAINT
+Ship_VehicleId FOREIGN KEY (vehicleId)
+REFERENCES Vehicle(id);
+
+ALTER TABLE Truck ADD CONSTRAINT
+Truck_VehicleId FOREIGN KEY (vehicleId)
+REFERENCES Vehicle(id);
