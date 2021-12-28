@@ -478,6 +478,26 @@ public class Menu {
                 case 7:
                     FunctionsDB.shipsAvailableMonday();
                     break;
+                case 8:
+                    //int 305container = getInput("Insert Container ID: \n", sc);
+                    //int 305client = getInput("Insert Client ID: \n", sc);
+                    String us305 = "{? = call func_check_container(" + 16 + " , "+ 3 +")}";
+
+
+                    try (CallableStatement callableStatement = connection.prepareCall(us305)) {
+                        callableStatement.registerOutParameter(1, Types.VARCHAR);
+                        callableStatement.execute();
+                        System.out.println(callableStatement.getString(1));
+                    } catch (SQLException e) {
+                        System.out.println("Failed to create a statement: " + e);
+                    } finally {
+                        try {
+                            connection.close();
+                        } catch (SQLException e) {
+                            System.out.println("Failed to access database: " + e);
+                        }
+                    }
+                    break;
                 case 0:
                     break;
                 default:
