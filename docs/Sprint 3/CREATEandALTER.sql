@@ -24,6 +24,7 @@ DROP TABLE Client CASCADE CONSTRAINTS PURGE;
 DROP TABLE Container_Client CASCADE CONSTRAINTS PURGE;
 DROP TABLE Type_Container CASCADE CONSTRAINTS PURGE;
 DROP TABLE Vehicle CASCADE CONSTRAINTS PURGE;
+DROP TABLE AuditTrail CASCADE CONSTRAINTS PURGE;
 
 -- CREATE Tables --
 CREATE TABLE Ship (
@@ -128,12 +129,29 @@ CREATE TABLE Type_Container(
     name VARCHAR(30)
 );
 
+CREATE TABLE AuditTrail (
+    id INTEGER CONSTRAINT AuditTrail_pk PRIMARY KEY,
+    "user" VARCHAR(10),
+    date_t DATE,
+    operation VARCHAR(10)
+);
+
+CREATE TABLE Arrival (
+    id INTEGER CONSTRAINT arrival_pk PRIMARY KEY,
+    TripId INTEGER,
+    arrival_date DATE CONSTRAINT arrival_nn NOT NULL,
+    InitialLocationId INTEGER,
+    DestinationLocationId INTEGER
+);
+
 CREATE TABLE Cargo_Manifest (
     id INTEGER CONSTRAINT cargo_manifest_pk PRIMARY KEY,
     gross_weight DECIMAL(5,2),
     year INTEGER,
     Type_Cargo_ManifestId INTEGER,
-    VehicleId INTEGER
+    VehicleId INTEGER,
+    ArrivalId INTEGER,
+    AuditTrailId INTEGER
 );
 
 CREATE TABLE Container_Cargo_Manifest (
@@ -154,16 +172,6 @@ CREATE TABLE Pos_Container (
 CREATE TABLE Type_Cargo_Manifest (
     id INTEGER CONSTRAINT type_cargo_manifest_pk PRIMARY KEY,
     designation VARCHAR(30) CONSTRAINT designation_nn NOT NULL
-);
-
-CREATE TABLE Arrival (
-    id INTEGER,
-    TripId INTEGER,
-    CONSTRAINT arrival_pk PRIMARY KEY (id, TripId),
-    arrival_date DATE CONSTRAINT arrival_nn NOT NULL,
-    Cargo_ManifestId INTEGER,
-    InitialLocationId INTEGER,
-    DestinationLocationId INTEGER
 );
 
 CREATE TABLE Ship_Crew (
@@ -249,6 +257,14 @@ ALTER TABLE Message ADD CONSTRAINT
 message_ship_fk FOREIGN KEY (Shipmmsi)
 REFERENCES Ship(mmsi);
 
+ALTER TABLE Arrival ADD CONSTRAINT
+arrival_initial_location_fk FOREIGN KEY (InitialLocationId)
+REFERENCES Location(id);
+
+ALTER TABLE Arrival ADD CONSTRAINT
+arrival_destination_location_fk FOREIGN KEY (DestinationLocationId)
+REFERENCES Location(id);
+
 ALTER TABLE Cargo_Manifest ADD CONSTRAINT
 cargoManifest_typeCargoManifest_fk FOREIGN KEY (Type_Cargo_ManifestId)
 REFERENCES Type_Cargo_Manifest(id);
@@ -256,6 +272,14 @@ REFERENCES Type_Cargo_Manifest(id);
 ALTER TABLE Cargo_Manifest ADD CONSTRAINT
 cargoManifest_ship_fk FOREIGN KEY (VehicleId)
 REFERENCES Vehicle(id);
+
+ALTER TABLE Cargo_Manifest ADD CONSTRAINT
+cargoManifest_arrival_fk FOREIGN KEY (ArrivalId)
+REFERENCES Arrival(id);
+
+ALTER TABLE Cargo_Manifest ADD CONSTRAINT
+cargoManifest_audittrail_fk FOREIGN KEY (AuditTrailId)
+REFERENCES AuditTrail(id);
 
 ALTER TABLE Container_Cargo_Manifest ADD CONSTRAINT
 containercargomanifest_posContainer_fk FOREIGN KEY (Pos_ContainerId)
@@ -267,10 +291,6 @@ REFERENCES Container(id);
 
 ALTER TABLE Container_Cargo_Manifest ADD CONSTRAINT
 containerCargoManifest_cargoManifest_fk FOREIGN KEY (Cargo_ManifestId)
-REFERENCES Cargo_Manifest(id);
-
-ALTER TABLE Arrival ADD CONSTRAINT
-arrival_cargoManifest_fk FOREIGN KEY (Cargo_ManifestId)
 REFERENCES Cargo_Manifest(id);
 
 ALTER TABLE Ship_Crew ADD CONSTRAINT
@@ -308,18 +328,6 @@ REFERENCES Location(id);
 ALTER TABLE Trip ADD CONSTRAINT
 trip_ship_fk FOREIGN KEY (Shipmmsi)
 REFERENCES Ship(mmsi);
-
-ALTER TABLE Arrival ADD CONSTRAINT
-arrival_initial_location_fk FOREIGN KEY (InitialLocationId)
-REFERENCES Location(id);
-
-ALTER TABLE Arrival ADD CONSTRAINT
-arrival_destination_location_fk FOREIGN KEY (DestinationLocationId)
-REFERENCES Location(id);
-
-ALTER TABLE Arrival ADD CONSTRAINT
-arrival_tripId_fk FOREIGN KEY (TripId)
-REFERENCES Trip(id);
 
 ALTER TABLE Container_Client ADD CONSTRAINT
 Container_Client_ClientId_fk FOREIGN KEY (ClientId)
