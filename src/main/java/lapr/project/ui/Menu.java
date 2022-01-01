@@ -481,7 +481,7 @@ public class Menu {
                 case 8:
                     //int 305container = getInput("Insert Container ID: \n", sc);
                     //int 305client = getInput("Insert Client ID: \n", sc);
-                    String us305 = "{? = call func_check_container(" + 16 + " , "+ 3 +")}";
+                    String us305 = "{? = call func_check_container(" + 16 + " , "+ 1 +")}";
 
 
                     try (CallableStatement callableStatement = connection.prepareCall(us305)) {
