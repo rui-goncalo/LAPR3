@@ -232,44 +232,35 @@ public class AdjacencyMatrixGraph<V, E> implements BasicGraphInterface<V, E>, Cl
     /**
      * Returns a string representation of the graph.
      * Matrix only represents existence of Edge
-     */
-    public String toString() {
+     */public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Vertices:\n");
-        for (int i = 0 ; i < numVertices ; i++)
-            sb.append(vertices.get(i)+"\n");
+        /*sb.append("Vertices:\n");
+        for (int i = 0; i < numVertices; i++)
+            sb.append(vertices.get(i) + "\n");*/
 
-        sb.append("\nMatrix:\n");
-
-        sb.append("  ");
-        for (int i = 0 ; i < numVertices ; i++)
-        {
-            sb.append(" |  "+ i + " ");
-        }
+        sb.append("\nMatrix:\n   ");
+        for (int i = 0; i < numVertices; i++)
+            sb.append(" |  " + (i >= 10 ? "" : "0") + i + " ");
         sb.append("\n");
 
-        // aligned only when vertices < 10
-        for (int i = 0 ; i < numVertices ; i++)
-        {
-            sb.append(" "+ i + " ");
-            for (int j = 0 ; j < numVertices ; j++)
-                if(edgeMatrix[i][j] != null)
-                    sb.append("|  X  ");
+        for (int i = 0; i < numVertices; i++) {
+            sb.append(" " + (i >= 10 ? "" : "0") + i + " ");
+            for (int j = 0; j < numVertices; j++)
+                if (edgeMatrix[i][j] != null)
+                    sb.append("|  X   ");
                 else
-                    sb.append("|     ");
+                    sb.append("|      ");
             sb.append("\n");
         }
 
-        sb.append("\nEdges:\n");
-
-        for (int i = 0; i < numVertices ; i++)
-            for (int j = 0 ; j < numVertices; j++)
+        /*sb.append("\nEdges:\n");
+        for (int i = 0; i < numVertices; i++)
+            for (int j = 0; j < numVertices; j++)
                 if (edgeMatrix[i][j] != null)
-                    sb.append("From " + i + " to " + j + "-> "+ edgeMatrix[i][j] + "\n");
+                    sb.append("From " + i + " to " + j + "-> " + edgeMatrix[i][j] + "\n");
 
-        sb.append("\n");
-
+        sb.append("\n");*/
         return sb.toString();
     }
 

@@ -82,7 +82,7 @@ public class Menu {
                                     + ANSI_RESET);
                             break;
                         }
-                        menuManageShips(sc);
+                        menuManageCargo(sc);
                         break;
                     case 3:
                         if (shipArray.isEmpty()) {
@@ -107,7 +107,7 @@ public class Menu {
         int choice;
 
         String[] options = {"Go Back\n", "Small Ship File CSV", "Big Ship File CSV", "Small Ports File CSV",
-                "Big Ports File CSV", "Load Matrices\n", "Load Ships from Database", "Load Ports from Database",
+                "Big Ports File CSV\n", "Load Ships from Database", "Load Ports from Database",
                 "Print Border Map"};
 
         printMenu("Import Ships", options, true);
@@ -162,25 +162,21 @@ public class Menu {
                 }
                 break;
             case 5:
-                if (capitalBordersMatrix == null || portMatrix == null) {
-                    loadMatrices();
-                }
-
-                break;
-            case 6:
                 if (!shipArray.isEmpty()) {
                     shipArray.clear();
                 }
                 shipArray = LoadDBFiles.readShipDB();
                 System.out.println("Ships are imported with success");
                 break;
-            case 7:
+            case 6:
                 if (!portsArray.isEmpty()) {
                     portsArray.clear();
                 }
                 portsArray = LoadDBFiles.readPortDB();
                 System.out.println("Ports are imported with success");
                 break;
+            case 8:
+                //FunctionsGraph.getBorderMap();
         }
     }
 
@@ -189,14 +185,15 @@ public class Menu {
      *
      * @param sc scanner to read input from the user
      */
-    private static void menuManageShips(Scanner sc) {
+    private static void menuManageCargo(Scanner sc) {
         int choice;
 
         do {
 
             String[] options = {"Go Back\n", "Show all Ships", "Search by Ship", "Search Ship Pairs\n",
                     "Create Summary of Ships", "View Summaries by Ship", "Get TOP N Ships\n",
-                    "Get Nearest Port"};
+                    "Get Nearest Port\n", "Print N Closest Port Matrix", "Print Ports Closest to Capital - same country - Matrix",
+                    "Print Capital and Borders Matrix"};
             printMenu("Manage Ships", options, true);
             choice = getInput("Please make a selection: ", sc);
 
@@ -270,6 +267,16 @@ public class Menu {
                     } else {
                         System.out.println("Ship not found");
                     }
+                    break;
+                case 8:
+                    int number = getInput("Insert N Ports: \n", sc);
+                    System.out.println(FunctionsGraph.getNClosestPortMatrix(number).toString());
+                    break;
+                case 9:
+                    System.out.println(FunctionsGraph.getClosestPortsFromCapital().toString());
+                    break;
+                case 10:
+                    System.out.println(FunctionsGraph.getCapitalBordersMatrix().toString());
                     break;
             }
 
@@ -648,15 +655,5 @@ public class Menu {
                         "\nTravelled distance: " + summaryShip.getTravelledDistance() +
                         "\nDelta distance: " + summaryShip.getDeltaDistance()
         );
-    }
-
-    /**
-     * Load Matrix of Ports, Borders and Capitals
-     */
-    private static void loadMatrices() {
-        capitalBordersMatrix = FunctionsGraph.getCapitalBordersMatrix();
-        Scanner sc = new Scanner(System.in);
-        int number = getInput("Insert N Ports: \n", sc);
-        portMatrix = FunctionsGraph.getPortMatrix(number);
     }
 }

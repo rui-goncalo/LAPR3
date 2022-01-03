@@ -29,16 +29,7 @@ public class FunctionsGraph {
      */
     private static void insertCapitalsAndBorders() {
 
-        for (Country country : countriesArray) {
-            capitalMatrix.insertVertex(country.getCapital());
-        }
 
-        for(Border border : borderArray) {
-            String capital1 = border.getCountry1().getCapital();
-            String capital2 = border.getCountry2().getCapital();
-
-            capitalMatrix.insertEdge(capital1, capital2, 1);
-        }
     }
 
     /**
@@ -48,6 +39,8 @@ public class FunctionsGraph {
      *
      */
     private static void insertPortsSameCountry() {
+        AdjacencyMatrixGraph<Port, Integer> portMatrix = new AdjacencyMatrixGraph<>();
+
         for (Port port : portsArray) {
             portMatrix.insertVertex(port);
         }
@@ -72,6 +65,7 @@ public class FunctionsGraph {
      * @param n number of Ports (input from user)
      */
     private static void calculateDistancesFromPorts(int n) {
+        AdjacencyMatrixGraph<Port, Integer> portNMatrix = new AdjacencyMatrixGraph<>();
         ArrayList<PortDistance> distanceArray = null;
 
         for (Port firstPort : portsArray) {
@@ -87,7 +81,7 @@ public class FunctionsGraph {
             int i = 0;
             for (PortDistance portDistance : distanceArray) {
                 if (i < n) {
-                    portMatrix.insertEdge(firstPort, portDistance.getPort(), 1);
+                    portNMatrix.insertEdge(firstPort, portDistance.getPort(), 1);
                     i++;
                 }
             }
@@ -128,14 +122,78 @@ public class FunctionsGraph {
     /**
      * Method used to get all methods that involving Ports.
      *
-     * @param n for the parameter of calculateDistancesFromPorts method
      * @return Matrix of Ports
      *
      */
-    public static AdjacencyMatrixGraph<Port, Integer> getPortMatrix(int n) {
-        insertPortsSameCountry();
-        calculateDistancesFromPorts(n);
-        closestPortToCapital();
+    public static AdjacencyMatrixGraph<Port, Integer> getCountryPortMatrix() {
+        portMatrix = new AdjacencyMatrixGraph<>();
+
+        for (Port port : portsArray) {
+            portMatrix.insertVertex(port);
+        }
+
+        for (int i = 0; i < portsArray.size() - 1; i++) {
+            for (int j = i + 1; j < portsArray.size(); j++) {
+                Port firstPort = portsArray.get(i);
+                Port secondPort = portsArray.get(j);
+                if (firstPort.getCountry().equals(secondPort.getCountry())) {
+                    portMatrix.insertEdge(firstPort, secondPort, 1);
+                }
+            }
+        }
+        return portMatrix;
+    }
+
+    public static AdjacencyMatrixGraph<Port, Integer> getNClosestPortMatrix(int n) {
+        portMatrix = new AdjacencyMatrixGraph<>();
+        ArrayList<PortDistance> distanceArray = null;
+
+        for (Port firstPort : portsArray) {
+            distanceArray = new ArrayList<>();
+            for (Port secondPort : portsArray) {
+                if (!firstPort.getCountry().equals(secondPort.getCountry())) {
+                    double distanceToPort = Calculator.getDistance(firstPort.getLatitude(), firstPort.getLongitude(),
+                            secondPort.getLatitude(), secondPort.getLongitude());
+                    distanceArray.add(new PortDistance(secondPort, distanceToPort));
+                }
+            }
+            Collections.sort(distanceArray);
+            int i = 0;
+            for (PortDistance portDistance : distanceArray) {
+                if (i < n) {
+                    portMatrix.insertEdge(firstPort, portDistance.getPort(), 1);
+                    i++;
+                }
+            }
+        }
+        return portMatrix;
+    }
+
+    public static AdjacencyMatrixGraph<Port, Integer> getClosestPortsFromCapital() {
+        portMatrix = new AdjacencyMatrixGraph<>();
+        Port nearestPort = null;
+        double distance = 0.0;
+        for(Country country : countriesArray) {
+            for (Port port : portsArray) {
+                if(port.getCountry().equals(country.getName())) {
+                    if (distance == 0.0) {
+                        distance = Calculator.getDistance(country.getLatitude(), country.getLongitude(),
+                                port.getLatitude(), port.getLongitude());
+                        nearestPort = port;
+                    } else {
+                        double distanceToCapital = Calculator.getDistance(country.getLatitude(), country.getLongitude(),
+                                port.getLatitude(), port.getLongitude());
+                        if (distanceToCapital < distance) {
+                            distance = distanceToCapital;
+                            nearestPort = port;
+                        }
+                    }
+                }
+            }
+            if (nearestPort != null) {
+                portMatrix.insertEdge(nearestPort, nearestPort, 1);
+            }
+        }
         return portMatrix;
     }
 
@@ -146,7 +204,17 @@ public class FunctionsGraph {
      *
      */
     public static AdjacencyMatrixGraph<String, Integer> getCapitalBordersMatrix() {
-        insertCapitalsAndBorders();
+        capitalMatrix = new AdjacencyMatrixGraph<>();
+        for (Country country : countriesArray) {
+            capitalMatrix.insertVertex(country.getCapital());
+        }
+
+        for(Border border : borderArray) {
+            String capital1 = border.getCountry1().getCapital();
+            String capital2 = border.getCountry2().getCapital();
+
+            capitalMatrix.insertEdge(capital1, capital2, 1);
+        }
         return capitalMatrix;
     }
 
