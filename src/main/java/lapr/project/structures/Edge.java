@@ -3,9 +3,9 @@ package lapr.project.structures;
 import java.util.Objects;
 
 public class Edge<V, E> {
-    private E weight;        // Edge weight
     final private V vOrig;        // vertex origin
     final private V vDest;        // vertex destination
+    private E weight;        // Edge weight
 
     public Edge(V vOrig, V vDest, E weight) {
         if ((vOrig == null) || (vDest == null)) throw new RuntimeException("Edge vertices cannot be null!");
@@ -14,18 +14,17 @@ public class Edge<V, E> {
         this.weight = weight;
     }
 
-//    public V getVOrig() {
-//        return vOrig;
-//    }
-//
-//    public V getVDest() {
-//        return vDest;
-//    }
+    public V getVOrig() {
+        return vOrig;
+    }
+
+    public V getVDest() {
+        return vDest;
+    }
 
     public E getWeight() {
         return weight;
     }
-
     public void setWeight(E weight) {
         this.weight = weight;
     }
