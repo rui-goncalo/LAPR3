@@ -1,7 +1,7 @@
 continent,country,code,port,lat,lon
 Europe,United Kingdom,29002,Liverpool,53.46666667,-3.033333333
-America,United States,14635,Los Angeles,33.71666667,-118.2666667
-America,United States,25007,New Jersey,40.66666667,-74.16666667
+America,United States of America,14635,Los Angeles,33.71666667,-118.2666667
+America,United States of America,25007,New Jersey,40.66666667,-74.16666667
 America,Brazil,20301,Rio Grande,-32.06666667,-52.06666667
 America,Brazil,20351,Salvador,-12.96666667,-38.51666667
 America,Brazil,27248,Santos,-23.93333333,-46.31666667

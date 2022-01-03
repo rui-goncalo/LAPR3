@@ -28,9 +28,9 @@ public class FunctionsGraph {
      *
      */
     private static void insertCapitalsAndBorders() {
-
-
     }
+
+
 
     /**
      * Method used to insert Countries as Vertex. Through ArrayList
@@ -146,6 +146,7 @@ public class FunctionsGraph {
 
     public static AdjacencyMatrixGraph<Port, Integer> getNClosestPortMatrix(int n) {
         portMatrix = new AdjacencyMatrixGraph<>();
+        loadPorts();
         ArrayList<PortDistance> distanceArray = null;
 
         for (Port firstPort : portsArray) {
@@ -171,9 +172,13 @@ public class FunctionsGraph {
 
     public static AdjacencyMatrixGraph<Port, Integer> getClosestPortsFromCapital() {
         portMatrix = new AdjacencyMatrixGraph<>();
+        loadPorts();
         Port nearestPort = null;
         double distance = 0.0;
+        int counter = 0;
         for(Country country : countriesArray) {
+            distance = 0.0;
+            counter++;
             for (Port port : portsArray) {
                 if(port.getCountry().equals(country.getName())) {
                     if (distance == 0.0) {
@@ -192,6 +197,15 @@ public class FunctionsGraph {
             }
             if (nearestPort != null) {
                 portMatrix.insertEdge(nearestPort, nearestPort, 1);
+            }
+        }
+        for (int i = 0; i < portsArray.size() - 1; i++) {
+            for (int j = i + 1; j < portsArray.size(); j++) {
+                Port firstPort = portsArray.get(i);
+                Port secondPort = portsArray.get(j);
+                if (firstPort.getCountry().equals(secondPort.getCountry())) {
+                    portMatrix.insertEdge(firstPort, secondPort, 1);
+                }
             }
         }
         return portMatrix;
@@ -216,6 +230,12 @@ public class FunctionsGraph {
             capitalMatrix.insertEdge(capital1, capital2, 1);
         }
         return capitalMatrix;
+    }
+
+    public static void loadPorts() {
+        for (Port port : portsArray) {
+            portMatrix.insertVertex(port);
+        }
     }
 
 
