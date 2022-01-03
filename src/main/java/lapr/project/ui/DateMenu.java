@@ -15,17 +15,23 @@ public class DateMenu {
     public static LocalDateTime readDate(Scanner sc, String msg) {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         System.out.print("Format: dd/MM/yyyy HH:mm\n");
-        System.out.print(msg);
         LocalDateTime dateTime;
 
-        String str = sc.nextLine();
 
-        try {
-            dateTime = LocalDateTime.parse(str, format);
-        } catch (Exception e) {
-            System.out.print("Invalid date.\n");
-            return null;
-        }
+        do {
+            System.out.print(msg);
+            String str = sc.nextLine();
+            try {
+                if (str.equals("null"))
+                    return null;
+                else
+                    dateTime = LocalDateTime.parse(str, format);
+            } catch (Exception e) {
+                System.out.println("Your date is invalid.\n");
+                dateTime = null;
+            }
+        } while (dateTime == null);
+
         return dateTime;
     }
 }

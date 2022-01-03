@@ -71,8 +71,8 @@ INSERT INTO location VALUES (4, 'Rio Grande', 120, 34.91666667, 33.65, 2, 4);
 INSERT INTO location VALUES (5, 'Salvador', 15, 34.91666667, 33.65, 1, 5);
 INSERT INTO location VALUES (6, 'São Paulo', 150, 34.91666667, 33.65, 2, 6);
 INSERT INTO location VALUES (7, 'Halifax', 200, 34.91666667, 33.65, 1, 7);
-INSERT INTO location VALUES (8, 'Vancouver', 150, 34.91666667, 33.65, 2, 8);
-INSERT INTO location VALUES (9, 'San Vicente', 300, 34.91666667, 33.65, 1, 9);
+INSERT INTO location VALUES (8, 'Vancouver', 150, 49.28333333,-123.1166667, 2, 8);
+INSERT INTO location VALUES (9, 'San Vicente', 300, 44.65,-63.56666667, 1, 9);
 INSERT INTO location VALUES (10, 'Pisa', 100, 34.91666667, 33.65, 1, 10);
 INSERT INTO location VALUES (11, 'Ship', 200, 34.91666667, 33.65, 3, 7);
 INSERT INTO location VALUES (12, 'Warehouse', 350, 34.91666667, 33.65, 3, 3);
@@ -127,30 +127,51 @@ INSERT INTO truck VALUES ('AL', 3, 24);
 INSERT INTO type_cargo_manifest VALUES (1, 'loading');
 INSERT INTO type_cargo_manifest VALUES (2, 'unloading');
 
+--INSERT AUDITTRAIL--
+--Equivale ao CM -> 10
+INSERT INTO audittrail VALUES (1, 'jgd', TO_DATE('04-12-2021 09:30', 'DD-MM-YYYY HH24-MI'), 'INSERT');
+INSERT INTO audittrail VALUES (2, 'jgv', TO_DATE('15-04-2021 23:20', 'DD-MM-YYYY HH24-MI'), 'UPDATE'); 
+
+--INSERT ARRIVAL--
+INSERT INTO arrival VALUES (1, 10, TO_DATE('30-12-2021 12:00', 'DD-MM-YYYY HH24-MI'), 4, 1);
+INSERT INTO arrival VALUES (2, 9, TO_DATE('15-09-2021 00:15', 'DD-MM-YYYY HH24-MI'), 3, 2);
+INSERT INTO arrival VALUES (3, 8, TO_DATE('04-06-2021 10:00', 'DD-MM-YYYY HH24-MI'), 6, 3);
+INSERT INTO arrival VALUES (4, 7, TO_DATE('15-04-2021 23:20', 'DD-MM-YYYY HH24-MI'), 8, 4);
+INSERT INTO arrival VALUES (5, 6, TO_DATE('03-01-2021 13:00', 'DD-MM-YYYY HH24-MI'), 4, 5);
+INSERT INTO arrival VALUES (6, 5, TO_DATE('29-12-2020 10:00', 'DD-MM-YYYY HH24-MI'), 4, 6);
+INSERT INTO arrival VALUES (7, 4, TO_DATE('03-11-2020 23:45', 'DD-MM-YYYY HH24-MI'), 9, 7);
+INSERT INTO arrival VALUES (8, 3, TO_DATE('03-09-2020 12:45', 'DD-MM-YYYY HH24-MI'), 7, 8);
+INSERT INTO arrival VALUES (9, 2, TO_DATE('03-03-2020 23:00', 'DD-MM-YYYY HH24-MI'), 2, 3);
+INSERT INTO arrival VALUES (10, 1, TO_DATE('03-01-2020 09:00', 'DD-MM-YYYY HH24-MI'), 11, 10);
+INSERT INTO arrival VALUES (19, 11, TO_DATE('10-01-2022 23:50', 'DD-MM-YYYY HH24-MI'), 3, 9);
+--INSERT INTO arrival VALUES (20, 2, TO_DATE('10-04-2020 23:50', 'DD-MM-YYYY HH24-MI'), 2, 4);
+INSERT INTO arrival VALUES (21, 5, TO_DATE('30-12-2020 09:00', 'DD-MM-YYYY HH24-MI'), 5, 8);
+INSERT INTO arrival VALUES (22, 5, TO_DATE('30-12-2020 09:00', 'DD-MM-YYYY HH24-MI'), 5, 7);
+
 --INSERT CARGO_MANIFEST--
-INSERT INTO cargo_manifest VALUES (1, 5.3, 2021, 1, 12);
-INSERT INTO cargo_manifest VALUES (2, 5.3, 2021, 2, 14);
-INSERT INTO cargo_manifest VALUES (3, 5.3, 2019, 2, 3);
-INSERT INTO cargo_manifest VALUES (4, 5.3, 2018, 1, 4);
-INSERT INTO cargo_manifest VALUES (5, 5.3, 2021, 1, 5);
-INSERT INTO cargo_manifest VALUES (6, 5.3, 2020, 1, 6);
-INSERT INTO cargo_manifest VALUES (7, 5.3, 2019, 2, 7);
-INSERT INTO cargo_manifest VALUES (8, 5.3, 2018, 2, 9);
-INSERT INTO cargo_manifest VALUES (9, 5.3, 2017, 1, 10);
-INSERT INTO cargo_manifest VALUES (10, 5.3, 2018, 2, 11);
-INSERT INTO cargo_manifest VALUES (11, 5.3, 2020, 1, 1);
-INSERT INTO cargo_manifest VALUES (12, 5.3, 2020, 2, 14);
-INSERT INTO cargo_manifest VALUES (13, 5.3, 2019, 2, 3);
-INSERT INTO cargo_manifest VALUES (14, 5.3, 2018, 1, 4);
-INSERT INTO cargo_manifest VALUES (15, 5.3, 2021, 1, 5);
-INSERT INTO cargo_manifest VALUES (16, 5.3, 2020, 1, 6);
-INSERT INTO cargo_manifest VALUES (17, 5.3, 2019, 2, 7);
-INSERT INTO cargo_manifest VALUES (18, 5.3, 2018, 2, 9);
-INSERT INTO cargo_manifest VALUES (19, 5.3, 2017, 1, 10);
-INSERT INTO cargo_manifest VALUES (20, 5.3, 2021, 2, 11);
+INSERT INTO cargo_manifest VALUES (1, 5.3, 2021, 1, 12, 10, null);
+INSERT INTO cargo_manifest VALUES (2, 5.3, 2021, 2, 14, 9, null);
+INSERT INTO cargo_manifest VALUES (3, 5.3, 2019, 2, 3, 8, null);
+INSERT INTO cargo_manifest VALUES (4, 5.3, 2018, 1, 4, 7, null);
+INSERT INTO cargo_manifest VALUES (5, 5.3, 2021, 1, 5, 6, null);
+INSERT INTO cargo_manifest VALUES (6, 5.3, 2020, 1, 6, 5, null);
+INSERT INTO cargo_manifest VALUES (7, 5.3, 2019, 2, 7, 3, null);
+INSERT INTO cargo_manifest VALUES (8, 5.3, 2018, 2, 9, 4, 2);
+INSERT INTO cargo_manifest VALUES (9, 5.3, 2017, 1, 10, 2, null);
+INSERT INTO cargo_manifest VALUES (10, 5.3, 2018, 2, 11, 1, 1);
+INSERT INTO cargo_manifest VALUES (11, 5.3, 2020, 1, 1, null, null);
+INSERT INTO cargo_manifest VALUES (12, 5.3, 2020, 2, 14, null, null);
+INSERT INTO cargo_manifest VALUES (13, 5.3, 2019, 2, 3, null, null);
+INSERT INTO cargo_manifest VALUES (14, 5.3, 2018, 1, 4, null, null);
+INSERT INTO cargo_manifest VALUES (15, 5.3, 2021, 1, 5, null, null);
+INSERT INTO cargo_manifest VALUES (16, 5.3, 2020, 1, 6, null, null);
+INSERT INTO cargo_manifest VALUES (17, 5.3, 2019, 2, 7, null, null);
+INSERT INTO cargo_manifest VALUES (18, 5.3, 2018, 2, 9, null, null);
+INSERT INTO cargo_manifest VALUES (19, 5.3, 2017, 1, 10, null, null);
+INSERT INTO cargo_manifest VALUES (20, 5.3, 2021, 2, 11, 19, null);
 --US RUI
-INSERT INTO cargo_manifest VALUES (21, 5.3, 2021, 2, 14);
-INSERT INTO cargo_manifest VALUES (22, 5.3, 2021, 2, 14);
+INSERT INTO cargo_manifest VALUES (21, 5.3, 2021, 2, 14, null, null);
+INSERT INTO cargo_manifest VALUES (22, 5.3, 2021, 2, 14, null, null);
 
 --INSERT TRIP--
 INSERT INTO trip VALUES (1, TO_DATE('01-01-2020 09:00', 'DD-MM-YYYY HH24-MI'), TO_DATE('01-03-2020 23:45', 'DD-MM-YYYY HH24-MI'), 1, 10, 211331620);
@@ -165,19 +186,6 @@ INSERT INTO trip VALUES (9, TO_DATE('13-09-2021 00:15', 'DD-MM-YYYY HH24-MI'), T
 INSERT INTO trip VALUES (10, TO_DATE('05-12-2021 12:10', 'DD-MM-YYYY HH24-MI'), TO_DATE('03-01-2022 11:40', 'DD-MM-YYYY HH24-MI'), 10, 1, 211331613);
 INSERT INTO trip VALUES (11, TO_DATE('04-01-2022 09:00', 'DD-MM-YYYY HH24-MI'), TO_DATE('10-01-2022 11:40', 'DD-MM-YYYY HH24-MI'), 10, 1, 211331613);
 --211331624
-
---INSERT ARRIVAL--
-INSERT INTO arrival VALUES (1, 10, TO_DATE('30-12-2021 12:00', 'DD-MM-YYYY HH24-MI'), 10, 4, 1);
-INSERT INTO arrival VALUES (2, 9, TO_DATE('15-09-2021 00:15', 'DD-MM-YYYY HH24-MI'), 9, 3, 2);
-INSERT INTO arrival VALUES (3, 8, TO_DATE('04-06-2021 10:00', 'DD-MM-YYYY HH24-MI'), 7, 6, 3);
-INSERT INTO arrival VALUES (4, 7, TO_DATE('15-04-2021 23:20', 'DD-MM-YYYY HH24-MI'), 8, 8, 4);
-INSERT INTO arrival VALUES (5, 6, TO_DATE('03-01-2021 13:00', 'DD-MM-YYYY HH24-MI'), 6, 4, 5);
-INSERT INTO arrival VALUES (6, 5, TO_DATE('29-12-2020 10:00', 'DD-MM-YYYY HH24-MI'), 5, 4, 6);
-INSERT INTO arrival VALUES (7, 4, TO_DATE('03-11-2020 23:45', 'DD-MM-YYYY HH24-MI'), 4, 9, 7);
-INSERT INTO arrival VALUES (8, 3, TO_DATE('03-09-2020 12:45', 'DD-MM-YYYY HH24-MI'), 3, 7, 8);
-INSERT INTO arrival VALUES (9, 2, TO_DATE('03-03-2020 23:00', 'DD-MM-YYYY HH24-MI'), 2, 2, 3);
-INSERT INTO arrival VALUES (10, 1, TO_DATE('03-01-2020 09:00', 'DD-MM-YYYY HH24-MI'), 1, 11, 10);
-INSERT INTO arrival VALUES (19, 11, TO_DATE('10-01-2022 23:50', 'DD-MM-YYYY HH24-MI'), 20, 3, 9);
 
 --INSERT MESSAGE--
 INSERT INTO message VALUES (1, 12, 13, 355, 321.5, TO_DATE('01-01-2021 23:45', 'DD-MM-YYYY HH24-MI'), 1, 211331620);

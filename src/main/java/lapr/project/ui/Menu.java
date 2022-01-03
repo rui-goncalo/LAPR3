@@ -43,7 +43,7 @@ public class Menu {
     private static final KDTree<Port> portTree = new KDTree<>();
     private static Ship currentShip = null;
 
-    private static AdjacencyMatrixGraph<String, Integer> capitalMatrix = null;
+    private static AdjacencyMatrixGraph<String, Integer> capitalBordersMatrix = null;
     private static AdjacencyMatrixGraph<Port, Integer> portMatrix = null;
 
     /**
@@ -106,7 +106,10 @@ public class Menu {
     private static void menuImport(Scanner sc) {
         int choice;
 
-        String[] options = {"Go Back\n", "Small Ship File CSV", "Big Ship File CSV", "Small Ports File CSV", "Big Ports File CSV", "Load Matrices\n", "Load Ships from Database", "Load Ports from Database"};
+        String[] options = {"Go Back\n", "Small Ship File CSV", "Big Ship File CSV", "Small Ports File CSV",
+                "Big Ports File CSV", "Load Matrices\n", "Load Ships from Database", "Load Ports from Database",
+                "Print Border Map"};
+
         printMenu("Import Ships", options, true);
 
         choice = getInput("Please make a selection: ", sc);
@@ -159,7 +162,7 @@ public class Menu {
                 }
                 break;
             case 5:
-                if (capitalMatrix == null || portMatrix == null) {
+                if (capitalBordersMatrix == null || portMatrix == null) {
                     loadMatrices();
                 }
 
@@ -169,20 +172,15 @@ public class Menu {
                     shipArray.clear();
                 }
                 shipArray = LoadDBFiles.readShipDB();
+                System.out.println("Ships are imported with success");
                 break;
             case 7:
                 if (!portsArray.isEmpty()) {
                     portsArray.clear();
                 }
                 portsArray = LoadDBFiles.readPortDB();
+                System.out.println("Ports are imported with success");
                 break;
-            case 8:
-               /* for (int i = 0; i < shipArray.size(); i++) {
-                    System.out.println("INSERT INTO Ship VALUES(" + (i + 1) + ", '" + shipArray.get(i).getShipName() + "', " + shipArray.get(i).getMMSICode() + ", " + shipArray.get(i).getIMOCode() + ", '" + shipArray.get(i).getCallSign() + "', " + shipArray.get(i).getVesselType() + ", " + shipArray.get(i).getLength() + ", " + shipArray.get(i).getWidth() + ", " + shipArray.get(i).getDraft() + ", " + (int) Math.floor(Math.random() * (500 - 250 + 1) + 250) + ", " + (int) Math.floor(Math.random() * (20 - 10 + 1) + 10) + ", " + (int) Math.floor(Math.random() * (20 - 10 + 1) + 10) + ");");
-                    for (ShipDynamic dynamic : shipArray.get(i).getDynamicData())
-                        System.out.println("INSERT INTO ShipDynamic VALUES(" + (i + 1) + ", TO_DATE('" + dynamic.getBaseDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + "', 'DD/MM/YYYY HH24:MI'), " + dynamic.getLat() + ", " + dynamic.getLon() + ", " + dynamic.getSog() + ", " + dynamic.getCog() + ", " + dynamic.getHeading() + ", '" + dynamic.getTransceiverClass() + "');");
-                }
-                break;*/
         }
     }
 
@@ -198,7 +196,7 @@ public class Menu {
 
             String[] options = {"Go Back\n", "Show all Ships", "Search by Ship", "Search Ship Pairs\n",
                     "Create Summary of Ships", "View Summaries by Ship", "Get TOP N Ships\n",
-                    "Get Nearest Port", "Querys DB"};
+                    "Get Nearest Port"};
             printMenu("Manage Ships", options, true);
             choice = getInput("Please make a selection: ", sc);
 
@@ -267,15 +265,11 @@ public class Menu {
                             Port nearestPort = portTree.findNearestNeighbour(
                                     data.getLatitude(),
                                     data.getLongitude());
-                            System.out.println("Nearest Port: " + nearestPort.getName());
+                            System.out.println("Nearest Port: " + nearestPort.getName() + "\n" + "Latitude: " + nearestPort.getLatitude() + "\n" + "Longitude: " + nearestPort.getLongitude());
                         }
                     } else {
                         System.out.println("Ship not found");
                     }
-                    break;
-                case 8:
-                    //queriesBDDAD(sc);
-                    //dbQueriesMenu(sc);
                     break;
             }
 
@@ -380,7 +374,7 @@ public class Menu {
                     "C.Manifest transported during a given year and the average number of Containers per Manifest",
                     "Occupancy rate of a given Ship for a given Cargo Manifest.",
                     "Occupancy rate of a given Ship for a given Cargo Manifest.",
-                    "Ships will be available on Monday next week"};
+                    "Ships will be available on Monday next week\n\n"};
             printMenu("Show Ships", options, true);
             choice = getInput("Please make a selection: ", sc);
             Connection connection = MakeDBConnection.makeConnection();
@@ -479,6 +473,24 @@ public class Menu {
                     break;
                 case 7:
                     FunctionsDB.shipsAvailableMonday();
+                    break;
+                case 8:
+                    String us305 = "{? = call func_check_container(" + 16 + " , "+ 1 +")}";
+
+
+                    try (CallableStatement callableStatement = connection.prepareCall(us305)) {
+                        callableStatement.registerOutParameter(1, Types.VARCHAR);
+                        callableStatement.execute();
+                        System.out.println(callableStatement.getString(1));
+                    } catch (SQLException e) {
+                        System.out.println("Failed to create a statement: " + e);
+                    } finally {
+                        try {
+                            connection.close();
+                        } catch (SQLException e) {
+                            System.out.println("Failed to access database: " + e);
+                        }
+                    }
                     break;
                 case 0:
                     break;
@@ -638,10 +650,13 @@ public class Menu {
         );
     }
 
+    /**
+     * Load Matrix of Ports, Borders and Capitals
+     */
     private static void loadMatrices() {
-        capitalMatrix = GraphUtils.getCapitalMatrix();
-        // TODO Pedir n ao utilizador
-        portMatrix = GraphUtils.getPortMatrix(5);
+        capitalBordersMatrix = FunctionsGraph.getCapitalBordersMatrix();
+        Scanner sc = new Scanner(System.in);
+        int number = getInput("Insert N Ports: \n", sc);
+        portMatrix = FunctionsGraph.getPortMatrix(number);
     }
-
 }

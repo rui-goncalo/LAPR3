@@ -1,26 +1,34 @@
-package lapr.project.utils;
+package lapr.project.ui;
 
 import lapr.project.model.Border;
 import lapr.project.model.Country;
 import lapr.project.model.Port;
 import lapr.project.model.PortDistance;
 import lapr.project.structures.AdjacencyMatrixGraph;
+import lapr.project.utils.CSVReaderUtils;
+import lapr.project.utils.Calculator;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 
-public class GraphUtils {
+public class FunctionsGraph {
 
-    private static final String BORDERS_FILE = "src/data/borders.csv";
-    private static final String SMALL_PORTS_FILE = "src/data/sports.csv";
-    private static final String COUNTRIES_FILE = "src/data/countries.csv";
+    private static final String BORDERS_FILE = "data/borders.csv";
+    private static final String SMALL_PORTS_FILE = "data/sports.csv";
+    private static final String COUNTRIES_FILE = "data/countries.csv";
     private static ArrayList<Port> portsArray = CSVReaderUtils.readPortCSV(SMALL_PORTS_FILE);
     private static ArrayList<Country> countriesArray  = CSVReaderUtils.readCountryCSV(COUNTRIES_FILE);
     private static ArrayList<Border> borderArray = CSVReaderUtils.readBordersCSV(BORDERS_FILE);
     private static AdjacencyMatrixGraph<Port, Integer> portMatrix = new AdjacencyMatrixGraph<>();
     private static AdjacencyMatrixGraph<String, Integer> capitalMatrix = new AdjacencyMatrixGraph<>();
 
-    private static void insertCapitals() {
+    /**
+     * Method used to insert Capitals and Borders into a Matrix
+     * Through Capitals we add a Vertex and for Borders
+     * we have the Edges.
+     *
+     */
+    private static void insertCapitalsAndBorders() {
+
         for (Country country : countriesArray) {
             capitalMatrix.insertVertex(country.getCapital());
         }
@@ -33,6 +41,12 @@ public class GraphUtils {
         }
     }
 
+    /**
+     * Method used to insert Countries as Vertex. Through ArrayList
+     * of Ports, we check if Ports have same Country and if so,
+     * we add a new edge with value 1. Otherwise, the field is null.
+     *
+     */
     private static void insertPortsSameCountry() {
         for (Port port : portsArray) {
             portMatrix.insertVertex(port);
@@ -49,6 +63,14 @@ public class GraphUtils {
         }
     }
 
+    /**
+     * Method used to calculate distances from one port to another.
+     * In the ArrayList of Ports we have a list of Ports and for each
+     * one we add a new Port Distance list with the Port that contains
+     * the n Ports with the smallest distance to the largest.
+     *
+     * @param n number of Ports (input from user)
+     */
     private static void calculateDistancesFromPorts(int n) {
         ArrayList<PortDistance> distanceArray = null;
 
@@ -72,6 +94,11 @@ public class GraphUtils {
         }
     }
 
+    /**
+     * Method used to get the closest Port to the Capital of a
+     * Country. For the closest one, we make a buckle.
+     *
+     */
     private static void closestPortToCapital() {
         Port nearestPort = null;
         double distance = 0.0;
@@ -98,6 +125,13 @@ public class GraphUtils {
         }
     }
 
+    /**
+     * Method used to get all methods that involving Ports.
+     *
+     * @param n for the parameter of calculateDistancesFromPorts method
+     * @return Matrix of Ports
+     *
+     */
     public static AdjacencyMatrixGraph<Port, Integer> getPortMatrix(int n) {
         insertPortsSameCountry();
         calculateDistancesFromPorts(n);
@@ -105,10 +139,18 @@ public class GraphUtils {
         return portMatrix;
     }
 
-    public static AdjacencyMatrixGraph<String, Integer> getCapitalMatrix() {
-        insertCapitals();
+    /**
+     * Method used to get Capital and Borders Matrix.
+     *
+     * @return Matrix of Capitals and Borders
+     *
+     */
+    public static AdjacencyMatrixGraph<String, Integer> getCapitalBordersMatrix() {
+        insertCapitalsAndBorders();
         return capitalMatrix;
     }
+
+
 }
 
 
