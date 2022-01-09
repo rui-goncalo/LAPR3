@@ -26,4 +26,12 @@ public class PortInfoTest {
         assertEquals("Liverpool", newPortInfo.getName());
     }
 
+    @Test
+    public void testCompareTo() {
+
+        PortInfo o = new PortInfo("Asia", 12012, "Seul");
+        PortInfo o2 = new PortInfo("Asia", 12012, "Seul");
+
+        assertEquals(0, o.compareTo(o2));
+    }
 }

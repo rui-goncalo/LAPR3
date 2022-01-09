@@ -30,18 +30,24 @@ public class FunctionsGraph {
     // os ports de seadist array e verifica se o from Port já existe. Senão cria um novo
     // Por último, verifica se o toNode já existe, para não repetir e criarmos um novo node.
 
+
+    // O nr de Shortest Paths deve ser 1 ou 0 por Porto?
+    // Perguntar se eles (profs.) disponibilizam alguma base/class para implementar o algoritmo de dijkstra
+
     public static DijkstraGraph populateGraph() {
         PortInfo latestPort = null;
+        DijkstraGraph.Node firstNode = null;
         DijkstraGraph.Node latestNode = null;
         for (Seadist portInfo : seaDistArray) {
             if (latestPort == null) {
                 latestPort = new PortInfo(portInfo.getFromCountry(), portInfo.getFromPortId(), portInfo.getFromPort());
                 latestNode = new DijkstraGraph.Node(latestPort);
+                firstNode = latestNode;
             }
 
             PortInfo fromPort = new PortInfo(portInfo.getFromCountry(), portInfo.getFromPortId(), portInfo.getFromPort());
 
-            if (latestPort.getId() != fromPort.getId()) {
+            if (Integer.compare(latestPort.getId(), fromPort.getId()) != 0) {
                 dijkstraGraph.addNode(latestNode);
                 latestPort = fromPort;
                 latestNode = new DijkstraGraph.Node(latestPort);
@@ -60,119 +66,13 @@ public class FunctionsGraph {
 
             dijkstraGraph.addNode(toNode);
         }
+        DijkstraGraph newGraph = DijkstraGraph.calculateShortestPathFromSource(dijkstraGraph, firstNode);
+        for(DijkstraGraph.Node node : newGraph.getNodes()){
+            for (DijkstraGraph.Node newNode : node.getShortestPath()) {
+                System.out.println(newNode.getPort().getName());
+            }
+        }
         return dijkstraGraph;
-    }
-
-    /**
-     * Method used to insert Countries as Vertex. Through ArrayList
-     * of Ports, we check if Ports have same Country and if so,
-     * we add a new edge with value 1. Otherwise, the field is null.
-     *
-     */
-    private static void insertPortsSameCountry() {
-        AdjacencyMatrixGraph<Port, Integer> portMatrix = new AdjacencyMatrixGraph<>();
-
-        for (Port port : portsArray) {
-            portMatrix.insertVertex(port);
-        }
-
-        for (int i = 0; i < portsArray.size() - 1; i++) {
-            for (int j = i + 1; j < portsArray.size(); j++) {
-                Port firstPort = portsArray.get(i);
-                Port secondPort = portsArray.get(j);
-                if (firstPort.getCountry().equals(secondPort.getCountry())) {
-                    portMatrix.insertEdge(firstPort, secondPort, 1);
-                }
-            }
-        }
-    }
-
-    /**
-     * Method used to calculate distances from one port to another.
-     * In the ArrayList of Ports we have a list of Ports and for each
-     * one we add a new Port Distance list with the Port that contains
-     * the n Ports with the smallest distance to the largest.
-     *
-     * @param n number of Ports (input from user)
-     */
-    private static void calculateDistancesFromPorts(int n) {
-        AdjacencyMatrixGraph<Port, Integer> portNMatrix = new AdjacencyMatrixGraph<>();
-        ArrayList<PortDistance> distanceArray = null;
-
-        for (Port firstPort : portsArray) {
-            distanceArray = new ArrayList<>();
-            for (Port secondPort : portsArray) {
-                if (!firstPort.getCountry().equals(secondPort.getCountry())) {
-                    double distanceToPort = Calculator.getDistance(firstPort.getLatitude(), firstPort.getLongitude(),
-                            secondPort.getLatitude(), secondPort.getLongitude());
-                    distanceArray.add(new PortDistance(secondPort, distanceToPort));
-                }
-            }
-            Collections.sort(distanceArray);
-            int i = 0;
-            for (PortDistance portDistance : distanceArray) {
-                if (i < n) {
-                    portNMatrix.insertEdge(firstPort, portDistance.getPort(), 1);
-                    i++;
-                }
-            }
-        }
-    }
-
-    /**
-     * Method used to get the closest Port to the Capital of a
-     * Country. For the closest one, we make a buckle.
-     *
-     */
-    private static void closestPortToCapital() {
-        Port nearestPort = null;
-        double distance = 0.0;
-        for(Country country : countriesArray) {
-            for (Port port : portsArray) {
-                if(port.getCountry().equals(country.getName())) {
-                    if (distance == 0.0) {
-                        distance = Calculator.getDistance(country.getLatitude(), country.getLongitude(),
-                                port.getLatitude(), port.getLongitude());
-                        nearestPort = port;
-                    } else {
-                        double distanceToCapital = Calculator.getDistance(country.getLatitude(), country.getLongitude(),
-                                port.getLatitude(), port.getLongitude());
-                        if (distanceToCapital < distance) {
-                            distance = distanceToCapital;
-                            nearestPort = port;
-                        }
-                    }
-                }
-            }
-            if (nearestPort != null) {
-                portMatrix.insertEdge(nearestPort, nearestPort, 1);
-            }
-        }
-    }
-
-    /**
-     * Method used to get all methods that involving Ports.
-     *
-     * @return Matrix of Ports
-     *
-     */
-    public static AdjacencyMatrixGraph<Port, Integer> getCountryPortMatrix() {
-        portMatrix = new AdjacencyMatrixGraph<>();
-
-        for (Port port : portsArray) {
-            portMatrix.insertVertex(port);
-        }
-
-        for (int i = 0; i < portsArray.size() - 1; i++) {
-            for (int j = i + 1; j < portsArray.size(); j++) {
-                Port firstPort = portsArray.get(i);
-                Port secondPort = portsArray.get(j);
-                if (firstPort.getCountry().equals(secondPort.getCountry())) {
-                    portMatrix.insertEdge(firstPort, secondPort, 1);
-                }
-            }
-        }
-        return portMatrix;
     }
 
     public static AdjacencyMatrixGraph<Port, Integer> getNClosestPortMatrix(int n) {

@@ -1,3 +1,4 @@
+
 package lapr.project.model;
 
 import org.junit.jupiter.api.Test;
@@ -24,4 +25,11 @@ public class PortDistanceTest {
     public void testGetDistance() {
         assertEquals(53.46666667, newPortDistance.getDistance());
     }
+
+    @Test
+    public void testCompareTo() {
+        PortDistance o = new PortDistance(newPort, 53.46666667);
+        PortDistance o2 = new PortDistance(newPort, 53.46666667);
+
+        assertEquals(0, o.compareTo(o2));    }
 }

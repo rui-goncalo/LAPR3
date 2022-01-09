@@ -66,6 +66,10 @@ public class DijkstraGraph {
             this.nodes = nodes;
     }
 
+    public Set<Node> getNodes() {
+            return this.nodes;
+    }
+
     public Node checkIfNodeExists(PortInfo portInfo) {
             Node returnNode = null;
             for(Node node : nodes) {
@@ -76,7 +80,7 @@ public class DijkstraGraph {
             return returnNode;
     }
 
-    public static Graph calculateShortestPathFromSource(Graph graph, Node source) {
+    public static DijkstraGraph calculateShortestPathFromSource(DijkstraGraph graph, Node source) {
         source.setDistance(0);
 
         Set<Node> settledNodes = new HashSet<>();
