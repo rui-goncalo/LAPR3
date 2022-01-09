@@ -13,6 +13,7 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * @author Rui Gonçalves - 1191831
@@ -110,6 +111,7 @@ public class Menu {
                 "Big Ports File CSV\n", "Load Ships from Database", "Load Ports from Database",
                 "Print Border Map"};
 
+        FunctionsGraph.populateGraph();
         printMenu("Import Ships", options, true);
 
         choice = getInput("Please make a selection: ", sc);
