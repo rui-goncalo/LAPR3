@@ -49,6 +49,9 @@ public class CSVReaderTest {
         assertEquals("Liverpool", ports.get(0).getName());
         assertEquals(53.46666667, ports.get(0).getLatitude());
         assertEquals(-3.033333333, ports.get(0).getLongitude());
+
+        ports = null;
+        assertNull(ports);
     }
 
     @Test
@@ -69,6 +72,9 @@ public class CSVReaderTest {
         assertEquals("Nicosia", countries.get(0).getCapital());
         assertEquals(35.16666667, countries.get(0).getLatitude());
         assertEquals(33.366667, countries.get(0).getLongitude());
+
+        countries = null;
+        assertNull(countries);
     }
 
     @Test
@@ -83,11 +89,14 @@ public class CSVReaderTest {
         assertEquals("Ambarli", seadists.get(0).getToPort());
         assertEquals(3673, seadists.get(0).getSeaDistance());
 
+        seadists = null;
+        assertNull(seadists);
     }
 
 
     @Test
-    void testReadBorder() {ArrayList<Country> countries = CSVReaderUtils.readCountryCSV("data/countries.csv");
+    void testReadBorder() {
+        ArrayList<Country> countries = CSVReaderUtils.readCountryCSV("data/countries.csv");
         if (countries != null) {
             assertEquals(68, countries.size());
             assertEquals("Europe", countries.get(0).getContinent());
@@ -106,6 +115,9 @@ public class CSVReaderTest {
                 assertEquals("Ukraine", borderArr.get(borderArr.size() - 1).getCountry2().getName());
             }
         }
+
+        countries = null;
+        assertNull(countries);
     }
 
 }
