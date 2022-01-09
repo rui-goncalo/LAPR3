@@ -1,6 +1,5 @@
-package lapr.project.structures;
+package lapr.project.ui;
 
-import lapr.project.model.Port;
 import lapr.project.model.PortInfo;
 
 import java.util.*;

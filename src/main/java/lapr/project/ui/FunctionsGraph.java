@@ -2,7 +2,6 @@ package lapr.project.ui;
 
 import lapr.project.model.*;
 import lapr.project.structures.AdjacencyMatrixGraph;
-import lapr.project.structures.DijkstraGraph;
 import lapr.project.utils.CSVReaderUtils;
 import lapr.project.utils.Calculator;
 
