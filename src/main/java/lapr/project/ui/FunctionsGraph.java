@@ -1,10 +1,8 @@
 package lapr.project.ui;
 
-import lapr.project.model.Border;
-import lapr.project.model.Country;
-import lapr.project.model.Port;
-import lapr.project.model.PortDistance;
+import lapr.project.model.*;
 import lapr.project.structures.AdjacencyMatrixGraph;
+import lapr.project.structures.DijkstraGraph;
 import lapr.project.utils.CSVReaderUtils;
 import lapr.project.utils.Calculator;
 
@@ -15,22 +13,55 @@ public class FunctionsGraph {
     private static final String BORDERS_FILE = "data/borders.csv";
     private static final String SMALL_PORTS_FILE = "data/sports.csv";
     private static final String COUNTRIES_FILE = "data/countries.csv";
+    private static final String SEADIST_FILE = "data/seadists.csv";
     private static ArrayList<Port> portsArray = CSVReaderUtils.readPortCSV(SMALL_PORTS_FILE);
     private static ArrayList<Country> countriesArray  = CSVReaderUtils.readCountryCSV(COUNTRIES_FILE);
     private static ArrayList<Border> borderArray = CSVReaderUtils.readBordersCSV(BORDERS_FILE);
+    private static ArrayList<Seadist> seaDistArray = CSVReaderUtils.readSeadistsCSV(SEADIST_FILE);
     private static AdjacencyMatrixGraph<Port, Integer> portMatrix = new AdjacencyMatrixGraph<>();
     private static AdjacencyMatrixGraph<String, Integer> capitalMatrix = new AdjacencyMatrixGraph<>();
 
-    /**
-     * Method used to insert Capitals and Borders into a Matrix
-     * Through Capitals we add a Vertex and for Borders
-     * we have the Edges.
-     *
-     */
-    private static void insertCapitalsAndBorders() {
+    private static DijkstraGraph dijkstraGraph = new DijkstraGraph();
+
+
+    // Criamos uma classe Dijkstra
+    // Criamos uma classe Port Info
+    // Criamos um metodo populateGraph para a US 401 que guarda em todos os nodes
+    // os ports de seadist array e verifica se o from Port já existe. Senão cria um novo
+    // Por último, verifica se o toNode já existe, para não repetir e criarmos um novo node.
+
+    public static DijkstraGraph populateGraph() {
+        PortInfo latestPort = null;
+        DijkstraGraph.Node latestNode = null;
+        for (Seadist portInfo : seaDistArray) {
+            if (latestPort == null) {
+                latestPort = new PortInfo(portInfo.getFromCountry(), portInfo.getFromPortId(), portInfo.getFromPort());
+                latestNode = new DijkstraGraph.Node(latestPort);
+            }
+
+            PortInfo fromPort = new PortInfo(portInfo.getFromCountry(), portInfo.getFromPortId(), portInfo.getFromPort());
+
+            if (latestPort.getId() != fromPort.getId()) {
+                dijkstraGraph.addNode(latestNode);
+                latestPort = fromPort;
+                latestNode = new DijkstraGraph.Node(latestPort);
+            }
+            PortInfo toPort = new PortInfo(portInfo.getToCountry(), portInfo.getToPortId(), portInfo.getToPort());
+
+            DijkstraGraph.Node toNode = null;
+            DijkstraGraph.Node checkNode = dijkstraGraph.checkIfNodeExists(toPort);
+            if (checkNode == null) {
+                 toNode = new DijkstraGraph.Node(toPort);
+            } else {
+                toNode = checkNode;
+            }
+
+            latestNode.addDestination(toNode, portInfo.getSeaDistance());
+
+            dijkstraGraph.addNode(toNode);
+        }
+        return dijkstraGraph;
     }
-
-
 
     /**
      * Method used to insert Countries as Vertex. Through ArrayList
@@ -237,7 +268,6 @@ public class FunctionsGraph {
             portMatrix.insertVertex(port);
         }
     }
-
 
 }
 
