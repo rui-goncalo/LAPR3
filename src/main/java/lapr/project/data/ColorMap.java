@@ -1,5 +1,7 @@
-package lapr.project.model;
+package lapr.project.data;
 
+import lapr.project.model.Country;
+import lapr.project.model.Location;
 import lapr.project.structures.Graph;
 import java.util.ArrayList;
 import java.util.HashMap;
