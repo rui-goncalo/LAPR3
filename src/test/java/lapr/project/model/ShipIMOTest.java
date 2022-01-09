@@ -1,5 +1,6 @@
 package lapr.project.model;
 
+import lapr.project.utils.Summary;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,8 +19,8 @@ public class ShipIMOTest {
     @Test
     public void testShipIMO() {
         System.out.println("ShipIMO()");
-        ArrayList<ShipData> shipArray = new ArrayList<>();
-        Ship ship = new Ship(123456789, shipArray, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
+        ArrayList<ShipData> shipArray1 = new ArrayList<>();
+        Ship ship = new Ship(123456781, shipArray1, "first", 1234561, "callsign1", 1, 294.13, 32.31, 11.89, 10.0);
 
         ShipIMO shipIMO = new ShipIMO(ship);
         Ship expRes = new Ship(ship.getMmsi(), ship.getDynamicShip(), ship.getName(), ship.getImo(), ship.getCallSign(), ship.getVessel(), ship.getLength(), ship.getWidth(), ship.getDraft(), ship.getCargo());
