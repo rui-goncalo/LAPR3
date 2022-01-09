@@ -24,7 +24,7 @@ public class ShipIMOTest {
         ShipIMO shipIMO = new ShipIMO(ship);
         Ship expRes = new Ship(ship.getMmsi(), ship.getDynamicShip(), ship.getName(), ship.getImo(), ship.getCallSign(), ship.getVessel(), ship.getLength(), ship.getWidth(), ship.getDraft(), ship.getCargo());
 
-        assertEquals(expRes, shipIMO, "should be equal");
+        assertEquals(expRes.toString(), shipIMO.toString(), "should be equal");
     }
 
     @Test
