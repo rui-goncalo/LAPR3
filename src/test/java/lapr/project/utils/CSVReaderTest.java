@@ -4,6 +4,7 @@ import lapr.project.model.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.ArrayList;
 
@@ -33,6 +34,9 @@ public class CSVReaderTest {
         assertEquals(5.5, arrayship.get(0).getDynamicShip().get(0).getCog());
         assertEquals(355, arrayship.get(0).getDynamicShip().get(0).getHeading());
         assertEquals('B', arrayship.get(0).getDynamicShip().get(0).getTransceiver());
+
+        arrayship = null;
+        assertNull(arrayship);
     }
 
     @Test
