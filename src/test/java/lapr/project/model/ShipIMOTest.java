@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ShipIMOTest {
     public ShipIMOTest() {
@@ -24,7 +24,7 @@ public class ShipIMOTest {
         ShipIMO shipIMO = new ShipIMO(ship);
         Ship expRes = new Ship(ship.getMmsi(), ship.getDynamicShip(), ship.getName(), ship.getImo(), ship.getCallSign(), ship.getVessel(), ship.getLength(), ship.getWidth(), ship.getDraft(), ship.getCargo());
 
-        assertEquals(expRes.toString(), shipIMO.toString(), "should be equal");
+        assertEquals(expRes, shipIMO, "should be equal");
     }
 
     @Test
