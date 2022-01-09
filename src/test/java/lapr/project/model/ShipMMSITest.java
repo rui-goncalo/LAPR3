@@ -24,7 +24,8 @@ public class ShipMMSITest {
         ShipMMSI ShipMMSI = new ShipMMSI(ship);
         Ship expRes = new Ship(ship.getMmsi(), ship.getDynamicShip(), ship.getName(), ship.getImo(), ship.getCallSign(), ship.getVessel(), ship.getLength(), ship.getWidth(), ship.getDraft(), ship.getCargo());
 
-        assertEquals(expRes.toString(), ShipMMSI.toString(), "should be equal");
+        assertEquals(expRes.toString(), ShipMMSI.toString());
+        //assertEquals(expRes.toString(), ShipMMSI.toString(), "should be equal");
     }
 
     @Test
@@ -51,7 +52,5 @@ public class ShipMMSITest {
         ShipMMSI o4 = new ShipMMSI(ship1);
         assertEquals(1, o3.compareTo(o4), "should be 1");
         assertEquals(-1, o4.compareTo(o3), "should be -1");
-
-
     }
 }
