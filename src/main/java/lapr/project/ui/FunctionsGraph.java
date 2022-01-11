@@ -168,6 +168,51 @@ public class FunctionsGraph {
         }
     }
 
+    public static Map<String, String> getBorderMap() {
+        Map<String, String> borderMap = new HashMap<>();
+        String color = "";
+
+        for(Country country :countriesArray) {
+            String countryName = country.getName();
+            color =getRandomColor();
+            for (Border border :borderArray) {
+                if(border.getCountry1().getName().equals(countryName)) {
+                    String country2 = border.getCountry2().getName();
+                    if (borderMap.containsKey(country2)) {
+                        String country2Color = borderMap.get(country2);
+                        while (color.equals(country2Color)) {
+                            color =getRandomColor();
+                        }
+                        borderMap.put(countryName, color);
+                    } else {
+                        borderMap.put(countryName, color);
+                    }
+                } else if (border.getCountry2().getName().equals(countryName)) {
+                    String country1 = border.getCountry1().getName();
+                    if (borderMap.containsKey(country1)) {
+                        String country1Color = borderMap.get(country1);
+                        while (color.equals(country1Color)) {
+                            color =getRandomColor();
+                        }
+                        borderMap.put(countryName, color);
+                    } else {
+                        borderMap.put(countryName, color);
+                    }
+                }
+            }
+        }
+
+        for (String key : borderMap.keySet()) {
+            System.out.println("Country: " + key + " Color: " + borderMap.get(key));
+        }
+        return borderMap;
+    }
+
+    public static String getRandomColor() {
+        String[] colors = new String[]{"blue", "green", "yellow", "black", "pink", "white", "grey"};
+        return colors[(int)Math.floor(Math.random()*(6-0+1)+0)];
+    }
+
 }
 
 

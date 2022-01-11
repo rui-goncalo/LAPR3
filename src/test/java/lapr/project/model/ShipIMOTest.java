@@ -18,7 +18,6 @@ public class ShipIMOTest {
 
     @Test
     public void testShipIMO() {
-        System.out.println("ShipIMO()");
         ArrayList<ShipData> shipArray1 = new ArrayList<>();
         Ship ship = new Ship(123456781, shipArray1, "first", 1234561, "callsign1", 1, 294.13, 32.31, 11.89, 10.0);
 
@@ -30,7 +29,6 @@ public class ShipIMOTest {
 
     @Test
     public void testShipIMO2() {
-        System.out.println("ShipIMO2()");
         ShipIMO shipIMO = new ShipIMO(1234567);
         Ship expRes = new Ship(0, null, null, 1234567, null, 0, 0, 0, 0, 0);
 
@@ -39,7 +37,6 @@ public class ShipIMOTest {
 
     @Test
     public void testCompareTo() {
-        System.out.println("compareTo()");
         ArrayList<ShipData> shipArray = new ArrayList<>();
         Ship ship = new Ship(123456789, shipArray, "Primeiro", 1234567, "callsign", 1, 294.13, 32.31, 11.89, 10.0);
 

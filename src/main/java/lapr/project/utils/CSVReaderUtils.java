@@ -109,7 +109,7 @@ public final class CSVReaderUtils {
             return portArrayList;
         } catch (Exception e) {
             System.out.println("No ports were imported - Try again.\n");
-            return null;
+            return new ArrayList<>();
         }
     }
 
@@ -147,7 +147,7 @@ public final class CSVReaderUtils {
             return countryArrayList;
         } catch (Exception e) {
             System.out.println("No countries were imported - Try again.\n");
-            return null;
+            return new ArrayList<>();
         }
     }
 
@@ -172,7 +172,8 @@ public final class CSVReaderUtils {
 
                     if (country.getName().equals(values[0])) {
                         country1 = country;
-                    } if (country.getName().equals(values[1].replaceFirst(" ", ""))) {
+                    }
+                    if (country.getName().equals(values[1].replaceFirst(" ", ""))) {
                         country2 = country;
 
                     }
@@ -184,7 +185,7 @@ public final class CSVReaderUtils {
             return borderArrayList;
         } catch (Exception e) {
             System.out.println("No borders were imported - Try again.\n");
-            return null;
+            return new ArrayList<>();
         }
     }
 
