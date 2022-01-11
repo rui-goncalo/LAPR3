@@ -108,7 +108,6 @@ public final class CSVReaderUtils {
             }
             return portArrayList;
         } catch (Exception e) {
-            System.out.println("No ports were imported - Try again.\n");
             return new ArrayList<>();
         }
     }
@@ -146,7 +145,6 @@ public final class CSVReaderUtils {
             }
             return countryArrayList;
         } catch (Exception e) {
-            System.out.println("No countries were imported - Try again.\n");
             return new ArrayList<>();
         }
     }
@@ -184,7 +182,6 @@ public final class CSVReaderUtils {
             }
             return borderArrayList;
         } catch (Exception e) {
-            System.out.println("No borders were imported - Try again.\n");
             return new ArrayList<>();
         }
     }
@@ -215,8 +212,7 @@ public final class CSVReaderUtils {
             }
             return seadistArrayList;
         } catch (Exception e) {
-            System.out.println("No seadists were imported - Try again.\n");
-            return null;
+            return new ArrayList<>();
         }
     }
 
