@@ -6,7 +6,7 @@ import lapr.project.model.ShipData;
 
 import java.util.ArrayList;
 
-public class Calculator {
+public final class Calculator {
     
     private static final double MINUTES_IN_A_DEGREE = 60;
     private static final double NAUTICAL_MILES_TO_STATUTE_MILES = 1.1515;
