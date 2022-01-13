@@ -52,7 +52,7 @@ public class CSVReaderTest {
         assertEquals(-3.033333333, ports.get(0).getLongitude());
 
         ports = CSVReaderUtils.readPortCSV("");
-        assertEquals(ports, new ArrayList<>());
+        assertEquals(0, ports.size());
     }
 
     @Test
