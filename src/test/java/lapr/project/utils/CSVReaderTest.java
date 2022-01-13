@@ -41,6 +41,7 @@ public class CSVReaderTest {
 
     @Test
     void testReadPorts() {
+
         ArrayList<Port> ports = CSVReaderUtils.readPortCSV("data/sports.csv");
         assertEquals(22, ports.size());
         assertEquals("Europe", ports.get(0).getContinent());
@@ -50,8 +51,8 @@ public class CSVReaderTest {
         assertEquals(53.46666667, ports.get(0).getLatitude());
         assertEquals(-3.033333333, ports.get(0).getLongitude());
 
-        ports = null;
-        assertNull(ports);
+        ports = CSVReaderUtils.readPortCSV("");
+        assertEquals(ports, new ArrayList<>());
     }
 
     @Test
