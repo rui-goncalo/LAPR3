@@ -34,9 +34,7 @@ public class CSVReaderTest {
         assertEquals(5.5, arrayship.get(0).getDynamicShip().get(0).getCog());
         assertEquals(355, arrayship.get(0).getDynamicShip().get(0).getHeading());
         assertEquals('B', arrayship.get(0).getDynamicShip().get(0).getTransceiver());
-
-        arrayship = CSVReaderUtils.readShipCSV("");
-        assertEquals(0, arrayship.size());
+        
     }
 
     @Test
