@@ -35,8 +35,8 @@ public class CSVReaderTest {
         assertEquals(355, arrayship.get(0).getDynamicShip().get(0).getHeading());
         assertEquals('B', arrayship.get(0).getDynamicShip().get(0).getTransceiver());
 
-        arrayship = null;
-        assertNull(arrayship);
+        arrayship = CSVReaderUtils.readShipCSV("");
+        assertEquals(0, arrayship.size());
     }
 
     @Test
@@ -74,8 +74,8 @@ public class CSVReaderTest {
         assertEquals(35.16666667, countries.get(0).getLatitude());
         assertEquals(33.366667, countries.get(0).getLongitude());
 
-        countries = null;
-        assertNull(countries);
+        countries = CSVReaderUtils.readCountryCSV("");
+        assertEquals(0, countries.size());
     }
 
     @Test
@@ -90,8 +90,8 @@ public class CSVReaderTest {
         assertEquals("Ambarli", seadists.get(0).getToPort());
         assertEquals(3673, seadists.get(0).getSeaDistance());
 
-        seadists = null;
-        assertNull(seadists);
+        seadists = CSVReaderUtils.readSeadistsCSV("");
+        assertEquals(0, seadists.size());
     }
 
 
@@ -115,10 +115,12 @@ public class CSVReaderTest {
                 assertEquals("Russia", borderArr.get(borderArr.size() - 1).getCountry1().getName());
                 assertEquals("Ukraine", borderArr.get(borderArr.size() - 1).getCountry2().getName());
             }
+
+            borderArr = CSVReaderUtils.readBordersCSV("");
+            assertEquals(0, borderArr.size());
         }
 
-        countries = null;
-        assertNull(countries);
+
     }
 
 }
