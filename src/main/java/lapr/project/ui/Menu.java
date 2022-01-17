@@ -111,7 +111,8 @@ public class Menu {
                 "Big Ports File CSV\n", "Load Ships from Database", "Load Ports from Database",
                 "Print Border Map"};
 
-        //FunctionsGraph.populateGraph();
+        FunctionsGraph.populateGraph();
+
         printMenu("Import Ships", options, true);
 
         choice = getInput("Please make a selection: ", sc);
@@ -177,7 +178,7 @@ public class Menu {
                 portsArray = LoadDBFiles.readPortDB();
                 System.out.println("Ports are imported with success");
                 break;
-            case 8:
+            case 7:
                 FunctionsGraph.getBorderMap();
         }
     }

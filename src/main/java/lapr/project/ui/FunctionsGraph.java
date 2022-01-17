@@ -2,10 +2,12 @@ package lapr.project.ui;
 
 import lapr.project.model.*;
 import lapr.project.structures.AdjacencyMatrixGraph;
+import lapr.project.structures.GraphDijkstra;
 import lapr.project.utils.CSVReaderUtils;
 import lapr.project.utils.Calculator;
 
 import java.util.*;
+import java.util.function.BinaryOperator;
 
 public class FunctionsGraph {
 
@@ -13,66 +15,50 @@ public class FunctionsGraph {
     private static final String SMALL_PORTS_FILE = "data/sports.csv";
     private static final String COUNTRIES_FILE = "data/countries.csv";
     private static final String SEADIST_FILE = "data/seadists.csv";
-    private static ArrayList<Port> portsArray = CSVReaderUtils.readPortCSV(SMALL_PORTS_FILE);
-    private static ArrayList<Country> countriesArray  = CSVReaderUtils.readCountryCSV(COUNTRIES_FILE);
-    private static ArrayList<Border> borderArray = CSVReaderUtils.readBordersCSV(BORDERS_FILE);
-    private static ArrayList<Seadist> seaDistArray = CSVReaderUtils.readSeadistsCSV(SEADIST_FILE);
+    private static final ArrayList<Port> portsArray = CSVReaderUtils.readPortCSV(SMALL_PORTS_FILE);
+    private static final ArrayList<Country> countriesArray  = CSVReaderUtils.readCountryCSV(COUNTRIES_FILE);
+    private static final ArrayList<Border> borderArray = CSVReaderUtils.readBordersCSV(BORDERS_FILE);
+    private static final ArrayList<Seadist> seaDistArray = CSVReaderUtils.readSeadistsCSV(SEADIST_FILE);
     private static AdjacencyMatrixGraph<Port, Integer> portMatrix = new AdjacencyMatrixGraph<>();
-    private static AdjacencyMatrixGraph<String, Integer> capitalMatrix = new AdjacencyMatrixGraph<>();
 
-    private static DijkstraGraph dijkstraGraph = new DijkstraGraph();
+    private static final GraphDijkstra<PortInfo, Integer> dijkstraGraph = new GraphDijkstra();
 
+    public static GraphDijkstra populateGraph() {
 
-    // Criamos uma classe Dijkstra
-    // Criamos uma classe Port Info
-    // Criamos um metodo populateGraph para a US 401 que guarda em todos os nodes
-    // os ports de seadist array e verifica se o from Port já existe. Senão cria um novo
-    // Por último, verifica se o toNode já existe, para não repetir e criarmos um novo node.
-
-
-    // O nr de Shortest Paths deve ser 1 ou 0 por Porto?
-    // Perguntar se eles (profs.) disponibilizam alguma base/class para implementar o algoritmo de dijkstra
-
-    public static DijkstraGraph populateGraph() {
-        PortInfo latestPort = null;
-        DijkstraGraph.Node firstNode = null;
-        DijkstraGraph.Node latestNode = null;
         for (Seadist portInfo : seaDistArray) {
-            if (latestPort == null) {
-                latestPort = new PortInfo(portInfo.getFromCountry(), portInfo.getFromPortId(), portInfo.getFromPort());
-                latestNode = new DijkstraGraph.Node(latestPort);
-                firstNode = latestNode;
-            }
-
             PortInfo fromPort = new PortInfo(portInfo.getFromCountry(), portInfo.getFromPortId(), portInfo.getFromPort());
-
-            if (Integer.compare(latestPort.getId(), fromPort.getId()) != 0) {
-                dijkstraGraph.addNode(latestNode);
-                latestPort = fromPort;
-                latestNode = new DijkstraGraph.Node(latestPort);
-            }
             PortInfo toPort = new PortInfo(portInfo.getToCountry(), portInfo.getToPortId(), portInfo.getToPort());
 
-            DijkstraGraph.Node toNode = null;
-            DijkstraGraph.Node checkNode = dijkstraGraph.checkIfNodeExists(toPort);
-            if (checkNode == null) {
-                 toNode = new DijkstraGraph.Node(toPort);
-            } else {
-                toNode = checkNode;
+
+            ArrayList<PortInfo> vertices = dijkstraGraph.vertices();
+
+            boolean isValidFromPort = true;
+            boolean isValidToPort = true;
+            for (PortInfo port : vertices) {
+                if (Integer.compare(port.getId(), fromPort.getId()) == 0) {
+                    isValidFromPort = false;
+                }
+                if (Integer.compare(port.getId(), toPort.getId()) == 0) {
+                    isValidToPort = false;
+                }
             }
 
-            latestNode.addDestination(toNode, portInfo.getSeaDistance());
-
-            dijkstraGraph.addNode(toNode);
-        }
-        DijkstraGraph newGraph = DijkstraGraph.calculateShortestPathFromSource(dijkstraGraph, firstNode);
-        for(DijkstraGraph.Node node : newGraph.getNodes()){
-            for (DijkstraGraph.Node newNode : node.getShortestPath()) {
-                System.out.println(newNode.getPort().getName());
+            if (isValidFromPort) {
+                dijkstraGraph.addVertex(fromPort);
             }
+
+            if (isValidToPort) {
+                dijkstraGraph.addVertex(toPort);
+            }
+
+            dijkstraGraph.addEdge(fromPort, toPort, portInfo.getSeaDistance());
         }
+
+        BinaryOperator<Integer> operator = (x, y) -> x + y;
+
         return dijkstraGraph;
     }
+
 
     public static AdjacencyMatrixGraph<Port, Integer> getNClosestPortMatrix(int n) {
         portMatrix = new AdjacencyMatrixGraph<>();
@@ -148,7 +134,7 @@ public class FunctionsGraph {
      *
      */
     public static AdjacencyMatrixGraph<String, Integer> getCapitalBordersMatrix() {
-        capitalMatrix = new AdjacencyMatrixGraph<>();
+        AdjacencyMatrixGraph<String, Integer> capitalMatrix = new AdjacencyMatrixGraph<>();
         for (Country country : countriesArray) {
             capitalMatrix.insertVertex(country.getCapital());
         }
@@ -170,7 +156,7 @@ public class FunctionsGraph {
 
     public static Map<String, String> getBorderMap() {
         Map<String, String> borderMap = new HashMap<>();
-        String color = "";
+        String color = null;
 
         for(Country country :countriesArray) {
             String countryName = country.getName();
@@ -209,10 +195,9 @@ public class FunctionsGraph {
     }
 
     public static String getRandomColor() {
-        String[] colors = new String[]{"blue", "green", "yellow", "black", "pink", "white", "grey"};
-        return colors[(int)Math.floor(Math.random()*(6-0+1)+0)];
+        String[] colors = new String[]{"blue", "green", "yellow", "black", "pink"};
+        return colors[(int)Math.floor(Math.random()*(4+1)+0)];
     }
-
 }
 
 
