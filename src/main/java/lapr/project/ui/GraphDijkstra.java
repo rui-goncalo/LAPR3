@@ -1,4 +1,6 @@
-package lapr.project.structures;
+package lapr.project.ui;
+
+import lapr.project.structures.Edge;
 
 import java.util.ArrayList;
 import java.util.Comparator;
