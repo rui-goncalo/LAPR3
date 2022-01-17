@@ -196,7 +196,7 @@ public class Menu {
             String[] options = {"Go Back\n", "Show all Ships", "Search by Ship", "Search Ship Pairs\n",
                     "Create Summary of Ships", "View Summaries by Ship", "Get TOP N Ships\n",
                     "Get Nearest Port\n", "Print N Closest Port Matrix", "Print Ports Closest to Capital - same country - Matrix",
-                    "Print Capital and Borders Matrix"};
+                    "Print Capital and Borders Matrix\n", "Vessel Type"};
             printMenu("Manage Ships", options, true);
             choice = getInput("Please make a selection: ", sc);
 
@@ -281,6 +281,8 @@ public class Menu {
                 case 10:
                     System.out.println(FunctionsGraph.getCapitalBordersMatrix().toString());
                     break;
+                case 11:
+                    vesselTypesMenu(sc);
             }
 
         } while (choice != 0);
@@ -659,4 +661,104 @@ public class Menu {
                         "\nDelta distance: " + summaryShip.getDeltaDistance()
         );
     }
+
+    public static void vesselTypesMenu(Scanner sc) {
+        Ship containerVessel = new Ship(
+                636091400,
+                new ArrayList<>(),
+                "RHL AGILITAS",
+                9373486,
+                "A8ND5",
+                70,
+                176f,
+                27f,
+                11.89,
+                10.0);
+
+        Ship fishingVessel = new Ship(
+                303221000,
+                new ArrayList<>(),
+                "ARTIC SEA",
+                7819216,
+                "WDG5171",
+                30,
+                37f,
+                9f,
+                3f,
+                10.0);
+
+        Ship tugVessel = new Ship(
+                499929694,
+                new ArrayList<>(),
+                "TANERLIQ",
+                9178445,
+                "WDF2025",
+                52,
+                45f,
+                14f,
+                0f,
+                10.0);
+
+        int choice;
+        do {
+            String[] options = {"Go Back\n", "Container Vessel", "Tug Vessel", "Ro-Ro Vessel \n"};
+            printMenu("Manage Ships", options, true);
+            choice = getInput("Please make a selection: ", sc);
+
+            switch (choice) {
+                case 1:
+                    printType(containerVessel, fishingDescription);
+                    break;
+                case 2:
+                    printType(fishingVessel, tugDescription);
+                    break;
+                case 3:
+                    printType(tugVessel, RoRoDescription);
+                    break;
+                case 0:
+                    break;
+                default:
+                    System.out.println("Invalid option, choose again.");
+                    break;
+            }
+        } while (choice != 0);
+    }
+
+    private static void printType(Ship ship, String desc) {
+        System.out.println("Ship Name: " + ship.getName() +
+                "\nMMSI Code: " + ship.getMmsi() +
+                "\nIMO Code: " + ship.getImo() +
+                "\nCallSign: " + ship.getCallSign() +
+                "\nLength: " + ship.getLength() +
+                "\nWidth: " + ship.getWidth() +
+                "\nDraft: " + ship.getDraft() +
+                "\nVessel Type: " + ship.getVessel() +
+                "\n\nDescription: " + desc);
+    }
+
+    private static final String fishingDescription = "Containers can accommodate anything from foodstuffs to electrical equipment to automobiles. They are also used to transport\n" +
+            "bagged and palatalised goods, as well as liquids and refrigerated cargo.\n\n" +
+            "Standard containers are measured as TEUs (Twenty-foot Equivalent Units) and are generally 20 feet (1 TEU) or 40 feet (2 TEUs) long.\n" +
+            "All standard shipping containers are 8 feet wide and 8 feet 6 inches tall. There are also longer, taller and even shorter standard\n" +
+            "sizes, but these are less common.\n\n" +
+            "Container ships are made up of several holds, each equipped with “cell guides” which allow the containers to slot into place. Once\n" +
+            "the first layers of containers have been loaded and the hatches closed, extra layers are loaded on top of the hatches. Each container\n" +
+            "is then lashed to the vessel but also to each other to provide integrity. Containers are usually loaded by specialized cranes or even\n" +
+            "general purpose cranes with container lifting attachments. Some small container vessels are geared to allow self-loading and discharging.\n";
+
+    private static final String tugDescription = "Even with the advent of highly maneuverable vessels, the tug is still vitally important to the maritime industry. Modern tugs are highly\n" +
+            "maneuverable with pulling power that can exceed 100 tonnes! Harbor tugs are very common at ports around the world, and generally less powerful.\n" +
+            "These vessels assist in docking, undocking and moving large vessels within port limits. Tugs are also used to assist vessels during bad weather\n" +
+            "or when carrying dangerous or polluting cargo. Harbor tugs are also employed to move barges, floating cranes and personnel around ports. Larger\n" +
+            "units are kept on standby in strategic locations to act as deep-sea rescue and salvage tugs.\n\n" +
+            "Tugs are also used to tow barges from port to port and move large structures such as offshore platforms and floating storage units. Some tugs\n" +
+            "can push barges; this is particularly common on rivers where the tug is able to exert more turning force on the tow. There are also tugs that\n" +
+            "are designed to ‘slot’ into a barge or hull. Once secured, this composite unit behaves and is treated like a standard powered vessel. These\n" +
+            "composite units are common on North American river and coastal trade.\n";
+
+    private static final String RoRoDescription = "Roll on-Roll off or Ro-Ro vessels come in many forms. They include vehicle ferries and cargo ships carrying truck trailers. The car\n" +
+            "carrier is the most commonly-used ro-ro vessel. These slab-sided vessels feature multiple vehicle decks comprising parking lanes, linked by internal\n" +
+            "ramps with access to shore provided by one or more loading ramps. Cargo capacity of such vessels is measured in Car Equivalent Units (CEU) and the\n" +
+            "largest car carriers afloat today have a capacity of over 6,000 CEU.\n";
+
 }
