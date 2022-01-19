@@ -96,7 +96,7 @@ INSERT INTO type_employee VALUES (11, 'Administrator');
 --INSERT EMPLOYEE--
 INSERT INTO employee VALUES (1, 'João', 8);
 INSERT INTO employee VALUES (2, 'Rui', 9);
-INSERT INTO employee VALUES (3, 'Tiago', 10);
+INSERT INTO employee VALUES (3, 'Tiago', 2);
 INSERT INTO employee VALUES (4, 'Catarina', 7);
 INSERT INTO employee VALUES (5, 'Maria', 5);
 INSERT INTO employee VALUES (6, 'Vítor', 6);
@@ -113,6 +113,8 @@ INSERT INTO employee_location VALUES (6, 1);
 INSERT INTO employee_location VALUES (7, 1);
 INSERT INTO employee_location VALUES (8, 2);
 INSERT INTO employee_location VALUES (9, 1);
+INSERT INTO employee_location VALUES (3, 4); --US405
+INSERT INTO employee_location VALUES (9, 8); --US405
 
 --INSERT TRUCK--
 INSERT INTO truck VALUES ('Kotka', 3, 15);
@@ -139,7 +141,7 @@ INSERT INTO audittrail VALUES (2, 'jgv', TO_DATE('15-04-2021 23:20', 'DD-MM-YYYY
 INSERT INTO arrival VALUES (1, 10, TO_DATE('30-12-2021 12:00', 'DD-MM-YYYY HH24-MI'), 4, 1);
 INSERT INTO arrival VALUES (2, 9, TO_DATE('15-09-2021 00:15', 'DD-MM-YYYY HH24-MI'), 3, 2);
 INSERT INTO arrival VALUES (3, 8, TO_DATE('04-06-2021 10:00', 'DD-MM-YYYY HH24-MI'), 6, 3);
-INSERT INTO arrival VALUES (4, 7, TO_DATE('15-04-2021 23:20', 'DD-MM-YYYY HH24-MI'), 8, 4);
+INSERT INTO arrival VALUES (4, 7, TO_DATE('10-04-2021 23:20', 'DD-MM-YYYY HH24-MI'), 8, 4);
 INSERT INTO arrival VALUES (5, 6, TO_DATE('03-01-2021 13:00', 'DD-MM-YYYY HH24-MI'), 4, 5);
 INSERT INTO arrival VALUES (6, 5, TO_DATE('29-12-2020 10:00', 'DD-MM-YYYY HH24-MI'), 4, 6);
 INSERT INTO arrival VALUES (7, 4, TO_DATE('03-11-2020 23:45', 'DD-MM-YYYY HH24-MI'), 9, 7);
