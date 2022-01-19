@@ -105,6 +105,7 @@ INSERT INTO employee VALUES (8, 'Joana', 4);
 INSERT INTO employee VALUES (9, 'David', 2);
 INSERT INTO employee VALUES (10, 'Francisco', 1);
 INSERT INTO employee VALUES (11, 'Rodrigo', 11);
+INSERT INTO employee VALUES (12, 'Diogo', 2);
 
 --INSERT EMPLOYEE_LOCATION--
 INSERT INTO employee_location VALUES (4, 1);
@@ -115,6 +116,8 @@ INSERT INTO employee_location VALUES (8, 2);
 INSERT INTO employee_location VALUES (9, 1);
 INSERT INTO employee_location VALUES (3, 4); --US405
 INSERT INTO employee_location VALUES (9, 8); --US405
+INSERT INTO employee_location VALUES (12, 1);
+INSERT INTO employee_location VALUES (12, 10);
 
 --INSERT TRUCK--
 INSERT INTO truck VALUES ('Kotka', 3, 15);
@@ -301,6 +304,7 @@ INSERT INTO "USER" VALUES ('jgv', '2de5', 11, 2);
 INSERT INTO "USER" VALUES ('jgq', '2de6', 11, 3);
 INSERT INTO "USER" VALUES ('jga', '2de7', 11, NULL);
 INSERT INTO "USER" VALUES ('jgx', '2de9', 11, 3);
+INSERT INTO "USER" VALUES ('ddd', 'diog', 12, NULL);
 
 --INSERT SHIP_CREW--
 INSERT INTO ship_crew VALUES (1, 1);
