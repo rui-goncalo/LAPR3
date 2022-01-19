@@ -196,7 +196,7 @@ public class Menu {
             String[] options = {"Go Back\n", "Show all Ships", "Search by Ship", "Search Ship Pairs\n",
                     "Create Summary of Ships", "View Summaries by Ship", "Get TOP N Ships\n",
                     "Get Nearest Port\n", "Print N Closest Port Matrix", "Print Ports Closest to Capital - same country - Matrix",
-                    "Print Capital and Borders Matrix\n", "Vessel Type"};
+                    "Print Capital and Borders Matrix\n", "Vessel Type", "Calculation Center of Mass"};
             printMenu("Manage Ships", options, true);
             choice = getInput("Please make a selection: ", sc);
 
@@ -283,8 +283,110 @@ public class Menu {
                     break;
                 case 11:
                     vesselTypesMenu(sc);
+                case 12:
+                    menuCenterOfMass(sc);
             }
 
+        } while (choice != 0);
+    }
+
+    private static void menuCenterOfMass(Scanner scan) {
+        int type;
+        double c_height = 0, c_width = 0, r_length = 0, r_height = 0, t_height = 0, m1 = 0, m2 = 0, m3 = 0, xCM = 0, yCM = 0;
+
+        int choice;
+        do {
+            String[] options = {"Go Back\n", "Bow", "Mid", "Stern"};
+            //String[] options = {"Choose one type of vessel.\n", "1. Bow", "2. Mid", "3. Stern\n"};
+            printMenu("Calculation Center of Mass", options, true);
+            choice = getInput("Please make a selection: ", scan);
+            Scanner input = new Scanner(System.in);
+
+            switch (choice) {
+                case 1:
+                    System.out.println("Enter the height of the cabin crew (m).");
+                    c_height = input.nextDouble();
+                    System.out.println("Enter the width of the cabin crew (m). ");
+                    c_width = input.nextDouble();
+                    System.out.println("Enter the length of the rectangle (m).");
+                    r_length = input.nextDouble();
+                    System.out.println("Enter the height of the rectangle (m).");
+                    r_height = input.nextDouble();
+                    System.out.println("Enter the height of the triangle (m).");
+                    t_height = input.nextDouble();
+                    System.out.println("Enter the mass of the cabin crew (kg).");
+                    m1 = input.nextDouble();
+                    System.out.println("Enter the mass of the rectangle (kg).");
+                    m2 = input.nextDouble();
+                    System.out.println("Enter the mass of the triangle (kg).");
+                    m3 = input.nextDouble();
+                    if (r_height == t_height) {
+                        xCM = ((r_length + (t_height - (c_width / 2))) * m1 + (r_length / 2) * m2 + ((r_length + r_length + (r_length + t_height)) / 3) * m3) / (m1 + m2 + m3);
+                        yCM = ((r_height + (c_height / 2)) * m1 + (r_height / 2) * m2 + ((t_height + t_height) / 3) * m3) / (m1 + m2 + m3);
+                        System.out.printf("The center of mass is: (" + xCM + ", " + yCM + ").");
+                    } else {
+                        System.out.println("The height of the triangle and rectangle doesn't match.");
+                        break;
+                    }
+                    break;
+                case 2:
+                    System.out.println("Enter the height of the cabin crew (m).");
+                    c_height = input.nextDouble();
+                    System.out.println("Enter the width of the cabin crew (m). ");
+                    c_width = input.nextDouble();
+                    System.out.println("Enter the length of the rectangle (m).");
+                    r_length = input.nextDouble();
+                    System.out.println("Enter the height of the rectangle (m).");
+                    r_height = input.nextDouble();
+                    System.out.println("Enter the height of the triangle (m).");
+                    t_height = input.nextDouble();
+                    System.out.println("Enter the mass of the cabin crew (kg).");
+                    m1 = input.nextDouble();
+                    System.out.println("Enter the mass of the rectangle (kg).");
+                    m2 = input.nextDouble();
+                    System.out.println("Enter the mass of the triangle (kg).");
+                    m3 = input.nextDouble();
+                    if (r_height == t_height) {
+                        xCM = (((r_length + t_height) / 2) * m1 + (r_length / 2) * m2 + ((r_length + r_length + (r_length + t_height)) / 3) * m3) / (m1 + m2 + m3);
+                        yCM = ((r_height + (c_height / 2)) * m1 + (r_height / 2) * m2 + ((t_height + t_height)/3) * m3) / (m1 + m2 + m3);
+                        System.out.printf("The center of mass is: (" + xCM + ", " + yCM + ").");
+                    } else {
+                        System.out.println("The height of the triangle and rectangle doesn't match.");
+                        break;
+                    }
+                    break;
+                case 3:
+                    System.out.println("Enter the height of the cabin crew (m).");
+                    c_height = input.nextDouble();
+                    System.out.println("Enter the width of the cabin crew (m). ");
+                    c_width = input.nextDouble();
+                    System.out.println("Enter the length of the rectangle (m).");
+                    r_length = input.nextDouble();
+                    System.out.println("Enter the height of the rectangle (m).");
+                    r_height = input.nextDouble();
+                    System.out.println("Enter the height of the triangle (m).");
+                    t_height = input.nextDouble();
+                    System.out.println("Enter the mass of the cabin crew (kg).");
+                    m1 = input.nextDouble();
+                    System.out.println("Enter the mass of the rectangle (kg).");
+                    m2 = input.nextDouble();
+                    System.out.println("Enter the mass of the triangle (kg).");
+                    m3 = input.nextDouble();
+                    if (r_height == t_height) {
+                        xCM = ((c_width / 2) * m1 + (r_length / 2) * m2 + ((r_length + r_length + (r_length + t_height)) / 3) * m3) / (m1 + m2 + m3);
+                        yCM = ((r_height + (c_height / 2)) * m1 + (r_height / 2) * m2 + ((t_height + t_height) / 3) * m3) / (m1 + m2 + m3);
+                        System.out.printf("The center of mass is: (" + xCM + ", " + yCM + ").");
+                    } else {
+                        System.out.println("The height of the triangle and rectangle doesn't match.");
+                        break;
+                    }
+                    break;
+                case 0:
+                    break;
+                default:
+                    System.out.println("Invalid option, choose again.");
+                    break;
+            }
         } while (choice != 0);
     }
 
