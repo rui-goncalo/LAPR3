@@ -196,7 +196,7 @@ public class Menu {
             String[] options = {"Go Back\n", "Show all Ships", "Search by Ship", "Search Ship Pairs\n",
                     "Create Summary of Ships", "View Summaries by Ship", "Get TOP N Ships\n",
                     "Get Nearest Port\n", "Print N Closest Port Matrix", "Print Ports Closest to Capital - same country - Matrix",
-                    "Print Capital and Borders Matrix\n", "Vessel Type", "Calculation Center of Mass","Position Containers"};
+                    "Print Capital and Borders Matrix\n", "Vessel Type", "Calculation Center of Mass","Position Containers","Energy Needed to Containers"};
             printMenu("Manage Ships", options, true);
             choice = getInput("Please make a selection: ", sc);
 
@@ -287,6 +287,8 @@ public class Menu {
                     menuCenterOfMass(sc);
                 case 13:
                     menuPosContainers(sc);
+                case 14:
+                    menuEnergyNeeded(sc);
             }
 
         } while (choice != 0);
@@ -496,12 +498,33 @@ public class Menu {
                     System.out.println("Invalid option, choose again.");
                     break;
             }
-            /*
-            Identify the area/volume of a container and its center of mass. The
-            distribution of the mass inside the container will be considered uniform.
-            Make a sketch of the distribution and loading on the vessel.
-            Calculate the center of mass of the sketch performed.
-             */
+        } while (choice != 0);
+
+    }
+
+    private static void menuEnergyNeeded(Scanner scan)
+    {
+
+        int choice;
+        do {
+            String[] options = {"Go Back\n", "Energy needed to a container in a trip of 2h30m with external temp of 20ºC", "Energy needed to a vessel with X containers in an established trip", "Energy needed to a vessel in role of containers position","How many auxiliar equipments of X kW are needed to power Y Containers in temperature of 7ºC and Z Containers inf temperature of -5ºC "};
+            printMenu("Energy Needed to transport of goods", options, true);
+            choice = getInput("Please make a selection: ", scan);
+            Scanner input = new Scanner(System.in);
+
+            switch (choice) {
+                case 1:
+                    Calculator.calculateEnergyNeeded(9000,20,1);
+                    break;
+
+                case 0:
+                    break;
+                default:
+                    System.out.println("Invalid option, choose again.");
+                    break;
+            }
+
+
         } while (choice != 0);
 
     }
