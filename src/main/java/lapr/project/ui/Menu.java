@@ -196,7 +196,7 @@ public class Menu {
             String[] options = {"Go Back\n", "Show all Ships", "Search by Ship", "Search Ship Pairs\n",
                     "Create Summary of Ships", "View Summaries by Ship", "Get TOP N Ships\n",
                     "Get Nearest Port\n", "Print N Closest Port Matrix", "Print Ports Closest to Capital - same country - Matrix",
-                    "Print Capital and Borders Matrix\n", "Vessel Type", "Calculation Center of Mass"};
+                    "Print Capital and Borders Matrix\n", "Vessel Type", "Calculation Center of Mass","Position Containers"};
             printMenu("Manage Ships", options, true);
             choice = getInput("Please make a selection: ", sc);
 
@@ -285,6 +285,8 @@ public class Menu {
                     vesselTypesMenu(sc);
                 case 12:
                     menuCenterOfMass(sc);
+                case 13:
+                    menuPosContainers(sc);
             }
 
         } while (choice != 0);
@@ -323,6 +325,7 @@ public class Menu {
                     if (r_height == t_height) {
                         xCM = ((r_length + (t_height - (c_width / 2))) * m1 + (r_length / 2) * m2 + ((r_length + r_length + (r_length + t_height)) / 3) * m3) / (m1 + m2 + m3);
                         yCM = ((r_height + (c_height / 2)) * m1 + (r_height / 2) * m2 + ((t_height + t_height) / 3) * m3) / (m1 + m2 + m3);
+
                         System.out.printf("The center of mass is: (" + xCM + ", " + yCM + ").");
                     } else {
                         System.out.println("The height of the triangle and rectangle doesn't match.");
@@ -388,6 +391,119 @@ public class Menu {
                     break;
             }
         } while (choice != 0);
+    }
+
+    private static void menuPosContainers(Scanner scan)
+    {
+        double contHeight=2.385;
+        double contLength=5.896;
+        double contWidth = 2.350;
+        double s_length,s_width, contCmXX = 0,contCmYY = 0,sCmXX,sCmYY;
+        int choice,nContainers;
+        ArrayList<Calculator.ContainerInfo> containerInfos = new ArrayList<Calculator.ContainerInfo>();
+        do {
+            String[] options = {"Go Back\n", "User Default Container Measurements\n Container Height:" + contHeight + "\n Container Length: " +contLength+ "\n Container Width: " + contWidth, "Enter New Container Measurements"};
+            printMenu("Calculation position of containers on the vessel", options, true);
+            choice = getInput("Please make a selection: ", scan);
+            Scanner input = new Scanner(System.in);
+            switch (choice) {
+                case 1:
+                    System.out.println("Enter the number of containers on the vessel.");
+                    nContainers = input.nextInt();
+                    System.out.println("Enter the length of the ships rectangle (m).");
+                    s_length = input.nextDouble();
+                    System.out.println("Enter the width of the ships rectangle (m). ");
+                    s_width = input.nextDouble();
+
+                    containerInfos = Calculator.calculateContainersPosition(nContainers,contHeight,contLength,contWidth,s_length,s_width);
+                    if(containerInfos == null)
+                    {
+                        System.out.println(ANSI_RED_BACKGROUND
+                                + "Impossible to add that many containers to the specified ship."
+                                + ANSI_RESET);
+
+                    } else {
+                        int n =0;
+                        for(Calculator.ContainerInfo containerInfo : containerInfos)
+                        {
+                            n++;
+                            contCmXX +=containerInfo.getXxCm();
+                            contCmYY += containerInfo.getYyCm();
+                            System.out.println(containerInfo);
+
+                        }
+                        contCmXX = contCmXX /nContainers;
+                        contCmYY = contCmYY / nContainers;
+                        sCmXX = s_length /2;
+                        sCmYY = s_width/2;
+                        System.out.println("Containers total Center of Mass XX : " + contCmXX);
+                        System.out.println("Containers total Center of Mass YY : " +contCmYY);
+                        System.out.println("Ship Center of Mass XX: " + sCmXX);
+                        System.out.println("Ship Center of Mass YY: " + sCmYY);
+
+
+                    }
+
+
+                    break;
+                case 2:
+                    System.out.println("Enter the height of the Container (m).");
+                   double  contHeight1 = input.nextInt();
+                    System.out.println("Enter the length of the Container (m).");
+                   double contLength1 = input.nextInt();
+                    System.out.println("Enter the width of the Container (m).");
+                   double contWidth1 = input.nextInt();
+                    System.out.println("Enter the number of containers on the vessel.");
+                    nContainers = input.nextInt();
+                    System.out.println("Enter the length of the ships rectangle (m).");
+                    s_length = input.nextDouble();
+                    System.out.println("Enter the width of the ships rectangle (m). ");
+                    s_width = input.nextDouble();
+                    containerInfos = Calculator.calculateContainersPosition(nContainers,contHeight1,contLength1,contWidth1,s_length,s_width);
+                    if(containerInfos == null)
+                    {
+
+                        System.out.println(ANSI_RED_BACKGROUND
+                                + "Impossible to add that many containers to the specified ship."
+                                + ANSI_RESET);
+                    } else {
+                        int n = 0;
+                        for(Calculator.ContainerInfo containerInfo : containerInfos)
+                        {
+                            n++;
+                            contCmXX +=containerInfo.getXxCm();
+                            contCmYY += containerInfo.getYyCm();
+                            System.out.println(containerInfo);
+
+                        }
+                        contCmXX = contCmXX /nContainers;
+                        contCmYY = contCmYY / nContainers;
+                        sCmXX = s_length /2;
+                        sCmYY = s_width/2;
+                        System.out.println("Containers total Center of Mass XX : " + contCmXX);
+                        System.out.println("Containers total Center of Mass YY : " +contCmYY);
+                        System.out.println("Ship Center of Mass XX: " + sCmXX);
+                        System.out.println("Ship Center of Mass YY: " + sCmYY);
+
+                    }
+
+
+
+                    break;
+                case 0:
+                    break;
+                default:
+                    System.out.println("Invalid option, choose again.");
+                    break;
+            }
+            /*
+            Identify the area/volume of a container and its center of mass. The
+            distribution of the mass inside the container will be considered uniform.
+            Make a sketch of the distribution and loading on the vessel.
+            Calculate the center of mass of the sketch performed.
+             */
+        } while (choice != 0);
+
     }
 
     /**
