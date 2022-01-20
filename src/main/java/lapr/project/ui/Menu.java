@@ -516,7 +516,37 @@ public class Menu {
                 case 1:
                     Calculator.calculateEnergyNeeded(9000,20,1);
                     break;
+                case 2:
+                    System.out.println("Enter the number of containers on the vessel.");
+                    int nContainers = input.nextInt();
+                    System.out.println("Enter the average Temperature of the trip");
+                    double temperature = input.nextInt();
+                    Ship currentShip = null;
+                    choice = getInput("Ship's MMSI: ", scan);
+                    for (Ship ship : shipArray) {
+                        if (ship.getMmsi() == choice) {
+                            currentShip = ship;
+                        }
+                    }
 
+                    if (currentShip != null) {
+                        if (currentShip.getSummary() != null) {
+                            long seconds = currentShip.getSummary().getMinutes()*60;
+                            seconds += currentShip.getSummary().getDays()*24*60*60;
+                            seconds += currentShip.getSummary().getHours()*60*60;
+                            long secondsPos = ~(seconds - 1);
+                            Calculator.calculateEnergyNeeded(secondsPos,temperature,nContainers);
+                        } else {
+                            System.out.println(ANSI_RED_BACKGROUND
+                                    + "Please import Summaries first."
+                                    + ANSI_RESET);
+                        }
+                    } else {
+                        System.out.println(ANSI_RED_BACKGROUND
+                                + "Sorry, no Ship found with this MMSI."
+                                + ANSI_RESET);
+                    }
+                    break;
                 case 0:
                     break;
                 default:

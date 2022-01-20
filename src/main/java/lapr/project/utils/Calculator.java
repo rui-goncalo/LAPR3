@@ -271,7 +271,11 @@ public final class Calculator {
         energy = ((temperature-(-5))/0.08173259 * duration);
         System.out.println("E = " +(temperature -(-5)) + " / 0.06913259 * " + duration + " = " + energy + " J");
 
-
+        if(nContainers >1)
+        {
+            System.out.println();
+            System.out.println("Etotal = nContainers * Econtainer = " + energy*nContainers + " J");
+        }
 
 
     }
