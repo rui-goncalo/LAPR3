@@ -44,39 +44,4 @@ public class CalculatorTest {
         assertEquals(shipPair.getSecondShip().getMmsi(), Calculator.searchShipPairs(shipArray).get(0).getSecondShip().getMmsi());
     }
 
-    @Test
-    public void testCalculateContainersPosition() {
-        int nContainers = 10;
-        double contHeight = 2.0, contLength = 1.0, contWidth = 2.0, s_length = 20.0, s_width = 10.0;
-        ArrayList<Calculator.ContainerInfo> result = Calculator.calculateContainersPosition(nContainers, contHeight, contLength, contWidth, s_length, s_width);
-        ArrayList<Calculator.ContainerInfo> resultNull = Calculator.calculateContainersPosition(300, contHeight, contLength, contWidth, s_length / 2, s_width / 2);
-        ArrayList<Calculator.ContainerInfo> expResult = new ArrayList<Calculator.ContainerInfo>();
-        ArrayList<Calculator.ContainerInfo> expResultNull = null;
-        System.out.println(result);
-        expResult.add(new Calculator.ContainerInfo("container1",0.5,1.0,0.0,1.0,0.0,2.0,0.0));
-        expResult.add(new Calculator.ContainerInfo("container2",19.5,9.0,19.0,20.0,10.0,8.0,0.0));
-        expResult.add(new Calculator.ContainerInfo("container3",1.5,1.0,1.0,2.0,0.0,2.0,0.0));
-        expResult.add(new Calculator.ContainerInfo("container4",18.5,9.0,18.0,19.0,10.0,8.0,0.0));
-        expResult.add(new Calculator.ContainerInfo("container5",2.5,1.0,2.0,3.0,0.0,2.0,0.0));
-        expResult.add(new Calculator.ContainerInfo("container6",17.5,9.0,17.0,18.0,10.0,8.0,0.0));
-        expResult.add(new Calculator.ContainerInfo("container7",3.5,1.0,3.0,4.0,0.0,2.0,0.0));
-        expResult.add(new Calculator.ContainerInfo("container8",16.5,9.0,16.0,17.0,10.0,8.0,0.0));
-        expResult.add(new Calculator.ContainerInfo("container9",4.5,1.0,4.0,5.0,0.0,2.0,0.0));
-        expResult.add(new Calculator.ContainerInfo("container10",15.5,9.0,15.0,16.0,10.0,8.0,0.0));
-
-        assertEquals(resultNull,expResultNull);
-    }
-
-    @Test
-    public void testContainerInfo() {
-        Calculator.ContainerInfo containerInfo = new Calculator.ContainerInfo("cont1", 2.0, 1.0, 0.0, 4.0, 0.0, 2.0, 0.0);
-        assertEquals(containerInfo.getContainer(), "cont1");
-        assertEquals(containerInfo.getXxCm(), 2.0);
-        assertEquals(containerInfo.getYyCm(), 1.0);
-        assertEquals(containerInfo.getHeight(), 0.0);
-        assertEquals(containerInfo.getXxIn(), 0.0);
-        assertEquals(containerInfo.getXxFin(), 4.0);
-        assertEquals(containerInfo.getYyIn(), 0.0);
-        assertEquals(containerInfo.getYyFin(), 2.0);
-    }
 }
