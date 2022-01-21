@@ -506,7 +506,7 @@ public class Menu {
 
         int choice;
         do {
-            String[] options = {"Go Back\n", "Energy needed to a container in a trip of 2h30m with external temp of 20ºC", "Energy needed to a vessel with X containers in an established trip", "Energy needed to a vessel in role of containers position","How many auxiliar equipments of X kW are needed to power Y Containers in temperature of 7ºC and Z Containers in temperature of -5ºC "};
+            String[] options = {"Go Back\n", "Energy needed to a container in a trip of 2h30m with external temp of 20ºC", "Energy needed to a vessel with X containers in an established trip", "Energy needed to a vessel in role of containers position and how many auxiliar equipments of x KW are needed"};
             printMenu("Energy Needed to transport of goods", options, true);
             choice = getInput("Please make a selection: ", scan);
             Scanner input = new Scanner(System.in);
@@ -565,8 +565,20 @@ public class Menu {
                     int nContainers4 = input.nextInt();
                     System.out.println("Enter the number of containers with 5 sides exposed to the sun on the vessel.");
                     int nContainers5 = input.nextInt();
+                    System.out.println("Enter the number of containers which will be at 7ºC.");
+                    int nContainers7 = input.nextInt();
+                    if(nContainers7 > (nContainers5+nContainers0+nContainers1+nContainers2+nContainers3+nContainers4))
+                    {
+                        System.out.println(ANSI_RED_BACKGROUND
+                                + "Number of containers with temperature of 7ºC must be lower than the total."
+                                + ANSI_RESET);
+                    }
+                    int cont5 = (nContainers5+nContainers0+nContainers1+nContainers2+nContainers3+nContainers4) - nContainers7;
+
                     System.out.println("Enter the average temperature of the trip.");
                     double temp = input.nextDouble();
+                    System.out.println("Power of the auxiliar Equipmente (KW).");
+                    double powerAux = input.nextDouble();
                     Ship currentShip2 = null;
                     choice = getInput("Ship's MMSI: ", scan);
                     for (Ship ship : shipArray) {
@@ -581,7 +593,7 @@ public class Menu {
                             seconds += currentShip2.getSummary().getDays()*24*60*60;
                             seconds += currentShip2.getSummary().getHours()*60*60;
                             long secondsPos = -seconds;
-                            calculateEnergy(nContainers0,nContainers1,nContainers2,nContainers3,nContainers4,nContainers5,contLength2,contHeight2,contWidth2,temp,secondsPos);
+                            calculateEnergy(nContainers0,nContainers1,nContainers2,nContainers3,nContainers4,nContainers5,contLength2,contHeight2,contWidth2,temp,secondsPos,powerAux,nContainers7,cont5);
                         } else {
                             System.out.println(ANSI_RED_BACKGROUND
                                     + "Please import Summaries first."
@@ -1305,7 +1317,7 @@ public class Menu {
     }
 
 
-    public static void calculateEnergy(int cont0,int cont1,int cont2,int cont3,int cont4,int cont5,double contLength,double contHeight,double contWidth,double temperature,long duration)
+    public static void calculateEnergy(int cont0,int cont1,int cont2,int cont3,int cont4,int cont5,double contLength,double contHeight,double contWidth,double temperature,long duration,double powerAux,int nCont7,int nCont5)
     {
         double cont1AC = contLength * contWidth;
         double cont2AC = (contLength * contWidth) + (contWidth*contHeight);
@@ -1329,7 +1341,7 @@ public class Menu {
         double eRadiation5 = (5.67*0.000000001*172.37*0.9*((temperature +273.15 )*(temperature +273.15 )*(temperature +273.15 )*(temperature +273.15 )+(5+273.15)*(5+273.15)*(5+273.15)*(5+273.15) )*duration);
         double totalE7 = eConduction7+eRadiation7;
         double totalE5 = eConduction5+eRadiation5;
-
+        double pTotal = ((nCont5*totalE5)+(nCont7*totalE7))/duration;
 
 
 
@@ -1388,6 +1400,14 @@ public class Menu {
         System.out.println("Total Energy for 7ºC: "+ totalE7);
         System.out.println();
         System.out.println("Total Energy for -5ºC: "+ totalE5);
+        System.out.println();
+        System.out.println();
+        System.out.println("Auxiliar Equipments needed:");
+        System.out.println("Ptotal = Etotal / time");
+        System.out.println("Ptotal =" + pTotal + " W ");
+        System.out.println("Ptotal = " + pTotal/1000 + " KW ");
+        System.out.println("NEquipments = Ptotal / Pequipments");
+        System.out.println("Nequipments = " + (int)((pTotal/1000) / powerAux)+1);
 
 
 
