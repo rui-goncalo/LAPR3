@@ -58,14 +58,14 @@ public final class Calculator {
     }
 
     public static class ContainerInfo {
-        private String container;
-        private double xxCm;
-        private double yyCm;
-        private double xxIn;
-        private double xxFin;
-        private double yyIn;
-        private double yyFin;
-        private double height;
+        private final String container;
+        private final double xxCm;
+        private final double yyCm;
+        private final double xxIn;
+        private final double xxFin;
+        private final double yyIn;
+        private final double yyFin;
+        private final double height;
 
         @Override
         public String toString() {
@@ -226,58 +226,6 @@ public final class Calculator {
 
 
         return containerInfos;
-    }
-
-    public static void calculateEnergyNeeded(long duration, double temperature, int nContainers)
-    {
-        System.out.println("Energy needed to a container so it maintains a determined difference of temperature from the outside");
-        System.out.println();
-        System.out.println("E = Q*T");
-        System.out.println(" E -> Energy (J) ; Q -> Quant. Heat Flow (W or J/s) ; t -> time (s)");
-        System.out.println();
-        System.out.println("Heat Flow is directionally proportional to the reason between temp gradient and thermal resistance");
-        System.out.println("I = ∆T- RT");
-        System.out.println("I -> Heat Flow (W or J/s) ; ∆T ->Temp difference (K) ; Rt ->Total resistance (K/W)");
-        System.out.println();
-        System.out.println("Energy Needed to 7ºC");
-        System.out.println("Materials used and its thermal resistances in the Container:");
-        System.out.println("Exterior:");
-        System.out.println("Steel ; Thermal Resistance : 0.00000259 K/W ; Thickness : 0.010 m");
-        System.out.println("Intermediate:");
-        System.out.println("Expanded polyester ; Thermal Resistance : 0.063 K/W ; Thickness : 0.14 m");
-        System.out.println("Interior:");
-        System.out.println("Polypropylene ; Thermal Resistance : 0.00613 K/W ; Thickness : 0.05 m");
-        System.out.println();
-        System.out.println("E=∆T/RT * t");
-        System.out.println("∆T = " + temperature + " - 7 = " + (temperature -7) + "K");
-        System.out.println("Rt = Rexterior + Rintermediate + Rinterior = 0.06913259 K/W");
-        double energy = ((temperature-7)/0.06913259 * duration);
-        System.out.println("E = " +(temperature - 7) + " / 0.06913259 * " + duration + " = " + energy + "J");
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println("Energy Needed to -5ºC");
-        System.out.println("Materials used and its thermal resistances in the Container:");
-        System.out.println("Exterior:");
-        System.out.println("Steel ; Thermal Resistance : 0.00000259 K/W ; Thickness : 0.010 m");
-        System.out.println("Intermediate:");
-        System.out.println("Polyurethane foam ; Thermal Resistance : 0.0756 K/W ; Thickness : 0.14 m");
-        System.out.println("Interior:");
-        System.out.println("Polypropylene ; Thermal Resistance : 0.00613 K/W ; Thickness : 0.05 m");
-        System.out.println();
-        System.out.println("E=∆T/RT * t");
-        System.out.println("∆T = " + temperature + " - (-5) = " + (temperature -(-5)) + "K");
-        System.out.println("Rt = Rexterior + Rintermediate + Rinterior = 0.08173259 K/W");
-        energy = ((temperature-(-5))/0.08173259 * duration);
-        System.out.println("E = " +(temperature -(-5)) + " / 0.06913259 * " + duration + " = " + energy + " J");
-
-        if(nContainers >1)
-        {
-            System.out.println();
-            System.out.println("Etotal = nContainers * Econtainer = " + energy*nContainers + " J");
-        }
-
-
     }
 
 

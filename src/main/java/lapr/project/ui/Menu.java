@@ -514,7 +514,7 @@ public class Menu {
 
             switch (choice) {
                 case 1:
-                    Calculator.calculateEnergyNeeded(9000,20,1);
+                    calculateEnergyNeeded(9000,20,1);
                     break;
                 case 2:
                     System.out.println("Enter the number of containers on the vessel.");
@@ -535,7 +535,7 @@ public class Menu {
                             seconds += currentShip.getSummary().getDays()*24*60*60;
                             seconds += currentShip.getSummary().getHours()*60*60;
                             long secondsPos = ~(seconds - 1);
-                            Calculator.calculateEnergyNeeded(secondsPos,temperature,nContainers);
+                            calculateEnergyNeeded(secondsPos,temperature,nContainers);
                         } else {
                             System.out.println(ANSI_RED_BACKGROUND
                                     + "Please import Summaries first."
@@ -1032,4 +1032,57 @@ public class Menu {
             "ramps with access to shore provided by one or more loading ramps. Cargo capacity of such vessels is measured in Car Equivalent Units (CEU) and the\n" +
             "largest car carriers afloat today have a capacity of over 6,000 CEU.\n";
 
+
+
+    public static void calculateEnergyNeeded(long duration, double temperature, int nContainers)
+    {
+        System.out.println("Energy needed to a container so it maintains a determined difference of temperature from the outside");
+        System.out.println();
+        System.out.println("E = Q*T");
+        System.out.println(" E -> Energy (J) ; Q -> Quant. Heat Flow (W or J/s) ; t -> time (s)");
+        System.out.println();
+        System.out.println("Heat Flow is directionally proportional to the reason between temp gradient and thermal resistance");
+        System.out.println("I = ∆T- RT");
+        System.out.println("I -> Heat Flow (W or J/s) ; ∆T ->Temp difference (K) ; Rt ->Total resistance (K/W)");
+        System.out.println();
+        System.out.println("Energy Needed to 7ºC");
+        System.out.println("Materials used and its thermal resistances in the Container:");
+        System.out.println("Exterior:");
+        System.out.println("Steel ; Thermal Resistance : 0.00000259 K/W ; Thickness : 0.010 m");
+        System.out.println("Intermediate:");
+        System.out.println("Expanded polyester ; Thermal Resistance : 0.063 K/W ; Thickness : 0.14 m");
+        System.out.println("Interior:");
+        System.out.println("Polypropylene ; Thermal Resistance : 0.00613 K/W ; Thickness : 0.05 m");
+        System.out.println();
+        System.out.println("E=∆T/RT * t");
+        System.out.println("∆T = " + temperature + " - 7 = " + (temperature -7) + "K");
+        System.out.println("Rt = Rexterior + Rintermediate + Rinterior = 0.06913259 K/W");
+        double energy = ((temperature-7)/0.06913259 * duration);
+        System.out.println("E = " +(temperature - 7) + " / 0.06913259 * " + duration + " = " + energy + "J");
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println("Energy Needed to -5ºC");
+        System.out.println("Materials used and its thermal resistances in the Container:");
+        System.out.println("Exterior:");
+        System.out.println("Steel ; Thermal Resistance : 0.00000259 K/W ; Thickness : 0.010 m");
+        System.out.println("Intermediate:");
+        System.out.println("Polyurethane foam ; Thermal Resistance : 0.0756 K/W ; Thickness : 0.14 m");
+        System.out.println("Interior:");
+        System.out.println("Polypropylene ; Thermal Resistance : 0.00613 K/W ; Thickness : 0.05 m");
+        System.out.println();
+        System.out.println("E=∆T/RT * t");
+        System.out.println("∆T = " + temperature + " - (-5) = " + (temperature -(-5)) + "K");
+        System.out.println("Rt = Rexterior + Rintermediate + Rinterior = 0.08173259 K/W");
+        energy = ((temperature-(-5))/0.08173259 * duration);
+        System.out.println("E = " +(temperature -(-5)) + " / 0.06913259 * " + duration + " = " + energy + " J");
+
+        if(nContainers >1)
+        {
+            System.out.println();
+            System.out.println("Etotal = nContainers * Econtainer = " + energy*nContainers + " J");
+        }
+
+
+    }
 }
