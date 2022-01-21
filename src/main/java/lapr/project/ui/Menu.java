@@ -506,7 +506,7 @@ public class Menu {
 
         int choice;
         do {
-            String[] options = {"Go Back\n", "Energy needed to a container in a trip of 2h30m with external temp of 20ºC", "Energy needed to a vessel with X containers in an established trip", "Energy needed to a vessel in role of containers position","How many auxiliar equipments of X kW are needed to power Y Containers in temperature of 7ºC and Z Containers inf temperature of -5ºC "};
+            String[] options = {"Go Back\n", "Energy needed to a container in a trip of 2h30m with external temp of 20ºC", "Energy needed to a vessel with X containers in an established trip", "Energy needed to a vessel in role of containers position","How many auxiliar equipments of X kW are needed to power Y Containers in temperature of 7ºC and Z Containers in temperature of -5ºC "};
             printMenu("Energy Needed to transport of goods", options, true);
             choice = getInput("Please make a selection: ", scan);
             Scanner input = new Scanner(System.in);
@@ -533,7 +533,7 @@ public class Menu {
                             long seconds = currentShip.getSummary().getMinutes()*60;
                             seconds += currentShip.getSummary().getDays()*24*60*60;
                             seconds += currentShip.getSummary().getHours()*60*60;
-                            long secondsPos = ~(seconds - 1);
+                            long secondsPos = -seconds;
                             calculateEnergyNeeded(secondsPos,temperature,nContainers);
                         } else {
                             System.out.println(ANSI_RED_BACKGROUND
@@ -545,6 +545,55 @@ public class Menu {
                                 + "Sorry, no Ship found with this MMSI."
                                 + ANSI_RESET);
                     }
+                    break;
+                case 3:
+                    System.out.println("Enter the height of the Container (m).");
+                    double  contHeight2 = input.nextInt();
+                    System.out.println("Enter the length of the Container (m).");
+                    double contLength2 = input.nextInt();
+                    System.out.println("Enter the width of the Container (m).");
+                    double contWidth2 = input.nextInt();
+                    System.out.println("Enter the number of containers with 0 sides exposed to the sun on the vessel.");
+                    int nContainers0 = input.nextInt();
+                    System.out.println("Enter the number of containers with 1 side exposed to the sun on the vessel.");
+                    int nContainers1 = input.nextInt();
+                    System.out.println("Enter the number of containers with 2 sides exposed to the sun on the vessel.");
+                    int nContainers2 = input.nextInt();
+                    System.out.println("Enter the number of containers with 3 sides exposed to the sun on the vessel.");
+                    int nContainers3 = input.nextInt();
+                    System.out.println("Enter the number of containers with 4 sides exposed to the sun on the vessel.");
+                    int nContainers4 = input.nextInt();
+                    System.out.println("Enter the number of containers with 5 sides exposed to the sun on the vessel.");
+                    int nContainers5 = input.nextInt();
+                    System.out.println("Enter the average temperature of the trip.");
+                    double temp = input.nextDouble();
+                    Ship currentShip2 = null;
+                    choice = getInput("Ship's MMSI: ", scan);
+                    for (Ship ship : shipArray) {
+                        if (ship.getMmsi() == choice) {
+                            currentShip2 = ship;
+                        }
+                    }
+
+                    if (currentShip2 != null) {
+                        if (currentShip2.getSummary() != null) {
+                            long seconds = currentShip2.getSummary().getMinutes()*60;
+                            seconds += currentShip2.getSummary().getDays()*24*60*60;
+                            seconds += currentShip2.getSummary().getHours()*60*60;
+                            long secondsPos = -seconds;
+                            calculateEnergy(nContainers0,nContainers1,nContainers2,nContainers3,nContainers4,nContainers5,contLength2,contHeight2,contWidth2,temp,secondsPos);
+                        } else {
+                            System.out.println(ANSI_RED_BACKGROUND
+                                    + "Please import Summaries first."
+                                    + ANSI_RESET);
+                        }
+                    } else {
+                        System.out.println(ANSI_RED_BACKGROUND
+                                + "Sorry, no Ship found with this MMSI."
+                                + ANSI_RESET);
+                    }
+
+
                     break;
                 case 0:
                     break;
@@ -1256,8 +1305,91 @@ public class Menu {
     }
 
 
-    public static void calculateEnergy()
+    public static void calculateEnergy(int cont0,int cont1,int cont2,int cont3,int cont4,int cont5,double contLength,double contHeight,double contWidth,double temperature,long duration)
     {
+        double cont1AC = contLength * contWidth;
+        double cont2AC = (contLength * contWidth) + (contWidth*contHeight);
+        double cont3AC = 2*(contLength * contWidth) + (contWidth*contHeight);
+        double cont4AC = 2*(contLength * contWidth) + 2*(contWidth*contHeight);
+        double cont5AC = 3*(contLength * contWidth) + 2*(contWidth*contHeight);
+        double totalContAC = cont1*cont1AC + cont2*cont2AC + cont3*cont3AC+cont4*cont4AC+cont5*cont5AC;
+        double Lsteel = 0.01;
+        double Ksteel = 52;
+        double LPoliuretano = 0.14;
+        double KPoliuretano = 0.03;
+        double LPolipropileno = 0.05;
+        double KPoplipropelino = 0.11;
+        double RTotal7 = ((Lsteel/(Ksteel*totalContAC))+(LPoliuretano/(KPoliuretano*totalContAC))+(LPolipropileno/(KPoplipropelino*totalContAC)));
+        double eConduction7 = (((temperature-7)/RTotal7)*duration);
+        double eRadiation7 = (5.67*0.000000001*172.37*0.9*((temperature +273.15 )*(temperature +273.15 )*(temperature +273.15 )*(temperature +273.15 )-(7+273.15)*(7+273.15)*(7+273.15)*(7+273.15) )*duration);
+        double LPoliestireno = 0.14;
+        double KPoliestireno = 0.025;
+        double RTotal5 = ((Lsteel/(Ksteel*totalContAC))+(LPoliestireno/(KPoliestireno*totalContAC))+(LPolipropileno/(KPoplipropelino*totalContAC)));
+        double eConduction5 = (((temperature+5)/RTotal5)*duration);
+        double eRadiation5 = (5.67*0.000000001*172.37*0.9*((temperature +273.15 )*(temperature +273.15 )*(temperature +273.15 )*(temperature +273.15 )+(5+273.15)*(5+273.15)*(5+273.15)*(5+273.15) )*duration);
+        double totalE7 = eConduction7+eRadiation7;
+        double totalE5 = eConduction5+eRadiation5;
+
+
+
+
+        System.out.println("To determine the necessary energy to maintain the temperature of 7ºC and -5ºC with the resulting temperature variations of exposure to the sun, we need to consider the Heat Flow from conduction and radiation");
+        System.out.println();
+        System.out.println("Etotal = Econduction + Eradiation");
+        System.out.println();
+        System.out.println("The transfered energy per conduction will be the product of Heat Flow (W or J/s) with the time (s).");
+        System.out.println();
+        System.out.println("Econduction = Q*t");
+        System.out.println();
+        System.out.println("Using the analogy of thermal resistance, we know that the Heat Flow is directly proportional to the difference of temperature and inversely proportional to the thermal resistance");
+        System.out.println();
+        System.out.println("Q= ∆T/Rt");
+        System.out.println("In terms of Heat Flow by radiation, we can determine the power from Stefan Boltzmann law:");
+        System.out.println();
+        System.out.println("Pradiation = σAεT^4");
+        System.out.println("Eradiation = (σAradation εT^4) *t");
+        System.out.println("T(K) = T(ºC) + 273.15");
+        System.out.println();
+        System.out.println();
+        System.out.println("Containers used: ");
+        System.out.println("Containers with 0 sides exposed to sun: " + cont0);
+        System.out.println("Containers with 1 side exposed to sun: "+ cont1);
+        System.out.println("Containers with 2 sides exposed to sun: "+ cont2);
+        System.out.println("Containers with 3 sides exposed to sun: "+ cont3);
+        System.out.println("Containers with 4 sides exposed to sun: "+ cont4);
+        System.out.println("Containers with 5 sides exposed to sun: "+ cont5);
+        System.out.println();
+        System.out.println("Total Area of Conduction:");
+        System.out.println("For each container with 0 sides exposed: 0 m^2");
+        System.out.println("For each container with 1 side exposed: ");
+        System.out.println("Aconduction1 = 1* (container length * container width) = " + cont1AC);
+        System.out.println("Aconduction2 = 1* (container length * container width) + 1*(container width * container height) = " + cont2AC);
+        System.out.println("Aconduction3 = 2* (container length * container width) + 1*(container width * container height) = " + cont3AC);
+        System.out.println("Aconduction4 = 2* (container length * container width) + 2*(container width * container height) = " + cont4AC);
+        System.out.println("Aconduction5 = 3* (container length * container width) + 2*(container width * container height) = " + cont5AC);
+        System.out.println("ATotalconduction = Cont 1 side * Aconduction1 + Cont 2 sides * Aconduction2 +Cont 3 sides * Aconduction3 +Cont 4 sides * Aconduction4 +Cont 5 sides * Aconduction5 = " + totalContAC);
+        System.out.println();
+        System.out.println("For 7ºC");
+        System.out.println("Rtotal = Lsteel / (Ksteel*ATotalConduction) + Lpolyurethane / (Kpolyurethane*ATotalConduction) + Lpolypropylene / (Kpolypropylene*ATotalConduction)");
+        System.out.println("Rtotal = " + RTotal7);
+        System.out.println();
+        System.out.println("Econduction = " + eConduction7);
+        System.out.println();
+        System.out.println("Eradiation =" + eRadiation7);
+        System.out.println();
+        System.out.println("For -5ºC");
+        System.out.println("Rtotal = Lsteel / (Ksteel*ATotalConduction) + LexpandedPolyester / (KexpandedPolyester*ATotalConduction) + Lpolypropylene / (Kpolypropylene*ATotalConduction)");
+        System.out.println("Rtotal = " + RTotal5);
+        System.out.println();
+        System.out.println("Econduction = " + eConduction5);
+        System.out.println();
+        System.out.println("Eradiation =" + eRadiation5);
+        System.out.println();
+        System.out.println("Total Energy for 7ºC: "+ totalE7);
+        System.out.println();
+        System.out.println("Total Energy for -5ºC: "+ totalE5);
+
+
 
     }
 }
