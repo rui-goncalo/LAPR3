@@ -2,13 +2,15 @@ package lapr.project.structures;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * @author DEI-ESINF
  */
 
-public class AdjacencyMatrixGraph<V, E> implements BasicGraphInterface<V, E>, Cloneable {
+public class AdjacencyMatrixGraph<V extends Comparable<V>, E> implements BasicGraphInterface<V, E>, Cloneable {
 
     public static final int INITIAL_CAPACITY = 10;
     public static final float RESIZE_FACTOR = 1.5F;
@@ -26,7 +28,20 @@ public class AdjacencyMatrixGraph<V, E> implements BasicGraphInterface<V, E>, Cl
      */
 
     int toIndex(V vertex) {
-        return vertices.indexOf(vertex);
+        int counter = 0;
+        boolean alreadyExists = false;
+        for (V vert : vertices) {
+            if (vert.compareTo(vertex) == 0) {
+                alreadyExists = true;
+                break;
+            }
+            counter++;
+        }
+        if (!alreadyExists) {
+            return -1;
+        } else {
+            return counter;
+        }
     }
 
     /**
@@ -107,6 +122,21 @@ public class AdjacencyMatrixGraph<V, E> implements BasicGraphInterface<V, E>, Cl
         return edges;
     }
 
+    public Map<Integer, Double> getVertexEdges(V vertex) {
+        Map<Integer, Double> edgeMap = new HashMap();
+        int index = toIndex(vertex);
+        for (int i = 0; i < vertices.size(); i++) {
+            E edge = edgeMatrix[index][i];
+            if (edge != null) {
+                if ((Double) edge > 0.0) {
+                    edgeMap.put(i, (Double) edge);
+                }
+            }
+        }
+        return edgeMap;
+    }
+
+
     /**
      * Inserts a new vertex with the given element.
      * fails if vertex already exists
@@ -122,6 +152,10 @@ public class AdjacencyMatrixGraph<V, E> implements BasicGraphInterface<V, E>, Cl
         numVertices++;
         resizeMatrix();
         return true;
+    }
+
+    public V getVertex(int index) {
+        return vertices.get(index);
     }
 
     /**
