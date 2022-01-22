@@ -1,5 +1,6 @@
 package lapr.project.ui;
 
+import lapr.project.model.PortInfo;
 import lapr.project.structures.Edge;
 
 import java.util.ArrayList;
@@ -52,7 +53,6 @@ public class GraphDijkstra<V extends Comparable<V>, E>  {
         return null;
     }
 
-
     private static <V, E> void initializePathDist(int nVerts, V [] pathKeys, E[] dist) {
         for (int i = 0; i < nVerts; i++) {
             dist[i] = null;
@@ -60,8 +60,7 @@ public class GraphDijkstra<V extends Comparable<V>, E>  {
         }
     }
 
-
-    public static <V extends Comparable<V>, E> E shortestPath(GraphDijkstra<V, E> g, V vOrig, V vDest,
+    public E shortestPath(GraphDijkstra<V, E> g, V vOrig, V vDest,
                                                               Comparator<E> ce, BinaryOperator<E> sum, E zero,
                                                               LinkedList<V> shortPath) {
 
@@ -87,8 +86,6 @@ public class GraphDijkstra<V extends Comparable<V>, E>  {
         }
         return null;
     }
-
-
 
     public static <V extends Comparable<V>, E> boolean shortestPaths(GraphDijkstra<V, E> g, V vOrig,
                                                                      Comparator<E> ce, BinaryOperator<E> sum, E zero,
@@ -125,8 +122,6 @@ public class GraphDijkstra<V extends Comparable<V>, E>  {
         return true;
     }
 
-
-
     private static <V extends Comparable<V>, E> void getPath(GraphDijkstra<V, E> g, V vOrig, V vDest,
                                                              V [] pathKeys, LinkedList<V> path) {
 
@@ -149,7 +144,13 @@ public class GraphDijkstra<V extends Comparable<V>, E>  {
     }
 
     public boolean validVertex(V vert) {
-        return this.key(vert) != null;
+        boolean isValidVertex = false;
+        for (V vertex : vertices) {
+            if (vertex.compareTo(vert) == 0) {
+                isValidVertex = true;
+            }
+        }
+        return isValidVertex;
     }
 
     // percorrer os vertices e verificar se já existe algum vertice com o mesmo port id
@@ -237,4 +238,5 @@ public class GraphDijkstra<V extends Comparable<V>, E>  {
     public GraphDijkstra clone() {
         return this;
     }
+
 }
