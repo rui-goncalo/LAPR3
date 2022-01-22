@@ -110,7 +110,7 @@ public class Menu {
                 "Big Ports File CSV\n", "Load Ships from Database", "Load Ports from Database",
                 "Print Border Map"};
 
-        FunctionsGraph.populateGraph();
+        //FunctionsGraph.populateGraph();
 
         printMenu("Import Ships", options, true);
 
@@ -823,6 +823,22 @@ public class Menu {
 
                     try (CallableStatement callableStatement = connection.prepareCall(us305)) {
                         callableStatement.registerOutParameter(1, Types.VARCHAR);
+                        callableStatement.execute();
+                        System.out.println(callableStatement.getString(1));
+                    } catch (SQLException e) {
+                        System.out.println("Failed to create a statement: " + e);
+                    } finally {
+                        try {
+                            connection.close();
+                        } catch (SQLException e) {
+                            System.out.println("Failed to access database: " + e);
+                        }
+                    }
+                    break;
+                case 9:
+                    String us407 = "{? = call prc_week_in_advance()}";
+
+                    try (CallableStatement callableStatement = connection.prepareCall(us407)) {
                         callableStatement.execute();
                         System.out.println(callableStatement.getString(1));
                     } catch (SQLException e) {
