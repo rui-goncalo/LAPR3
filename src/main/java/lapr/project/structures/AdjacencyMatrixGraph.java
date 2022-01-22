@@ -135,7 +135,7 @@ public class AdjacencyMatrixGraph<V, E> implements BasicGraphInterface<V, E>, Cl
      */
     void insertEdge(int indexA, int indexB, E newEdge){
         if (edgeMatrix[indexA][indexB] == null){
-            edgeMatrix[indexA][indexB] = edgeMatrix[indexB][indexA] = newEdge; // undirected graph
+            edgeMatrix[indexA][indexB] = newEdge; // undirected graph
             numEdges++;
         }
     }
