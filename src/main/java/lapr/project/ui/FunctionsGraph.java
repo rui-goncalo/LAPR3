@@ -22,12 +22,19 @@ public class FunctionsGraph {
 
     private static final GraphDijkstra<PortInfo, Integer> dijkstraGraph = new GraphDijkstra();
 
-    public static GraphDijkstra populateGraph() {
 
+    public static GraphDijkstra populateGraph() {
+        int counter = 0;
+        PortInfo origin = null;
+        PortInfo dest = null;
         for (Seadist portInfo : seaDistArray) {
+            if (counter == 0) {
+                origin = new PortInfo(portInfo.getFromCountry(), portInfo.getFromPortId(), portInfo.getFromPort());
+            }
             PortInfo fromPort = new PortInfo(portInfo.getFromCountry(), portInfo.getFromPortId(), portInfo.getFromPort());
             PortInfo toPort = new PortInfo(portInfo.getToCountry(), portInfo.getToPortId(), portInfo.getToPort());
 
+            dest = toPort;
 
             ArrayList<PortInfo> vertices = dijkstraGraph.vertices();
 
@@ -54,6 +61,19 @@ public class FunctionsGraph {
         }
 
         BinaryOperator<Integer> operator = (x, y) -> x + y;
+
+        Comparator<Integer> portComparator = new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o1 < o2 ? -1 : (o1 == o2 ? 0 : 1);
+            }
+        };
+
+        LinkedList<PortInfo> portLinkedList = new LinkedList<>();
+        Integer zero = 0;
+
+        Integer distance = dijkstraGraph.shortestPath(dijkstraGraph, origin, dest, portComparator, operator, zero, portLinkedList);
+
 
         return dijkstraGraph;
     }
