@@ -1,6 +1,6 @@
 package lapr.project.model;
 
-public class Port {
+public class Port extends Location {
     /**
      * Instance variables of a Port.
      */
@@ -21,6 +21,7 @@ public class Port {
      * @param longitude
      */
     public Port(String continent, String country, int id, String name, double latitude, double longitude) {
+        super(name, continent);
         this.continent = continent;
         this.country = country;
         this.id = id;
