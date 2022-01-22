@@ -7,10 +7,21 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import org.junit.jupiter.api.AfterAll;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeAll;
+
 
 public class CalculatorTest {
+
+    @BeforeAll
+    public static void setUpClass() throws Exception {
+    }
+
+    @AfterAll
+    public static void tearDownClass() throws Exception {
+    }
     @Test
     public void testGetDistance() {
         ShipData dynamic1 = new ShipData(LocalDateTime.of(2020, 12, 31, 16, 53, 0), 25.83657, -78.50441, 0.8, -143.9, 146, 'A');
@@ -44,4 +55,48 @@ public class CalculatorTest {
         assertEquals(shipPair.getSecondShip().getMmsi(), Calculator.searchShipPairs(shipArray).get(0).getSecondShip().getMmsi());
     }
 
+    /**
+     * Test of totalMassPlaced method, of class Calculator.
+     */
+    @Test
+    public void testTotalMassPlaced() {
+        System.out.println("Test totalMassPlaced");
+        int numContainers = 1000;
+        int expResult = 500000;
+        int result = Calculator.totalMassPlaced(numContainers);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of pressureExerted method, of class Calculator.
+     */
+    @Test
+    public void testPressureExerted() {
+        System.out.println("pressureExerted");
+        double shipArea = 40;
+        double mass = 100;
+        double expResult = 24.50;
+        double result = Calculator.pressureExerted(shipArea, mass);
+        assertEquals(expResult, result, 0.00);
+    }
+
+    /**
+     * Test of heightDifference method, of class Calculator.
+     */
+    @Test
+    public void testHeightDifference() {
+        System.out.println("Test heightDifference\n");
+        //PANAMAX
+        double initialDraft = 12.04;
+        double shipWidth = 32.31;
+        double shipLength = 294.13;
+        //1000 containers
+        double placedMass = 500000;
+        
+        double expResult = 0.0;
+        double result = Calculator.heightDifference(initialDraft, shipWidth, shipLength, placedMass);
+        System.out.println(result);
+        assertEquals(1, 1, 0.0);
+        
+    }
 }

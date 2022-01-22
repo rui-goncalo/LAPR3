@@ -8,6 +8,13 @@ import java.util.ArrayList;
 
 public final class Calculator {
     
+    //In Kg/m^3
+    private static final double SEAWATER_DENSITY = 1026;
+    
+    //In m/s^2
+    private static final double GRAV_ACCELERATION = 9.8;
+    
+    private static final int CONTAINER_MASS = 500;
     private static final double MINUTES_IN_A_DEGREE = 60;
     private static final double NAUTICAL_MILES_TO_STATUTE_MILES = 1.1515;
     private static final double STATUTE_MILES_TO_KILOMETERS = 1.609344;
@@ -114,4 +121,23 @@ public final class Calculator {
         return shipPairs;
     }
 
+    
+    //US420
+    //The total mass placed on the vessel
+    public static int totalMassPlaced(int numContainers){
+        return numContainers*CONTAINER_MASS;
+    }
+    
+    //The pressure exerted by the cargo in the water
+    public static double pressureExerted(double shipArea, double mass){
+        double weight = mass * GRAV_ACCELERATION;
+        return Math.round( (weight / shipArea) * 100) /100.0;
+    }
+    
+    public static double heightDifference(double initialDraft, double shipWidth, double shipLength, double placedMass){
+        double shipArea = shipWidth * shipLength;
+        double displacedVol = placedMass / SEAWATER_DENSITY;
+        double draftChange = displacedVol/shipArea;
+        return draftChange*(-1);
+    }
 }
