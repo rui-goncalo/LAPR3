@@ -3,7 +3,7 @@ CREATE OR REPLACE FUNCTION fnc_iddle_ship(p_year INTEGER) return varchar
     IS
     v_days_idle INT;
     v_ship_mmsi INT;
-    v_str VARCHAR(300);
+    v_str VARCHAR(1000);
     v_const DATE := TO_DATE(p_year || '-01-01', 'YYYY-MM-DD');
 BEGIN
     v_str := v_str || 'Year: ' || p_year || CHR(10);
