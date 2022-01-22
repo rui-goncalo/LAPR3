@@ -217,3 +217,4 @@ nbdist/
 
 # End of https://www.toptal.com/developers/gitignore/api/eclipse,maven,java,intellij+all,netbeans
 nbproject/project.properties
+/nbproject/

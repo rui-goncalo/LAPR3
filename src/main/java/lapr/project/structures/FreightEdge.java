@@ -1,0 +1,53 @@
+package lapr.project.structures;
+
+import java.util.Objects;
+
+public class FreightEdge<V, E> {
+    
+    final private V vOrig;        // vertex origin
+    final private V vDest;        // vertex destination
+    private E weight;        // Edge weight
+
+
+    public FreightEdge(V vOrig, V vDest, E weight) {
+        if ((vOrig == null) || (vDest == null)) throw new RuntimeException("Edge vertices cannot be null!");
+        this.vOrig = vOrig;
+        this.vDest = vDest;
+        this.weight = weight;
+    }
+
+    public V getVOrig() {
+        return vOrig;
+    }
+
+    public V getVDest() {
+        return vDest;
+    }
+
+    public E getWeight() {
+        return weight;
+    }
+    public void setWeight(E weight) {
+        this.weight = weight;
+    }
+
+
+    @Override
+    public String toString() {
+        return String.format("%s -> %s\nWeight: %s", vOrig, vDest, weight);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        @SuppressWarnings("unchecked") FreightEdge<V, E> edge = (FreightEdge<V, E>) o;
+        return  vOrig.equals(edge.vOrig) &&
+                vDest.equals(edge.vDest);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(vOrig, vDest);
+    }
+}
