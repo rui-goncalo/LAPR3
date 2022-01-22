@@ -1,6 +1,6 @@
 SET SERVEROUTPUT ON;
-DROP PROCEDURE func_voyages_occupation_rate;
-CREATE OR REPLACE PROCEDURE func_voyages_occupation_rate(f_ship Ship.mmsi%type)
+DROP PROCEDURE prc_voyages_occupation_rate;
+CREATE OR REPLACE PROCEDURE prc_voyages_occupation_rate(f_ship Ship.mmsi%type)
 IS
     v_threshold INTEGER;
     v_trip INTEGER;
@@ -13,7 +13,6 @@ BEGIN
     v_threshold := 66;
     
     FOR rec IN (SELECT DISTINCT t.id, l.name, t.initial_date, a.arrival_date
-                --INTO v_trip, v_location, v_initial, v_final
                 FROM Trip t, Vehicle v, Ship s, Arrival a, Location l, Employee_Location el, Employee e, Type_Employee te, Cargo_Manifest cm
                 WHERE ((SELECT COUNT(*) AS "Containers Per Manifest"
                         FROM Container_Cargo_Manifest ccm, Cargo_Manifest cm, Vehicle v, Ship s
@@ -37,7 +36,7 @@ BEGIN
     END LOOP;
 END;
 
-exec func_voyages_occupation_rate(211331613);
+exec prc_voyages_occupation_rate(211331613);
 
 --Para demonstração usar o Ship 211331613 que tem uma occupancy rate de 1.14
 --Alterar o valor do threshold por 1.14 e 1.15 para ver que só aparecem os que têm occupancy rate abaixo do pedido.
