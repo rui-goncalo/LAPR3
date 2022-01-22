@@ -43,8 +43,6 @@ public class Menu {
     private static final KDTree<Port> portTree = new KDTree<>();
     private static Ship currentShip = null;
 
-    private static AdjacencyMatrixGraph<String, Integer> capitalBordersMatrix = null;
-    private static AdjacencyMatrixGraph<Port, Integer> portMatrix = null;
 
     /**
      * Opens the main menu with all the options for users.
@@ -178,7 +176,7 @@ public class Menu {
                 System.out.println("Ports are imported with success");
                 break;
             case 7:
-                FunctionsGraph.getBorderMap();
+                //FunctionsGraph.getBorderMap();
         }
     }
 
@@ -194,8 +192,7 @@ public class Menu {
 
             String[] options = {"Go Back\n", "Show all Ships", "Search by Ship", "Search Ship Pairs\n",
                     "Create Summary of Ships", "View Summaries by Ship", "Get TOP N Ships\n",
-                    "Get Nearest Port\n", "Print N Closest Port Matrix", "Print Ports Closest to Capital - same country - Matrix",
-                    "Print Capital and Borders Matrix\n", "Vessel Type", "Calculation Center of Mass","Position Containers","Energy Needed to Containers"};
+                    "Get Nearest Port\n", "Print Freight Network Matrix\n", "Vessel Type", "Calculation Center of Mass","Position Containers","Energy Needed to Containers"};
             printMenu("Manage Ships", options, true);
             choice = getInput("Please make a selection: ", sc);
 
@@ -272,21 +269,16 @@ public class Menu {
                     break;
                 case 8:
                     int number = getInput("Insert N Ports: \n", sc);
-                    System.out.println(FunctionsGraph.getNClosestPortMatrix(number).toString());
+                    System.out.println(FunctionsGraph.getFreightNetworkMatrix(number).toString());
+                    FunctionsGraph.populateGraph();
                     break;
                 case 9:
-                    System.out.println(FunctionsGraph.getClosestPortsFromCapital().toString());
-                    break;
-                case 10:
-                    System.out.println(FunctionsGraph.getCapitalBordersMatrix().toString());
-                    break;
-                case 11:
                     vesselTypesMenu(sc);
-                case 12:
+                case 10:
                     menuCenterOfMass(sc);
-                case 13:
+                case 11:
                     menuPosContainers(sc);
-                case 14:
+                case 12:
                     menuEnergyNeeded(sc);
             }
 
