@@ -1,6 +1,6 @@
 package lapr.project.model;
 
-public class PortInfo implements Comparable<PortInfo>{
+public class PortInfo implements Comparable<PortInfo> {
     private final String country;
     private final Integer id;
     private final String name;
