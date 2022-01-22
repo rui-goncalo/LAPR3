@@ -1,6 +1,6 @@
 package lapr.project.model;
 
-public class Country {
+public class Country extends Location {
 
     private final int id;
     private final String name;
@@ -13,6 +13,7 @@ public class Country {
     private final double longitude;
 
     public Country(int id, String name, String alpha2, String alpha3, String continent, String capital, double population, double latitude, double longitude) {
+        super(name, continent);
         this.id = id;
         this.name = name;
         this.alpha2 = alpha2;
@@ -59,5 +60,4 @@ public class Country {
     public double getLongitude() {
         return longitude;
     }
-
 }
