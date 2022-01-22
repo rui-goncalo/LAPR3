@@ -50,7 +50,7 @@ public class GraphDijkstra<V extends Comparable<V>, E>  {
                 outgoing.add(edge);
             }
         }
-        return null;
+        return outgoing;
     }
 
     private static <V, E> void initializePathDist(int nVerts, V [] pathKeys, E[] dist) {
@@ -60,7 +60,7 @@ public class GraphDijkstra<V extends Comparable<V>, E>  {
         }
     }
 
-    public E shortestPath(GraphDijkstra<V, E> g, V vOrig, V vDest,
+    public String shortestPath(GraphDijkstra<V, E> g, V vOrig, V vDest,
                                                               Comparator<E> ce, BinaryOperator<E> sum, E zero,
                                                               LinkedList<V> shortPath) {
 
@@ -71,7 +71,7 @@ public class GraphDijkstra<V extends Comparable<V>, E>  {
         int numVerts = g.numVertices();
         boolean[] visited = new boolean[numVerts]; //default value: false
         @SuppressWarnings("unchecked")
-        V[] pathKeys = (V[]) new Object [numVerts];
+        V[] pathKeys = (V[]) new Comparable[numVerts];
         @SuppressWarnings("unchecked")
         E[] dist = (E[]) new Object [numVerts];
         initializePathDist(numVerts, pathKeys, dist);
@@ -82,7 +82,16 @@ public class GraphDijkstra<V extends Comparable<V>, E>  {
 
         if (lengthPath != null) {
             getPath(g, vOrig, vDest, pathKeys, shortPath);
-            return lengthPath;
+            String path = "";
+            int counter = 0;
+            for (boolean visit : visited) {
+                if (visit == true) {
+                    path = path + counter + ",";
+                }
+                counter++;
+            }
+            path = path + lengthPath;
+            return path;
         }
         return null;
     }
@@ -153,6 +162,10 @@ public class GraphDijkstra<V extends Comparable<V>, E>  {
         return isValidVertex;
     }
 
+    public V getVertex(int index) {
+        return vertices.get(index);
+    }
+
     // percorrer os vertices e verificar se já existe algum vertice com o mesmo port id
 
     public Integer key(V vert) {
@@ -203,6 +216,7 @@ public class GraphDijkstra<V extends Comparable<V>, E>  {
         }
         return false;
     }
+
 
     public boolean addEdge(V vOrig, V vDest, E weight) {
         if(this.validVertex(vOrig)) {
