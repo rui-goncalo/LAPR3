@@ -11,76 +11,83 @@ import java.util.function.BinaryOperator;
 public class FunctionsGraph {
 
     private static final String BORDERS_FILE = "data/borders.csv";
-    private static final String SMALL_PORTS_FILE = "data/sports.csv";
+    private static final String BIG_PORTS_FILE = "data/bports.csv";
     private static final String COUNTRIES_FILE = "data/countries.csv";
     private static final String SEADIST_FILE = "data/seadists.csv";
-    private static final ArrayList<Port> portsArray = CSVReaderUtils.readPortCSV(SMALL_PORTS_FILE);
+    private static final ArrayList<Port> portsArray = CSVReaderUtils.readPortCSV(BIG_PORTS_FILE);
     private static final ArrayList<Country> countriesArray  = CSVReaderUtils.readCountryCSV(COUNTRIES_FILE);
     private static final ArrayList<Border> borderArray = CSVReaderUtils.readBordersCSV(BORDERS_FILE);
     private static final ArrayList<Seadist> seaDistArray = CSVReaderUtils.readSeadistsCSV(SEADIST_FILE);
-    private static AdjacencyMatrixGraph<Port, Integer> portMatrix = new AdjacencyMatrixGraph<>();
+    private static AdjacencyMatrixGraph<Location, Double> freightNetworkMatrix = new AdjacencyMatrixGraph<>();
 
-    private static final GraphDijkstra<PortInfo, Integer> dijkstraGraph = new GraphDijkstra();
+    private static GraphDijkstra<Location, Double> dijkstraGraph = new GraphDijkstra();
 
 
     public static GraphDijkstra populateGraph() {
-        int counter = 0;
-        PortInfo origin = null;
-        PortInfo dest = null;
-        for (Seadist portInfo : seaDistArray) {
-            if (counter == 0) {
-                origin = new PortInfo(portInfo.getFromCountry(), portInfo.getFromPortId(), portInfo.getFromPort());
-            }
-            PortInfo fromPort = new PortInfo(portInfo.getFromCountry(), portInfo.getFromPortId(), portInfo.getFromPort());
-            PortInfo toPort = new PortInfo(portInfo.getToCountry(), portInfo.getToPortId(), portInfo.getToPort());
+        dijkstraGraph = new GraphDijkstra<>();
+        Iterable<Location> freightVertices = freightNetworkMatrix.vertices();
 
-            dest = toPort;
-
-            ArrayList<PortInfo> vertices = dijkstraGraph.vertices();
-
-            boolean isValidFromPort = true;
-            boolean isValidToPort = true;
-            for (PortInfo port : vertices) {
-                if (Integer.compare(port.getId(), fromPort.getId()) == 0) {
-                    isValidFromPort = false;
+        for (Location location : freightVertices) {
+            if (location.getClass() == Port.class) {
+                if (!dijkstraGraph.validVertex(location)) {
+                    dijkstraGraph.addVertex(location);
                 }
-                if (Integer.compare(port.getId(), toPort.getId()) == 0) {
-                    isValidToPort = false;
+                Map<Integer, Double> edgeMap = freightNetworkMatrix.getVertexEdges(location);
+                for (Map.Entry<Integer, Double> edge : edgeMap.entrySet()) {
+                    System.out.println(edge);
+                    Location toLocation = freightNetworkMatrix.getVertex(edge.getKey());
+                    if (toLocation.getClass() == Port.class) {
+
+                        if (!dijkstraGraph.validVertex(toLocation)) {
+                            dijkstraGraph.addVertex(toLocation);
+                        }
+                        dijkstraGraph.addEdge(location, toLocation, edge.getValue());
+                    }
                 }
+                System.out.println("\n");
             }
-
-            if (isValidFromPort) {
-                dijkstraGraph.addVertex(fromPort);
-            }
-
-            if (isValidToPort) {
-                dijkstraGraph.addVertex(toPort);
-            }
-
-            dijkstraGraph.addEdge(fromPort, toPort, portInfo.getSeaDistance());
         }
 
-        BinaryOperator<Integer> operator = (x, y) -> x + y;
+        BinaryOperator<Double> operator = (x, y) -> x + y; // somar distancias
+        Comparator<Double> portComparator = (o1, o2) -> o1 < o2 ? -1 : (o1 == o2 ? 0 : 1); //comparar se são maiores ou + pequenas
 
-        Comparator<Integer> portComparator = new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                return o1 < o2 ? -1 : (o1 == o2 ? 0 : 1);
+        LinkedList<Location> portLinkedList = new LinkedList<>();
+        Double zero = 0.0;
+
+        ArrayList<Location> vertices = dijkstraGraph.vertices();
+        ArrayList<String> paths = new ArrayList<>();
+        for (Location fromLocation : vertices) {
+            for (Location toLocation : vertices) {
+                String path = dijkstraGraph.shortestPath(dijkstraGraph, fromLocation, toLocation, portComparator, operator, zero, portLinkedList);
+                if (path != null) {
+                    String[] splitPath = path.split(",");
+                    System.out.println(splitPath[splitPath.length - 1]);
+                    System.out.println("From: " + fromLocation.getName() + " To: " + toLocation.getName() + " -> " + path);
+                    paths.add("From: " + fromLocation.getName() + " To: " + toLocation.getName() + " -> " + path);
+                }
             }
-        };
+        }
 
-        LinkedList<PortInfo> portLinkedList = new LinkedList<>();
-        Integer zero = 0;
-
-        Integer distance = dijkstraGraph.shortestPath(dijkstraGraph, origin, dest, portComparator, operator, zero, portLinkedList);
-
+        // fazer o map com a contagem dos vertices nos caminhos. Deve retornar aquele que tiver maior numero de caminhos.
 
         return dijkstraGraph;
     }
 
+    public static AdjacencyMatrixGraph<Location, Double> getFreightNetworkMatrix(int n) {
+        // Add capitals
+        freightNetworkMatrix = new AdjacencyMatrixGraph<>();
+        for (Country country : countriesArray) {
+            freightNetworkMatrix.insertVertex(country);
+        }
 
-    public static AdjacencyMatrixGraph<Port, Integer> getNClosestPortMatrix(int n) {
-        portMatrix = new AdjacencyMatrixGraph<>();
+        for(Border border : borderArray) {
+            Country country1 = border.getCountry1();
+            Country country2 = border.getCountry2();
+
+            freightNetworkMatrix.insertEdge(country1, country2, 1.0);
+        }
+
+        // Add N closest ports
         loadPorts();
         ArrayList<PortDistance> distanceArray = null;
 
@@ -88,6 +95,14 @@ public class FunctionsGraph {
             distanceArray = new ArrayList<>();
             for (Port secondPort : portsArray) {
                 if (!firstPort.getCountry().equals(secondPort.getCountry())) {
+                    double dist = 0.0;
+                    for (Seadist seadist : seaDistArray) {
+                        if (firstPort.equals(seadist.getFromPort()) && secondPort.equals(seadist.getToPort())) {
+                            dist = seadist.getSeaDistance();
+                        } else if (secondPort.equals(seadist.getFromPort()) && firstPort.equals(seadist.getToPort())) {
+                            dist = seadist.getSeaDistance();
+                        }
+                    }
                     double distanceToPort = Calculator.getDistance(firstPort.getLatitude(), firstPort.getLongitude(),
                             secondPort.getLatitude(), secondPort.getLongitude());
                     distanceArray.add(new PortDistance(secondPort, distanceToPort));
@@ -97,17 +112,14 @@ public class FunctionsGraph {
             int i = 0;
             for (PortDistance portDistance : distanceArray) {
                 if (i < n) {
-                    portMatrix.insertEdge(firstPort, portDistance.getPort(), 1);
+                    freightNetworkMatrix.insertEdge(firstPort, portDistance.getPort(), portDistance.getDistance());
                     i++;
                 }
             }
         }
-        return portMatrix;
-    }
 
-    public static AdjacencyMatrixGraph<Port, Integer> getClosestPortsFromCapital() {
-        portMatrix = new AdjacencyMatrixGraph<>();
-        loadPorts();
+        // Get closest ports from capital
+
         Port nearestPort = null;
         double distance = 0.0;
         int counter = 0;
@@ -131,7 +143,7 @@ public class FunctionsGraph {
                 }
             }
             if (nearestPort != null) {
-                portMatrix.insertEdge(nearestPort, nearestPort, 1);
+                freightNetworkMatrix.insertEdge(nearestPort, nearestPort, 1.0);
             }
         }
         for (int i = 0; i < portsArray.size() - 1; i++) {
@@ -139,37 +151,32 @@ public class FunctionsGraph {
                 Port firstPort = portsArray.get(i);
                 Port secondPort = portsArray.get(j);
                 if (firstPort.getCountry().equals(secondPort.getCountry())) {
-                    portMatrix.insertEdge(firstPort, secondPort, 1);
+                    String fromPort = firstPort.getName();
+                    String toPort = secondPort.getName();
+                    double dist = 0.0;
+                    for (Seadist seadist : seaDistArray) {
+                        if (fromPort.equals(seadist.getFromPort()) && toPort.equals(seadist.getToPort())) {
+                            dist = seadist.getSeaDistance();
+                            freightNetworkMatrix.insertEdge(firstPort, secondPort, dist);
+                            System.out.println("First Port: " + firstPort.getName() + " Second Port: " + secondPort.getName() + " -> " + dist);
+                        } else if (toPort.equals(seadist.getFromPort()) && fromPort.equals(seadist.getToPort())) {
+                            dist = seadist.getSeaDistance();
+                            freightNetworkMatrix.insertEdge(secondPort, firstPort, dist);
+                            System.out.println("First Port: " + firstPort.getName() + " Second Port: " + secondPort.getName() + " -> " + dist);
+                        }
+                    }
+
                 }
             }
         }
-        return portMatrix;
-    }
 
-    /**
-     * Method used to get Capital and Borders Matrix.
-     *
-     * @return Matrix of Capitals and Borders
-     *
-     */
-    public static AdjacencyMatrixGraph<String, Integer> getCapitalBordersMatrix() {
-        AdjacencyMatrixGraph<String, Integer> capitalMatrix = new AdjacencyMatrixGraph<>();
-        for (Country country : countriesArray) {
-            capitalMatrix.insertVertex(country.getCapital());
-        }
+        return freightNetworkMatrix;
 
-        for(Border border : borderArray) {
-            String capital1 = border.getCountry1().getCapital();
-            String capital2 = border.getCountry2().getCapital();
-
-            capitalMatrix.insertEdge(capital1, capital2, 1);
-        }
-        return capitalMatrix;
     }
 
     public static void loadPorts() {
         for (Port port : portsArray) {
-            portMatrix.insertVertex(port);
+            freightNetworkMatrix.insertVertex(port);
         }
     }
 
