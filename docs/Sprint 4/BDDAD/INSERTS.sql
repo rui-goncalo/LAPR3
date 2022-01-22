@@ -1,3 +1,359 @@
+-- DROP Tables --
+DROP TABLE Vessel_Type CASCADE CONSTRAINTS PURGE;
+DROP TABLE Ship CASCADE CONSTRAINTS PURGE;
+DROP TABLE Container CASCADE CONSTRAINTS PURGE;
+DROP TABLE Truck CASCADE CONSTRAINTS PURGE;
+DROP TABLE Message CASCADE CONSTRAINTS PURGE;
+DROP TABLE Cargo_Manifest CASCADE CONSTRAINTS PURGE;
+DROP TABLE Container_Cargo_Manifest CASCADE CONSTRAINTS PURGE;
+DROP TABLE Pos_Container CASCADE CONSTRAINTS PURGE;
+DROP TABLE Type_Cargo_Manifest CASCADE CONSTRAINTS PURGE;
+DROP TABLE Location CASCADE CONSTRAINTS PURGE;
+DROP TABLE Type_Location CASCADE CONSTRAINTS PURGE;
+DROP TABLE Country CASCADE CONSTRAINTS PURGE;
+DROP TABLE Continent CASCADE CONSTRAINTS PURGE;
+DROP TABLE Employee CASCADE CONSTRAINTS PURGE;
+DROP TABLE Type_Employee CASCADE CONSTRAINTS PURGE;
+DROP TABLE Arrival CASCADE CONSTRAINTS PURGE;
+DROP TABLE Employee_Location CASCADE CONSTRAINTS PURGE;
+DROP TABLE Ship_Crew CASCADE CONSTRAINTS PURGE;
+--DROP TABLE Role CASCADE CONSTRAINTS PURGE;
+DROP TABLE "USER" CASCADE CONSTRAINTS PURGE;
+DROP TABLE Container_Refrigerated CASCADE CONSTRAINTS PURGE;
+DROP TABLE Trip CASCADE CONSTRAINTS PURGE;
+DROP TABLE Client CASCADE CONSTRAINTS PURGE;
+DROP TABLE Container_Client CASCADE CONSTRAINTS PURGE;
+DROP TABLE Type_Container CASCADE CONSTRAINTS PURGE;
+DROP TABLE Vehicle CASCADE CONSTRAINTS PURGE;
+DROP TABLE AuditTrail CASCADE CONSTRAINTS PURGE;
+
+-- CREATE Tables --
+CREATE TABLE Vessel_Type (
+                             id INTEGER CONSTRAINT vessel_type_pk PRIMARY KEY,
+                             designation VARCHAR(30)
+);
+
+CREATE TABLE Ship (
+                      mmsi    INTEGER     CONSTRAINT ship_pk PRIMARY KEY,
+                      name  VARCHAR(30) CONSTRAINT ship_nn_name NOT NULL,
+                      imo     INTEGER UNIQUE,
+                      number_energy_gen   INTEGER,
+                      gen_power_output    DECIMAL(5,2),
+                      callsign    VARCHAR(10) UNIQUE,
+                      vessel_typeid INTEGER,
+                      length    DECIMAL(5,2),
+                      Width   DECIMAL(5,2),
+                      capacity  INTEGER CONSTRAINT ship_nn_capacity NOT NULL,
+                      draft   DECIMAL(5,2),
+                      transceiver_class   VARCHAR(50),
+                      code    INTEGER,
+                      vehicleId INTEGER
+);
+
+CREATE TABLE Location (
+                          id  INTEGER CONSTRAINT location_pk PRIMARY KEY,
+                          name VARCHAR(30) CONSTRAINT location_nn_name NOT NULL,
+                          capacity INTEGER CONSTRAINT location_nn_capacity NOT NULL,
+                          latitude    DECIMAL(5,2) DEFAULT 91.00,
+                          longitude   DECIMAL(5,2) DEFAULT 181.00,
+                          Type_Locationid INTEGER,
+                          CountryId   INTEGER,
+                          CONSTRAINT location_ck CHECK (latitude >= -90.00 AND latitude <= 90.00 AND longitude >= -180.00 AND longitude <= 180.00)
+);
+
+CREATE TABLE Type_Location (
+                               id INTEGER CONSTRAINT type_location_pk PRIMARY KEY,
+                               description VARCHAR(10)
+);
+
+CREATE TABLE Country(
+                        id  INTEGER CONSTRAINT country_pk PRIMARY KEY,
+                        name VARCHAR(30) CONSTRAINT country_nn NOT NULL,
+                        ContinentId INTEGER
+);
+
+CREATE TABLE Continent (
+                           id  INTEGER CONSTRAINT continent_pk PRIMARY KEY,
+                           name VARCHAR(30) CONSTRAINT continent_nn NOT NULL
+);
+
+CREATE TABLE Truck (
+                       registration_plate  VARCHAR(8) CONSTRAINT truck_pk PRIMARY KEY,
+                       EmployeeId_employee INTEGER,
+                       vehicleId INTEGER
+);
+
+CREATE TABLE Employee (
+                          id  INTEGER CONSTRAINT employee_pk PRIMARY KEY,
+                          name VARCHAR(30) CONSTRAINT employee_nn NOT NULL,
+                          Type_Employeetype_id INTEGER
+);
+
+
+CREATE TABLE Employee_Location (
+                                   Employeeid INTEGER,
+                                   Locationid INTEGER,
+                                   CONSTRAINT employee_location_pk
+                                       PRIMARY KEY (Employeeid, Locationid)
+);
+
+
+CREATE TABLE Type_Employee (
+                               type_id INTEGER CONSTRAINT type_employee_pk PRIMARY KEY,
+                               role VARCHAR(30)
+);
+
+CREATE TABLE Message (
+                         id  INTEGER CONSTRAINT message_pk PRIMARY KEY,
+                         sog INTEGER,
+                         cog INTEGER,
+                         heading INTEGER DEFAULT 511,
+                         distance DECIMAL(5,2),
+                         date_t DATE,
+                         LocationId INTEGER,
+                         Shipmmsi INTEGER,
+                         CONSTRAINT message_ck CHECK (heading >= 0 AND heading <= 359 AND cog >= 0 AND cog <= 359)
+);
+
+CREATE TABLE Container_Refrigerated (
+                                        id INTEGER CONSTRAINT container_refrigerated_pk PRIMARY KEY,
+                                        temperature INTEGER
+);
+
+CREATE TABLE Container (
+                           id INTEGER CONSTRAINT container_pk PRIMARY KEY,
+                           payload DECIMAL(5,2),
+                           tare DECIMAL(5,2),
+                           gross DECIMAL(5,2),
+                           iso_code VARCHAR(30),
+                           Container_Refrigeratedid INTEGER,
+                           Type_Containerid INTEGER
+);
+
+CREATE TABLE Type_Container(
+                               id INTEGER CONSTRAINT Type_Container_pk PRIMARY KEY,
+                               name VARCHAR(30)
+);
+
+CREATE TABLE AuditTrail (
+                            id INTEGER CONSTRAINT AuditTrail_pk PRIMARY KEY,
+                            "user" VARCHAR(10),
+                            date_t DATE,
+                            operation VARCHAR(10)
+);
+
+CREATE TABLE Arrival (
+                         id INTEGER CONSTRAINT arrival_pk PRIMARY KEY,
+                         TripId INTEGER,
+                         arrival_date DATE CONSTRAINT arrival_nn NOT NULL,
+                         InitialLocationId INTEGER,
+                         DestinationLocationId INTEGER
+);
+
+CREATE TABLE Cargo_Manifest (
+                                id INTEGER CONSTRAINT cargo_manifest_pk PRIMARY KEY,
+                                gross_weight DECIMAL(5,2),
+                                date_t DATE,
+                                Type_Cargo_ManifestId INTEGER,
+                                VehicleId INTEGER,
+                                ArrivalId INTEGER,
+                                AuditTrailId INTEGER
+);
+
+CREATE TABLE Container_Cargo_Manifest (
+                                          ContainerId INTEGER,
+                                          Cargo_ManifestId INTEGER,
+                                          CONSTRAINT container_cargo_manifest_pk
+                                              PRIMARY KEY(ContainerId, Cargo_ManifestId),
+                                          Pos_ContainerId INTEGER NOT NULL
+);
+
+CREATE TABLE Pos_Container (
+                               id INTEGER CONSTRAINT pos_container_pk PRIMARY KEY,
+                               container_x INTEGER,
+                               container_y INTEGER,
+                               container_z INTEGER
+);
+
+CREATE TABLE Type_Cargo_Manifest (
+                                     id INTEGER CONSTRAINT type_cargo_manifest_pk PRIMARY KEY,
+                                     designation VARCHAR(30) CONSTRAINT designation_nn NOT NULL
+);
+
+CREATE TABLE Ship_Crew (
+                           Employeeid INTEGER,
+                           TripId INTEGER,
+                           CONSTRAINT ship_crew_pk
+                               PRIMARY KEY(Employeeid, TripId)
+);
+
+--CREATE TABLE Role (
+--  id INTEGER CONSTRAINT role_pk PRIMARY KEY,
+--  description VARCHAR(30)
+--);
+
+CREATE TABLE "USER"(
+                       username VARCHAR(20) CONSTRAINT user_pk PRIMARY KEY,
+                       password VARCHAR(20),
+                       Employeeid INTEGER,
+                       Clientid INTEGER
+);
+
+CREATE TABLE Trip (
+                      id INTEGER CONSTRAINT trip_pk PRIMARY KEY,
+                      initial_date DATE,
+                      final_date DATE,
+                      InitialLocationId INTEGER,
+                      DestinationLocationId INTEGER,
+                      VehicleId INTEGER
+);
+
+CREATE TABLE Client (
+                        id INTEGER CONSTRAINT Client_pk PRIMARY KEY,
+                        name VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE Container_Client(
+                                 ClientId INTEGER,
+                                 Containerid INTEGER,
+                                 Cargo_Manifestid INTEGER,
+                                 CONSTRAINT Container_Client_pk
+                                     PRIMARY KEY (ClientId, Containerid, Cargo_Manifestid)
+);
+
+CREATE TABLE Vehicle (
+    id INTEGER CONSTRAINT Vehicle_pk PRIMARY KEY
+);
+
+-- ALTER Tables --
+ALTER TABLE Ship ADD CONSTRAINT
+    ship_vessel_type_fk FOREIGN KEY (vessel_typeid)
+        REFERENCES Vessel_Type(id);
+
+ALTER TABLE Location ADD CONSTRAINT
+    location_type_location_fk FOREIGN KEY (Type_Locationid)
+        REFERENCES Type_Location(id);
+
+ALTER TABLE Location ADD CONSTRAINT
+    location_country_fk FOREIGN KEY (CountryId)
+        REFERENCES Country(id);
+
+ALTER TABLE Country ADD CONSTRAINT
+    country_continet_fk FOREIGN KEY (ContinentId)
+        REFERENCES Continent(id);
+
+ALTER TABLE Truck ADD CONSTRAINT
+    truck_employee_fk FOREIGN KEY (EmployeeId_employee)
+        REFERENCES Employee(id);
+
+ALTER TABLE Employee ADD CONSTRAINT
+    employee_type_employee_fk FOREIGN KEY (Type_Employeetype_id)
+        REFERENCES Type_Employee(type_id);
+
+ALTER TABLE Employee_Location ADD CONSTRAINT
+    employee_employee_location_fk FOREIGN KEY (Employeeid)
+        REFERENCES Employee(id);
+
+ALTER TABLE Employee_Location ADD CONSTRAINT
+    location_employee_location_fk FOREIGN KEY (Locationid)
+        REFERENCES Location(id);
+
+ALTER TABLE Message ADD CONSTRAINT
+    message_location_fk FOREIGN KEY (LocationId)
+        REFERENCES Location(id);
+
+ALTER TABLE Message ADD CONSTRAINT
+    message_ship_fk FOREIGN KEY (Shipmmsi)
+        REFERENCES Ship(mmsi);
+
+ALTER TABLE Arrival ADD CONSTRAINT
+    arrival_initial_location_fk FOREIGN KEY (InitialLocationId)
+        REFERENCES Location(id);
+
+ALTER TABLE Arrival ADD CONSTRAINT
+    arrival_destination_location_fk FOREIGN KEY (DestinationLocationId)
+        REFERENCES Location(id);
+
+ALTER TABLE Cargo_Manifest ADD CONSTRAINT
+    cargoManifest_typeCargoManifest_fk FOREIGN KEY (Type_Cargo_ManifestId)
+        REFERENCES Type_Cargo_Manifest(id);
+
+ALTER TABLE Cargo_Manifest ADD CONSTRAINT
+    cargoManifest_ship_fk FOREIGN KEY (VehicleId)
+        REFERENCES Vehicle(id);
+
+ALTER TABLE Cargo_Manifest ADD CONSTRAINT
+    cargoManifest_arrival_fk FOREIGN KEY (ArrivalId)
+        REFERENCES Arrival(id);
+
+ALTER TABLE Cargo_Manifest ADD CONSTRAINT
+    cargoManifest_audittrail_fk FOREIGN KEY (AuditTrailId)
+        REFERENCES AuditTrail(id);
+
+ALTER TABLE Container_Cargo_Manifest ADD CONSTRAINT
+    containercargomanifest_posContainer_fk FOREIGN KEY (Pos_ContainerId)
+        REFERENCES Pos_Container(id);
+
+ALTER TABLE Container_Cargo_Manifest ADD CONSTRAINT
+    containerCargoManifest_container_fk FOREIGN KEY (ContainerId)
+        REFERENCES Container(id);
+
+ALTER TABLE Container_Cargo_Manifest ADD CONSTRAINT
+    containerCargoManifest_cargoManifest_fk FOREIGN KEY (Cargo_ManifestId)
+        REFERENCES Cargo_Manifest(id);
+
+ALTER TABLE Ship_Crew ADD CONSTRAINT
+    employee_ship_crew_fk FOREIGN KEY (Employeeid)
+        REFERENCES Employee(id);
+
+ALTER TABLE Ship_Crew ADD CONSTRAINT
+    trip_ship_crew_fk FOREIGN KEY (tripid)
+        REFERENCES Trip(id);
+
+--ALTER TABLE "USER" ADD CONSTRAINT
+--role_user_fk FOREIGN KEY (Roleid)
+--REFERENCES Role(id);
+
+ALTER TABLE "USER" ADD CONSTRAINT
+    employee_user_fk FOREIGN KEY (Employeeid)
+        REFERENCES Employee(id);
+
+ALTER TABLE Container ADD CONSTRAINT
+    container_refrigerated_container_fk FOREIGN KEY (Container_Refrigeratedid)
+        REFERENCES Container_Refrigerated(id);
+
+ALTER TABLE Container ADD CONSTRAINT
+    container_type_container_fk FOREIGN KEY (type_containerid)
+        REFERENCES Type_Container(id);
+
+ALTER TABLE Trip ADD CONSTRAINT
+    trip_initial_location_fk FOREIGN KEY (InitialLocationId)
+        REFERENCES Location(id);
+
+ALTER TABLE Trip ADD CONSTRAINT
+    trip_destination_location_fk FOREIGN KEY (DestinationLocationId)
+        REFERENCES Location(id);
+
+ALTER TABLE Trip ADD CONSTRAINT
+    trip_vehicle_fk FOREIGN KEY (Vehicleid)
+        REFERENCES Vehicle(id);
+
+ALTER TABLE Container_Client ADD CONSTRAINT
+    Container_Client_ClientId_fk FOREIGN KEY (ClientId)
+        REFERENCES Client(id);
+
+ALTER TABLE Container_Client ADD CONSTRAINT
+    Container_Client_Container_Cargo_ManifestContainerid_fk FOREIGN KEY (Containerid, Cargo_Manifestid)
+        REFERENCES Container_Cargo_Manifest(ContainerId, Cargo_Manifestid);
+
+ALTER TABLE Ship ADD CONSTRAINT
+    Ship_VehicleId FOREIGN KEY (vehicleId)
+        REFERENCES Vehicle(id);
+
+ALTER TABLE Truck ADD CONSTRAINT
+    Truck_VehicleId FOREIGN KEY (vehicleId)
+        REFERENCES Vehicle(id);
+
 --INSERT VEHICLE--
 INSERT INTO vehicle VALUES (1);
 INSERT INTO vehicle VALUES (2);
@@ -106,6 +462,11 @@ INSERT INTO employee VALUES (9, 'David', 2);
 INSERT INTO employee VALUES (10, 'Francisco', 1);
 INSERT INTO employee VALUES (11, 'Rodrigo', 11);
 INSERT INTO employee VALUES (12, 'Diogo', 2);
+-- US Rui Sprint 4
+INSERT INTO employee VALUES (13, 'Joana', 7);
+INSERT INTO employee VALUES (14, 'Mafalda', 6);
+INSERT INTO employee VALUES (15, 'Mischa', 5);
+INSERT INTO employee VALUES (16, 'Rishi', 4);
 
 --INSERT EMPLOYEE_LOCATION--
 INSERT INTO employee_location VALUES (4, 1);
@@ -118,6 +479,10 @@ INSERT INTO employee_location VALUES (3, 4); --US405
 INSERT INTO employee_location VALUES (9, 8); --US405
 INSERT INTO employee_location VALUES (12, 1);
 INSERT INTO employee_location VALUES (12, 10);
+INSERT INTO employee_location VALUES (13, 4); --US407
+INSERT INTO employee_location VALUES (14, 4); --US407
+INSERT INTO employee_location VALUES (15, 12); --US407
+INSERT INTO employee_location VALUES (16, 12); --US407
 
 --INSERT TRUCK--
 INSERT INTO truck VALUES ('Kotka', 3, 15);
@@ -138,7 +503,7 @@ INSERT INTO type_cargo_manifest VALUES (2, 'unloading');
 --INSERT AUDITTRAIL--
 --Equivale ao CM -> 10
 INSERT INTO audittrail VALUES (1, 'jgd', TO_DATE('04-12-2021 09:30', 'DD-MM-YYYY HH24-MI'), 'INSERT');
-INSERT INTO audittrail VALUES (2, 'jgv', TO_DATE('15-04-2021 23:20', 'DD-MM-YYYY HH24-MI'), 'UPDATE'); 
+INSERT INTO audittrail VALUES (2, 'jgv', TO_DATE('15-04-2021 23:20', 'DD-MM-YYYY HH24-MI'), 'UPDATE');
 
 --INSERT ARRIVAL--
 INSERT INTO arrival VALUES (1, 10, TO_DATE('30-12-2021 12:00', 'DD-MM-YYYY HH24-MI'), 4, 1);
@@ -155,6 +520,19 @@ INSERT INTO arrival VALUES (19, 11, TO_DATE('10-01-2022 23:50', 'DD-MM-YYYY HH24
 --INSERT INTO arrival VALUES (20, 2, TO_DATE('10-04-2020 23:50', 'DD-MM-YYYY HH24-MI'), 2, 4);
 INSERT INTO arrival VALUES (21, 5, TO_DATE('30-12-2020 09:00', 'DD-MM-YYYY HH24-MI'), 5, 8);
 INSERT INTO arrival VALUES (22, 5, TO_DATE('30-12-2020 09:00', 'DD-MM-YYYY HH24-MI'), 5, 7);
+INSERT INTO arrival VALUES(23, 5, TO_DATE('31-01-2022 09:00', 'DD-MM-YYYY HH24-MI'), 5, 4); --US407
+INSERT INTO arrival VALUES(24, 1, TO_DATE('03-02-2022 09:00', 'DD-MM-YYYY HH24-MI'), 11, 4); --US407
+INSERT INTO arrival VALUES(25, 13, TO_DATE('04-02-2022 09:00', 'DD-MM-YYYY HH24-MI'), 11, 4); --US407
+INSERT INTO arrival VALUES(26, 13, TO_DATE('31-01-2022 09:00', 'DD-MM-YYYY HH24-MI'), 6, 9); --US407
+INSERT INTO arrival VALUES(27, 13, TO_DATE('03-02-2022 09:00', 'DD-MM-YYYY HH24-MI'), 1, 4); --US407
+INSERT INTO arrival VALUES(28, 14, TO_DATE('02-02-2022 09:00', 'DD-MM-YYYY HH24-MI'), 3, 4); --US407
+
+update Arrival set arrival_date = TO_DATE('04-02-2022 09:00', 'DD-MM-YYYY HH24-MI') where id = 25;
+update Arrival set arrival_date = TO_DATE('31-01-2022 09:00', 'DD-MM-YYYY HH24-MI') where id = 26;
+update Arrival set arrival_date = TO_DATE('03-02-2022 09:00', 'DD-MM-YYYY HH24-MI') where id = 27;
+update Arrival set arrival_date = TO_DATE('02-02-2022 09:00', 'DD-MM-YYYY HH24-MI') where id = 28;
+
+update Arrival set InitialLocationId = 3 where id = 28;
 
 --INSERT CARGO_MANIFEST--
 INSERT INTO cargo_manifest VALUES (1, 5.3, TO_DATE('01-01-2021 09:00', 'DD-MM-YYYY HH24-MI'), 1, 12, 10, null);
@@ -167,7 +545,7 @@ INSERT INTO cargo_manifest VALUES (7, 5.3, TO_DATE('12-12-2019 09:00', 'DD-MM-YY
 INSERT INTO cargo_manifest VALUES (8, 5.3, TO_DATE('17-07-2018 09:00', 'DD-MM-YYYY HH24-MI'), 2, 9, 4, 2);
 INSERT INTO cargo_manifest VALUES (9, 5.3, TO_DATE('21-11-2017 09:00', 'DD-MM-YYYY HH24-MI'), 1, 10, 2, null);
 INSERT INTO cargo_manifest VALUES (10, 5.3, TO_DATE('24-03-2018 09:00', 'DD-MM-YYYY HH24-MI'), 2, 11, 1, 1);
-INSERT INTO cargo_manifest VALUES (11, 5.3, TO_DATE('08-08-2020 09:00', 'DD-MM-YYYY HH24-MI'), 1, 1, null, null);
+INSERT INTO cargo_manifest VALUES (11, 5.3, TO_DATE('01-01-2020 09:30', 'DD-MM-YYYY HH24-MI'), 1, 1, null, null);
 INSERT INTO cargo_manifest VALUES (12, 5.3, TO_DATE('01-12-2020 09:00', 'DD-MM-YYYY HH24-MI'), 2, 14, null, null);
 INSERT INTO cargo_manifest VALUES (13, 5.3, TO_DATE('10-10-2019 09:00', 'DD-MM-YYYY HH24-MI'), 2, 3, null, null);
 INSERT INTO cargo_manifest VALUES (14, 5.3, TO_DATE('01-11-2018 09:00', 'DD-MM-YYYY HH24-MI'), 1, 4, null, null);
@@ -177,9 +555,12 @@ INSERT INTO cargo_manifest VALUES (17, 5.3, TO_DATE('19-07-2019 09:00', 'DD-MM-Y
 INSERT INTO cargo_manifest VALUES (18, 5.3, TO_DATE('11-10-2018 09:00', 'DD-MM-YYYY HH24-MI'), 2, 9, null, null);
 INSERT INTO cargo_manifest VALUES (19, 5.3, TO_DATE('20-02-2017 09:00', 'DD-MM-YYYY HH24-MI'), 1, 10, null, null);
 INSERT INTO cargo_manifest VALUES (20, 5.3, TO_DATE('12-12-2021 09:00', 'DD-MM-YYYY HH24-MI'), 2, 11, 19, null);
---US RUI
 INSERT INTO cargo_manifest VALUES (21, 5.3, TO_DATE('11-08-2021 09:00', 'DD-MM-YYYY HH24-MI'), 2, 14, null, null);
 INSERT INTO cargo_manifest VALUES (22, 5.3, TO_DATE('25-12-2021 09:00', 'DD-MM-YYYY HH24-MI'), 2, 14, null, null);
+INSERT INTO cargo_manifest VALUES (23, 5.3, TO_DATE('04-02-2022 09:00', 'DD-MM-YYYY HH24-MI'), 2, 14, 25, null);
+INSERT INTO cargo_manifest VALUES (24, 5.3, TO_DATE('02-02-2022 09:00', 'DD-MM-YYYY HH24-MI'), 2, 6, 28, null);
+INSERT INTO cargo_manifest VALUES (25, 5.3, TO_DATE('03-02-2022 09:00', 'DD-MM-YYYY HH24-MI'), 1, 6, 27, null);
+INSERT INTO cargo_manifest VALUES (26, 5.3, TO_DATE('31-01-2022 09:00', 'DD-MM-YYYY HH24-MI'), 2, 14, 26, null);
 
 --INSERT TRIP--
 INSERT INTO trip VALUES (1, TO_DATE('01-01-2020 09:00', 'DD-MM-YYYY HH24-MI'), TO_DATE('01-03-2020 23:45', 'DD-MM-YYYY HH24-MI'), 1, 10, 1);
@@ -193,7 +574,10 @@ INSERT INTO trip VALUES (8, TO_DATE('02-06-2021 10:00', 'DD-MM-YYYY HH24-MI'), T
 INSERT INTO trip VALUES (9, TO_DATE('13-09-2021 00:15', 'DD-MM-YYYY HH24-MI'), TO_DATE('20-09-2021 23:45', 'DD-MM-YYYY HH24-MI'), 9, 2, 10);
 INSERT INTO trip VALUES (10, TO_DATE('05-12-2021 12:10', 'DD-MM-YYYY HH24-MI'), TO_DATE('03-01-2022 11:40', 'DD-MM-YYYY HH24-MI'), 10, 1, 11);
 INSERT INTO trip VALUES (11, TO_DATE('04-01-2022 09:00', 'DD-MM-YYYY HH24-MI'), TO_DATE('10-01-2022 11:40', 'DD-MM-YYYY HH24-MI'), 10, 1, 11);
---211331624
+INSERT INTO trip VALUES (12, TO_DATE('01-02-2022 09:00', 'DD-MM-YYYY HH24-MI'), TO_DATE('04-02-2022 11:40', 'DD-MM-YYYY HH24-MI'), 10, 1, 9);-- US407
+INSERT INTO trip VALUES (13, TO_DATE('30-01-2022 09:00', 'DD-MM-YYYY HH24-MI'), TO_DATE('05-02-2022 11:40', 'DD-MM-YYYY HH24-MI'), 7, 1, 7);-- US407
+INSERT INTO trip VALUES (14, TO_DATE('31-01-2022 09:00', 'DD-MM-YYYY HH24-MI'), TO_DATE('05-02-2022 11:40', 'DD-MM-YYYY HH24-MI'), 7, 1, 7);-- 407
+INSERT INTO trip VALUES (15, TO_DATE('01-02-2022 09:00', 'DD-MM-YYYY HH24-MI'), TO_DATE('04-02-2022 11:40', 'DD-MM-YYYY HH24-MI'), 4, 3, 1);-- 407
 
 --INSERT MESSAGE--
 INSERT INTO message VALUES (1, 12, 13, 355, 321.5, TO_DATE('01-01-2021 23:45', 'DD-MM-YYYY HH24-MI'), 1, 211331620);
@@ -286,6 +670,20 @@ INSERT INTO container_cargo_manifest VALUES (18, 3, 18);
 INSERT INTO container_cargo_manifest VALUES (20, 1, 20);
 INSERT INTO container_cargo_manifest VALUES (21, 2, 21);
 INSERT INTO container_cargo_manifest VALUES (22, 2, 22);
+INSERT INTO container_cargo_manifest VALUES (8, 23, 1);-- US407
+INSERT INTO container_cargo_manifest VALUES (3, 23, 2);-- US407
+INSERT INTO container_cargo_manifest VALUES (5, 23, 3);-- US407
+INSERT INTO container_cargo_manifest VALUES (6, 23, 4);-- US407
+INSERT INTO container_cargo_manifest VALUES (1, 23, 5);-- US407
+INSERT INTO container_cargo_manifest VALUES (2, 23, 6);-- US407
+INSERT INTO container_cargo_manifest VALUES (9, 23, 7);-- US407
+INSERT INTO container_cargo_manifest VALUES (8, 26, 1);-- US407
+INSERT INTO container_cargo_manifest VALUES (3, 24, 2);-- US407
+INSERT INTO container_cargo_manifest VALUES (5, 25, 3);-- US407
+INSERT INTO container_cargo_manifest VALUES (6, 26, 4);-- US407
+INSERT INTO container_cargo_manifest VALUES (1, 24, 5);-- US407
+INSERT INTO container_cargo_manifest VALUES (2, 25, 6);-- US407
+INSERT INTO container_cargo_manifest VALUES (9, 25, 7);-- US407
 
 --INSERT ROLE--
 --INSERT INTO role VALUES (1, 'User');
