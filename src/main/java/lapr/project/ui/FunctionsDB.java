@@ -34,6 +34,7 @@ public class FunctionsDB {
             "    AND tcm.id = 2\n" +
             "    AND t.final_date < TRUNC(sysdate, 'DAY')+8";
 
+    //private final static String GET_OCCUPANCY_RATE_WAREHOUSE = ""
 
     public static void getGetContainersNextPort(Ship ship, String loading) {
 

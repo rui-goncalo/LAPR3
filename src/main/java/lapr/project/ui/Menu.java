@@ -717,7 +717,20 @@ public class Menu {
                     "C.Manifest transported during a given year and the average number of Containers per Manifest",
                     "Occupancy rate of a given Ship for a given Cargo Manifest.",
                     "Occupancy rate of a given Ship for a given Cargo Manifest.",
-                    "Ships will be available on Monday next week\n\n"};
+                    "Ships will be available on Monday next week.",
+                    "Access to audit trails for a given container of a given cargo manifest.",
+                    "Route of a specific container I am leasing.",
+                    "Occupancy rate of each warehouse and an estimate for the next 30 days.",
+                    "Get a warning whenever I issue a cargo manifest destined for a warehouse whose available capacity is insufficient.",
+                    "Have a system that ensures that the number of containers in a manifest does not exceed the ship's available capacity.",
+                    "Do not allow a cargo manifest for a particular ship to be registered in the system on a date when the ship is already occupied.",
+                    "Map of the occupation of the existing resources in the port during a given month.",
+                    "Know the current situation of a specific container being used to transport my goods.",
+                    "Know the number of days each ship has been idle since the beginning of the current year",
+                    "Know the average occupancy rate per manifest of a given ship during a given period",
+                    "Know which ship voyages – place and date of origin and destination – had an occupancy rate below a certain threshold.",
+                    "Generate, a week in advance, the loading and unloading map based on ships and trucks load manifests and corresponding travel plans.\n\n"};
+
             printMenu("Show Ships", options, true);
             choice = getInput("Please make a selection: ", sc);
             Connection connection = MakeDBConnection.makeConnection();
@@ -814,12 +827,32 @@ public class Menu {
                         }
                     }
                     break;
-                case 7:
+                case 7: //US210
                     FunctionsDB.shipsAvailableMonday();
                     break;
                 case 8:
-                    String us305 = "{? = call func_check_container(" + 16 + " , "+ 1 +")}";
+                    int containerid = getInput("Insert Container ID: \n", sc);
+                    int cargomanifestid = getInput("Insert Cargo Manifest ID: \n", sc);
+                    String us304 = "{? = call func_audit_trail(" + containerid + " , "+ cargomanifestid +")}";
 
+                    try (CallableStatement callableStatement = connection.prepareCall(us304)) {
+                        callableStatement.registerOutParameter(1, Types.VARCHAR);
+                        callableStatement.execute();
+                        System.out.println(callableStatement.getString(1));
+                    } catch (SQLException e) {
+                        System.out.println("Failed to create a statement: " + e);
+                    } finally {
+                        try {
+                            connection.close();
+                        } catch (SQLException e) {
+                            System.out.println("Failed to access database: " + e);
+                        }
+                    }
+                    break;
+                case 9:
+                    int container_id = getInput("Insert Container ID: \n", sc);
+                    int clientid = getInput("Insert Client ID: \n", sc);
+                    String us305 = "{? = call func_check_container(" + container_id + " , "+ clientid +")}";
 
                     try (CallableStatement callableStatement = connection.prepareCall(us305)) {
                         callableStatement.registerOutParameter(1, Types.VARCHAR);
@@ -835,7 +868,109 @@ public class Menu {
                         }
                     }
                     break;
-                case 9:
+                case 10:
+                    //FunctionsDB.occupancyRateWarehouse();
+                    /*
+                    --Nº containers em cada warehouse
+                    SELECT COUNT(*) AS "Containers in Warehouse"
+                    FROM Container c, Container_Cargo_Manifest ccm, Cargo_Manifest cm, Arrival a, Location l
+                    WHERE c.id = ccm.containerid
+                    AND ccm.cargo_manifestid = cm.id
+                    AND cm.arrivalid = a.id
+                    AND a.initiallocationid = l.id
+                    AND l.type_locationid = 2
+                    GROUP BY l.id;
+
+                    --Nº containers por warehouse que partem nos proximos 30 dias
+                    SELECT COUNT(*) AS "Containers in Warehouse", l.name, t.final_date
+                    FROM Container c, Container_Cargo_Manifest ccm, Cargo_Manifest cm, Arrival a, Location l, Type_cargo_manifest tcm, Trip t
+                    WHERE c.id = ccm.containerid
+                    AND ccm.cargo_manifestid = cm.id
+                    AND cm.type_cargo_manifestid = tcm.id
+                    AND cm.arrivalid = a.id
+                    AND a.initiallocationid = l.id
+                    AND l.type_locationid = 2
+                    AND a.tripid = t.id
+                    AND t.final_date BETWEEN SYSDATE AND TRUNC(sysdate, 'DAY')+31
+                    GROUP BY l.id, l.name, t.final_date;
+                    * */
+                    break;
+                case 11:
+                    //US307 - Trigger
+                    break;
+                case 12:
+                    //US308 - Trigger
+                    break;
+                case 13:
+                    //US309 - Trigger
+                    break;
+                case 14:
+                    int arrival_date = getInput("Insert Date of Arrival: \n", sc);
+                    String us310 = "{? = call func_map_occupation(" + arrival_date + ")}";
+
+                    try (CallableStatement callableStatement = connection.prepareCall(us310)) {
+                        callableStatement.registerOutParameter(1, Types.VARCHAR);
+                        callableStatement.execute();
+                        System.out.println(callableStatement.getString(1));
+                    } catch (SQLException e) {
+                        System.out.println("Failed to create a statement: " + e);
+                    } finally {
+                        try {
+                            connection.close();
+                        } catch (SQLException e) {
+                            System.out.println("Failed to access database: " + e);
+                        }
+                    }
+                    break;
+                case 15:
+                    //US312 - Procedure
+                    break;
+                case 16:
+                    int p_year = getInput("Insert Year: \n", sc);
+                    String us404 = "{? = call fnc_iddle_ship(" + p_year + ")}";
+
+                    try (CallableStatement callableStatement = connection.prepareCall(us404)) {
+                        callableStatement.registerOutParameter(1, Types.VARCHAR);
+                        callableStatement.execute();
+                        System.out.println(callableStatement.getString(1));
+                    } catch (SQLException e) {
+                        System.out.println("Failed to create a statement: " + e);
+                    } finally {
+                        try {
+                            connection.close();
+                        } catch (SQLException e) {
+                            System.out.println("Failed to access database: " + e);
+                        }
+                    }
+                    break;
+                case 17:
+                    int v_ship = getInput("Insert Ship mmsi: \n", sc);
+                    Scanner v_initial_date = new Scanner(System.in);
+                    DateMenu.readDate(v_initial_date, "Insert Initial Date:");
+                    Scanner v_final_date = new Scanner(System.in);
+                    DateMenu.readDate(v_final_date, "Insert Initial Date:");
+
+                    String us405 = "{? = call func_occupancy_rate_period(" + v_ship + " , " + v_initial_date + " , " + v_final_date + ")}";
+
+                    try (CallableStatement callableStatement = connection.prepareCall(us405)) {
+                        callableStatement.registerOutParameter(1, Types.VARCHAR);
+                        callableStatement.execute();
+                        System.out.println(callableStatement.getString(1));
+                    } catch (SQLException e) {
+                        System.out.println("Failed to create a statement: " + e);
+                    } finally {
+                        try {
+                            connection.close();
+                        } catch (SQLException e) {
+                            System.out.println("Failed to access database: " + e);
+                        }
+                    }
+                    break;
+                case 18:
+                    //US406 - Procedure
+                    break;
+                case 19:
+                    //US407 - Procedure
                     String us407 = "{? = call prc_week_in_advance()}";
 
                     try (CallableStatement callableStatement = connection.prepareCall(us407)) {
