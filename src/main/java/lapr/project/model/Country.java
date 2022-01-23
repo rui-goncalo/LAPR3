@@ -60,4 +60,9 @@ public class Country extends Location {
     public double getLongitude() {
         return longitude;
     }
+    
+    @Override
+    public String toString(){
+        return capital;
+    }
 }

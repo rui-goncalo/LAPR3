@@ -34,10 +34,14 @@ public class Menu {
     private static final String BIG_PORTS_FILE = "data/bports.csv";
     private static final String SMALL_PORTS_FILE = "data/sports.csv";
     private static final String SEADISTS_FILE = "data/seadists.csv";
+    private static final String COUNTRIES_FILE = "data/countries.csv";
+    private static final String BORDERS_FILE = "data/borders.csv";
 
     private static ArrayList<Ship> shipArray = new ArrayList<>();
     private static ArrayList<Port> portsArray = new ArrayList<>();
     private static ArrayList<Seadist> seadistsArray = new ArrayList<>();
+    private static ArrayList<Country> countriesArray = new ArrayList<>();
+    private static ArrayList<Border> bordersArray = new ArrayList<>();
 
     private static final AVL<ShipMMSI> mmsiAVL = new AVL<>();
     private static final AVL<ShipIMO> imoAVL = new AVL<>();
@@ -47,6 +51,7 @@ public class Menu {
     private static Ship currentShip = null;
 
     private static FreightAdjacencyMatrixGraph<Port, Integer> freightNetwork= new FreightAdjacencyMatrixGraph(false);
+    private static FreightAdjacencyMatrixGraph<Country, Double> freightNetworkLand = new FreightAdjacencyMatrixGraph(false);
 
     /**
      * Opens the main menu with all the options for users.
@@ -196,7 +201,7 @@ public class Menu {
 
             String[] options = {"Go Back\n", "Show all Ships", "Search by Ship", "Search Ship Pairs\n",
                     "Create Summary of Ships", "View Summaries by Ship", "Get TOP N Ships\n",
-                    "Get Nearest Port\n", "Print Freight Network Matrix\n", "Vessel Type", "Calculation Center of Mass","Position Containers","Energy Needed to Containers", "Shortest Maritime Path", "Calculate how much did the vessel sink"};
+                    "Get Nearest Port\n", "Print Freight Network Matrix\n", "Vessel Type", "Calculation Center of Mass","Position Containers","Energy Needed to Containers\n", "Shortest Maritime Path", "Shortest Land Path\n", "Calculate how much did the vessel sink\n"};
             printMenu("Manage Ships", options, true);
             choice = getInput("Please make a selection: ", sc);
 
@@ -288,7 +293,11 @@ public class Menu {
                     freightCalcMaritimePaths(sc);
                     break;
                 case 14:
+                    freightCalcLandPaths(sc);
+                    break;
+                case 15:
                     calcVesselSink(sc);
+                    break;
             }
 
         } while (choice != 0);
@@ -1565,7 +1574,11 @@ public class Menu {
 
     }
     
-        //US402
+    //
+    //US402
+    //
+    
+    //MARITIME
     public static void freightCalcMaritimePaths(Scanner sc){
         freightLoadMaritimePaths();
         Port vOrig = null;
@@ -1684,7 +1697,87 @@ public class Menu {
         return portFound;
     }
     
+    //LAND
+    
+    public static void freightCalcLandPaths(Scanner sc){
+        freightLoadLandPaths(sc);
+        
+        Country vOrig = null;
+        Country vDest = null;
+        do {
+            System.out.println("Input First City\n");
+            String cityOrig = sc.next();
+
+            for (Country country : freightNetworkLand.vertices()) {
+                if (country.getCapital().equals(cityOrig)) {
+                    vOrig = country;
+                    break;
+                }
+            }
+        } while (vOrig == null);
+
+        do {
+            System.out.println("Input Second City\n");
+            String cityDest = sc.next();
+
+            for (Country country : freightNetworkLand.vertices()) {
+                if (country.getCapital().equals(cityDest)) {
+                    vDest = country;
+                    break;
+                }
+            }
+        } while (vDest == null);
+
+        BinaryOperator<Double> sum = (a, b) -> { return a + b;};
+        Comparator<Double> ce = (Double d1, Double d2) -> d1.compareTo(d2);
+        int numVerts = freightNetworkLand.numVertices();
+        boolean[] visited = new boolean[numVerts];
+        Country[] pathKeys = new Country[numVerts];
+        Double[] dist = new Double[numVerts];
+        Arrays.fill(dist, Double.MAX_VALUE);
+        
+        freightNetworkLand.shortestPathDijkstraFreight(vOrig, ce, sum, 0.0, visited, pathKeys, dist);
+        
+        int origKey = freightNetworkLand.key(vOrig);
+        int destKey = freightNetworkLand.key(vDest);
+        
+        if(dist[destKey]==Double.MAX_VALUE){
+            System.out.printf("There is no possible Land Path between %s and %s.", vOrig.getCapital(), vDest.getCapital());
+            return;
+        }
+        
+        System.out.printf("The shortest path from city %s to city %s\nIt's distance is %.2f Km\nThe Path that was used:\n", vOrig.getCapital(), vDest.getCapital(), dist[destKey]);
+        
+        int i = destKey;
+        ArrayList<Country> reversedPath = new ArrayList<>();
+        reversedPath.add(vDest);
+        while(pathKeys[i]!=vOrig){
+            reversedPath.add(pathKeys[i]);
+            i = freightNetworkLand.key(pathKeys[i]);
+        }
+        reversedPath.add(vOrig);
+        Collections.reverse(reversedPath);
+        for(Country country: reversedPath){
+            System.out.println(country.toString());
+        }
+        
+    }
+    
+    public static void freightLoadLandPaths(Scanner sc){
+        countriesArray = CSVReaderUtils.readCountryCSV(COUNTRIES_FILE);
+        bordersArray = CSVReaderUtils.readBordersCSV(BORDERS_FILE);
+        
+        for(Border border : bordersArray){
+            Country country1 = border.getCountry1();
+            Country country2 = border.getCountry2();
+            double distance = Calculator.getDistance(country1.getLatitude(), country1.getLongitude(), country2.getLatitude(), country2.getLongitude());
+            freightNetworkLand.addEdge(country1, country2, distance);
+        }
+
+    }
+    //
     //US420
+    //
     public static void calcVesselSink(Scanner sc){
         int numContainers = getInput("How many Containers", sc);
         int totalMassPlaced = Calculator.totalMassPlaced(numContainers);
@@ -1696,12 +1789,13 @@ public class Menu {
         
         double heightDifference = Calculator.heightDifference(shipDraft, shipBeam, shipLength, totalMassPlaced);
         
-        System.out.printf("----SHIP MEASUREMENTS----\n\nShip Length: %.2f m\nShip Beam: %.2f m\n"
+        System.out.printf("|----SHIP MEASUREMENTS----|\n\nShip Length: %.2f m\nShip Beam: %.2f m\n"
                            + "Ship Draft: %.2f m\nShip Area: %.2f m^2\nTotal Mass Placed: %d Kg\n"
-                           + "Pressure Exerted: %.2f N/m^2\nDifference In Height: %.2f m", shipLength, shipBeam, shipDraft, shipArea, totalMassPlaced, pressureExerted, heightDifference);
+                           + "Pressure Exerted: %.2f N/m^2\nDifference In Height: %.2f m", shipLength,
+                           shipBeam, shipDraft, shipArea, totalMassPlaced, pressureExerted, heightDifference);
     }
     
-        /**
+     /**
      * Prompts for and verifies the user input.
      *
      * @param prompt Prompt to be shown to the user
