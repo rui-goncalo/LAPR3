@@ -139,6 +139,6 @@ public final class Calculator {
         double shipArea = shipWidth * shipLength;
         double displacedVol = placedMass / SEAWATER_DENSITY;
         double draftChange = displacedVol/shipArea;
-        return draftChange*(-1);
+        return draftChange;
     }
 }

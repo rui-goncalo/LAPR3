@@ -196,7 +196,7 @@ public class Menu {
 
             String[] options = {"Go Back\n", "Show all Ships", "Search by Ship", "Search Ship Pairs\n",
                     "Create Summary of Ships", "View Summaries by Ship", "Get TOP N Ships\n",
-                    "Get Nearest Port\n", "Print Freight Network Matrix\n", "Vessel Type", "Calculation Center of Mass","Position Containers","Energy Needed to Containers", "Shortest Maritime Path"};
+                    "Get Nearest Port\n", "Print Freight Network Matrix\n", "Vessel Type", "Calculation Center of Mass","Position Containers","Energy Needed to Containers", "Shortest Maritime Path", "Calculate how much did the vessel sink"};
             printMenu("Manage Ships", options, true);
             choice = getInput("Please make a selection: ", sc);
 
@@ -285,7 +285,10 @@ public class Menu {
                 case 12:
                     menuEnergyNeeded(sc);
                 case 13:
-                    freightCalcMaritimePaths();
+                    freightCalcMaritimePaths(sc);
+                    break;
+                case 14:
+                    calcVesselSink(sc);
             }
 
         } while (choice != 0);
@@ -1563,9 +1566,8 @@ public class Menu {
     }
     
         //US402
-    public static void freightCalcMaritimePaths(){
+    public static void freightCalcMaritimePaths(Scanner sc){
         freightLoadMaritimePaths();
-        Scanner sc = new Scanner(System.in);
         Port vOrig = null;
         Port vDest = null;
         do {
@@ -1600,11 +1602,11 @@ public class Menu {
         
         freightNetwork.shortestPathDijkstraFreight(vOrig, ce, sum, 0, visited, pathKeys, dist);
         
-        int origKey = freightNetwork.key(vOrig);
+//        int origKey = freightNetwork.key(vOrig);
         int destKey = freightNetwork.key(vDest);
         
         
-        System.out.printf("The shortest path from Port %s to Port %s\nAnd it's distance is %d\nThe Path that was used:", vOrig.getName(), vDest.getName(), dist[destKey]);
+        System.out.printf("The shortest path from Port %s to Port %s\nIt's distance is %d\nThe Path that was used:\n", vOrig.getName(), vDest.getName(), dist[destKey]);
         
         int i = destKey;
         ArrayList<Port> reversedPath = new ArrayList<Port>();
@@ -1680,6 +1682,41 @@ public class Menu {
             }
         }
         return portFound;
+    }
+    
+    //US420
+    public static void calcVesselSink(Scanner sc){
+        int numContainers = getInput("How many Containers", sc);
+        int totalMassPlaced = Calculator.totalMassPlaced(numContainers);
+        double shipLength = getInputDouble("Input the Ship Length:", sc);
+        double shipBeam = getInputDouble("Input the Ship Beam:", sc);
+        double shipDraft = getInputDouble("Input the Ship Draft:", sc);
+        double shipArea = shipBeam * shipLength;
+        double pressureExerted = Calculator.pressureExerted(shipArea, totalMassPlaced);
+        
+        double heightDifference = Calculator.heightDifference(shipDraft, shipBeam, shipLength, totalMassPlaced);
+        
+        System.out.printf("----SHIP MEASUREMENTS----\n\nShip Length: %.2f m\nShip Beam: %.2f m\n"
+                           + "Ship Draft: %.2f m\nShip Area: %.2f m^2\nTotal Mass Placed: %d Kg\n"
+                           + "Pressure Exerted: %.2f N/m^2\nDifference In Height: %.2f m", shipLength, shipBeam, shipDraft, shipArea, totalMassPlaced, pressureExerted, heightDifference);
+    }
+    
+        /**
+     * Prompts for and verifies the user input.
+     *
+     * @param prompt Prompt to be shown to the user
+     * @param sc     user input
+     * @return user input
+     */
+    public static double getInputDouble(String prompt, Scanner sc) {
+        System.out.print(prompt);
+        while (!sc.hasNextDouble()) {
+            System.out.println("Invalid input.");
+            sc.next();
+            System.out.print(prompt);
+        }
+
+        return sc.nextDouble();
     }
 }
 
