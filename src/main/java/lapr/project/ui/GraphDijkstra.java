@@ -184,10 +184,6 @@ public class GraphDijkstra<V extends Comparable<V>, E>  {
         return null;
     }
 
-    public int numEdges() {
-        return this.edges.size();
-    }
-
     public ArrayList<Edge<V, E>> edges() {
         return this.edges;
     }

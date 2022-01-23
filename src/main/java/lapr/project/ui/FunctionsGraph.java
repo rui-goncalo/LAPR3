@@ -24,7 +24,7 @@ public class FunctionsGraph {
 
 
     public static GraphDijkstra populateGraph() {
-        dijkstraGraph = new GraphDijkstra<>();
+        dijkstraGraph = new GraphDijkstra<>(); // cria um novo grafo dijkstra
         Iterable<Location> freightVertices = freightNetworkMatrix.vertices();
 
         for (Location location : freightVertices) {

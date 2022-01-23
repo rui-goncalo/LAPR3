@@ -1569,9 +1569,6 @@ public class Menu {
         System.out.println("Ptotal = " + pTotal/1000 + " KW ");
         System.out.println("NEquipments = Ptotal / Pequipments");
         System.out.println("Nequipments = " + (int)((pTotal/1000) / powerAux)+1);
-
-
-
     }
     
     //
