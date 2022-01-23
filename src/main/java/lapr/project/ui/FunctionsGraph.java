@@ -27,14 +27,14 @@ public class FunctionsGraph {
         dijkstraGraph = new GraphDijkstra<>();
         Iterable<Location> freightVertices = freightNetworkMatrix.vertices();
 
-        for (Location location : freightVertices) { // percorrer os vertices das locations
-            if (location.getClass() == Port.class) { // contabilizamos apenas os vertices que estão definidos como Portos
-                if (!dijkstraGraph.validVertex(location)) { // se não existir um vertice criado no grafo dijkstra, adiciona um
+        for (Location location : freightVertices) {
+            if (location.getClass() == Port.class) {
+                if (!dijkstraGraph.validVertex(location)) {
                     dijkstraGraph.addVertex(location);
                 }
 
-                Map<Integer, Double> edgeMap = freightNetworkMatrix.getVertexEdges(location); //os edges já são um map. Integer = ID , Double = distância
-                for (Map.Entry<Integer, Double> edge : edgeMap.entrySet()) { // map.entry são cada linha do map... para cada map.entry ...
+                Map<Integer, Double> edgeMap = freightNetworkMatrix.getVertexEdges(location);
+                for (Map.Entry<Integer, Double> edge : edgeMap.entrySet()) {
                     //System.out.println(edge); -> mostra os edges para cada location
                     Location toLocation = freightNetworkMatrix.getVertex(edge.getKey());
                     if (toLocation.getClass() == Port.class) {
@@ -45,7 +45,6 @@ public class FunctionsGraph {
                         dijkstraGraph.addEdge(location, toLocation, edge.getValue());
                     }
                 }
-                //System.out.println("\n");
             }
         }
 
