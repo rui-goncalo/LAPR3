@@ -1,10 +1,10 @@
 package lapr.project.ui;
 
+import lapr.project.data.Circuit;
 import lapr.project.data.LoadDBFiles;
 import lapr.project.data.MakeDBConnection;
 import lapr.project.model.*;
 import lapr.project.structures.AVL;
-import lapr.project.structures.AdjacencyMatrixGraph;
 import lapr.project.structures.KDTree;
 import lapr.project.utils.*;
 import lapr.project.structures.FreightAdjacencyMatrixGraph;

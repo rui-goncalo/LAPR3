@@ -1,7 +1,8 @@
-package lapr.project.utils;
+package lapr.project.data;
 
 import lapr.project.model.Port;
 import lapr.project.structures.FreightAdjacencyMatrixGraph;
+import lapr.project.utils.Calculator;
 
 import java.util.*;
 
