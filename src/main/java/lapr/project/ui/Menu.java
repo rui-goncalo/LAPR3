@@ -10,7 +10,6 @@ import lapr.project.utils.*;
 import lapr.project.data.FreightAdjacencyMatrixGraph;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -960,9 +959,10 @@ public class Menu {
                     break;
                 case 17:
                     int v_ship = getInput("Insert Ship mmsi: \n", sc);
-                    Scanner scan2 = new Scanner(System.in);
-                    LocalDate v_initial_date = DateMenu.readDateSQL(scan, "Insert Initial Date:\n");
-                    LocalDate v_final_date = DateMenu.readDateSQL(scan2, "Insert Final Date:");
+                    Scanner v_initial_date = new Scanner(System.in);
+                    DateMenu.readDate(v_initial_date, "Insert Initial Date:");
+                    Scanner v_final_date = new Scanner(System.in);
+                    DateMenu.readDate(v_final_date, "Insert Initial Date:");
 
                     String us405 = "{? = call func_occupancy_rate_period(" + v_ship + " , " + v_initial_date + " , " + v_final_date + ")}";
 
