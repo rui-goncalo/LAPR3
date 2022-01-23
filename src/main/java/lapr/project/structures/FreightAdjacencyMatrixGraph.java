@@ -3,6 +3,8 @@ package lapr.project.structures;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.function.BinaryOperator;
 
 /**
  *
@@ -11,7 +13,7 @@ import java.util.Collection;
 
 public class FreightAdjacencyMatrixGraph<V, E> extends CommonGraph<V,E> implements Cloneable {
 
-    public static final int INITIAL_CAPACITY = 10;
+    public static final int INITIAL_CAPACITY = 70;
     public static final float RESIZE_FACTOR = 1.5F;
 
 
@@ -271,6 +273,18 @@ public class FreightAdjacencyMatrixGraph<V, E> extends CommonGraph<V,E> implemen
         return ce;
     }
     
+    public Collection<FreightEdge<V, E>> outgoingEdges(V vert) {
+        Collection <FreightEdge<V, E>> ce = new ArrayList<>();
+        int vertKey = key(vert);
+        if (vertKey == -1)
+            return ce;
+        
+        for (int i = 0; i < numVerts; i++)
+            if (edgeMatrix[vertKey][i] != null)
+                ce.add(edgeMatrix[vertKey][i]);
+        return ce;
+    }
+    
      @Override
     public Collection<V> adjVertices(V vert) {
         int index = key(vert);
@@ -283,8 +297,37 @@ public class FreightAdjacencyMatrixGraph<V, E> extends CommonGraph<V,E> implemen
                 outVertices.add(vertices.get(i));
         return outVertices;
     }
-
-        /**
+    
+     public void shortestPathDijkstraFreight(V vOrig,Comparator<E> ce, BinaryOperator<E> sum, E zero,
+                                        boolean[] visited, V [] pathKeys, E [] dist) {
+        int vkey = key(vOrig);
+        dist[vkey] = zero;
+        pathKeys[vkey] = vOrig;
+        while (vOrig != null) {
+            vkey = key(vOrig);
+            visited[vkey] = true;
+            for (FreightEdge<V, E> edge : outgoingEdges(vOrig)) {
+                int vkeyAdj = key(edge.getVDest());
+                if (!visited[vkeyAdj]) {
+                    E s = sum.apply(dist[vkey], edge.getWeight());
+                    if (dist[vkeyAdj] == null || ce.compare(dist[vkeyAdj], s) > 0) {
+                        dist[vkeyAdj] = s;
+                        pathKeys[vkeyAdj] = vOrig;
+                    }
+                }
+            }
+            E minDist = null;  //next vertice, that has minimum dist
+            vOrig = null;
+            for (V vert : vertices()) {
+                int i = key(vert);
+                if (!visited[i] && (dist[i] != null) && ((minDist == null) || ce.compare(dist[i], minDist) < 0)) {
+                    minDist = dist[i];
+                    vOrig = vert;
+                }
+            }
+        }
+    }
+     /**
      * Returns a string representation of the graph.
      * Matrix only represents existence of Edge 
      */

@@ -40,7 +40,7 @@ public abstract class CommonGraph <V,E> implements FreightBasicGraphInterface<V,
     }
 
     @Override
-    public boolean validVertex(V vert) { return vertices.contains(vert);   }
+    public boolean validVertex(V vert) { return vertices.contains(vert);  }
 
     @Override
     public int key(V vert) {

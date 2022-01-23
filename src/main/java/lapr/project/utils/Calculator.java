@@ -134,6 +134,7 @@ public final class Calculator {
         return Math.round( (weight / shipArea) * 100) /100.0;
     }
     
+    //The height difference after adding the cargo
     public static double heightDifference(double initialDraft, double shipWidth, double shipLength, double placedMass){
         double shipArea = shipWidth * shipLength;
         double displacedVol = placedMass / SEAWATER_DENSITY;

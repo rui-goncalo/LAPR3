@@ -7,12 +7,13 @@ import lapr.project.structures.AVL;
 import lapr.project.structures.AdjacencyMatrixGraph;
 import lapr.project.structures.KDTree;
 import lapr.project.utils.*;
-
+import lapr.project.structures.FreightAdjacencyMatrixGraph;
 
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.function.BinaryOperator;
 
 /**
  * @author Rui Gonçalves - 1191831
@@ -32,9 +33,11 @@ public class Menu {
     private static final String SMALL_SHIP_FILE = "data/sships.csv";
     private static final String BIG_PORTS_FILE = "data/bports.csv";
     private static final String SMALL_PORTS_FILE = "data/sports.csv";
+    private static final String SEADISTS_FILE = "data/seadists.csv";
 
     private static ArrayList<Ship> shipArray = new ArrayList<>();
     private static ArrayList<Port> portsArray = new ArrayList<>();
+    private static ArrayList<Seadist> seadistsArray = new ArrayList<>();
 
     private static final AVL<ShipMMSI> mmsiAVL = new AVL<>();
     private static final AVL<ShipIMO> imoAVL = new AVL<>();
@@ -43,6 +46,7 @@ public class Menu {
     private static final KDTree<Port> portTree = new KDTree<>();
     private static Ship currentShip = null;
 
+    private static FreightAdjacencyMatrixGraph<Port, Integer> freightNetwork= new FreightAdjacencyMatrixGraph(false);
 
     /**
      * Opens the main menu with all the options for users.
@@ -192,7 +196,7 @@ public class Menu {
 
             String[] options = {"Go Back\n", "Show all Ships", "Search by Ship", "Search Ship Pairs\n",
                     "Create Summary of Ships", "View Summaries by Ship", "Get TOP N Ships\n",
-                    "Get Nearest Port\n", "Print Freight Network Matrix\n", "Vessel Type", "Calculation Center of Mass","Position Containers","Energy Needed to Containers"};
+                    "Get Nearest Port\n", "Print Freight Network Matrix\n", "Vessel Type", "Calculation Center of Mass","Position Containers","Energy Needed to Containers", "Shortest Maritime Path"};
             printMenu("Manage Ships", options, true);
             choice = getInput("Please make a selection: ", sc);
 
@@ -280,6 +284,8 @@ public class Menu {
                     menuPosContainers(sc);
                 case 12:
                     menuEnergyNeeded(sc);
+                case 13:
+                    freightCalcMaritimePaths();
             }
 
         } while (choice != 0);
@@ -1555,4 +1561,125 @@ public class Menu {
 
 
     }
+    
+        //US402
+    public static void freightCalcMaritimePaths(){
+        freightLoadMaritimePaths();
+        Scanner sc = new Scanner(System.in);
+        Port vOrig = null;
+        Port vDest = null;
+        do {
+            int portOrig = getInput("Input First Port", sc);
+
+            for (Port port : freightNetwork.vertices()) {
+                if (port.getId() == portOrig) {
+                    vOrig = port;
+                    break;
+                }
+            }
+        } while (vOrig == null);
+
+        do {
+            int portDest = getInput("Input Second Port", sc);
+
+            for (Port port : freightNetwork.vertices()) {
+                if (port.getId() == portDest) {
+                    vDest = port;
+                    break;
+                }
+            }
+        } while (vDest == null);
+
+        BinaryOperator<Integer> sum = (a, b) -> { return a + b;};
+        Comparator<Integer> ce = (Integer d1, Integer d2) -> d1 - d2;
+        int numVerts = freightNetwork.numVertices();
+        boolean[] visited = new boolean[numVerts];
+        Port[] pathKeys = new Port[numVerts];
+        Integer[] dist = new Integer[numVerts];
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        
+        freightNetwork.shortestPathDijkstraFreight(vOrig, ce, sum, 0, visited, pathKeys, dist);
+        
+        int origKey = freightNetwork.key(vOrig);
+        int destKey = freightNetwork.key(vDest);
+        
+        
+        System.out.printf("The shortest path from Port %s to Port %s\nAnd it's distance is %d\nThe Path that was used:", vOrig.getName(), vDest.getName(), dist[destKey]);
+        
+        int i = destKey;
+        ArrayList<Port> reversedPath = new ArrayList<Port>();
+        reversedPath.add(vDest);
+        while(pathKeys[i]!=vOrig){
+            reversedPath.add(pathKeys[i]);
+            i = freightNetwork.key(pathKeys[i]);
+        }
+        reversedPath.add(vOrig);
+        Collections.reverse(reversedPath);
+        for(Port port: reversedPath){
+            System.out.println(port.toString());
+        }
+        
+    }
+    public static void freightLoadMaritimePaths(){
+        //make sure ports are loaded into the array.
+        if(portsArray==null){
+            System.out.println("Ports array is empty.");
+            return;
+        }
+        for (Port port : portsArray) {
+            if(port == null){ System.out.println("Port is null.");
+                return;
+            }
+            freightNetwork.addVertex(port);
+        }
+        
+        int fromPortId;
+        int toPortId;
+        Port fromPort;
+        Port toPort;
+        
+        seadistsArray = CSVReaderUtils.readSeadistsCSV(SEADISTS_FILE);      
+        //check if seadists empty
+        if(seadistsArray.isEmpty()){
+            System.out.println("Seadists array is empty!");
+            return;
+        }
+        
+        for(Seadist seadist: seadistsArray){
+            fromPortId = seadist.getFromPortId();
+            toPortId = seadist.getToPortId();
+            
+            fromPort = findPortById(fromPortId);
+            toPort = findPortById(toPortId);
+            
+            //if from Port is NULL
+            if(fromPort==null){
+                System.out.printf("The from Port does not exist:\nfromPortId: %d\n", fromPortId);
+                fromPort = new Port("None", seadist.getFromCountry(), seadist.getFromPortId(), seadist.getFromPort(), 0, 0);
+            }
+            
+            //if to Port is NULL
+            if(toPort==null){
+                System.out.printf("The to Port does not exist:\ntoPortId: %d\n", toPortId);
+                toPort = new Port("None", seadist.getToCountry(), seadist.getToPortId(), seadist.getToPort(), 0, 0);
+            }
+            
+//            System.out.println(freightNetwork.addEdge(fromPort, toPort, seadist.getSeaDistance()));
+            freightNetwork.addEdge(fromPort, toPort, seadist.getSeaDistance());
+        }
+        //printing matrix
+//        System.out.println(freightNetwork.toString());
+    }
+    
+    public static Port findPortById(int portId){
+        Port portFound = null;
+        for (Port port : freightNetwork.vertices()){
+            if(port.getId()==portId){
+                portFound = port;
+                break;
+            }
+        }
+        return portFound;
+    }
 }
+
