@@ -23,18 +23,19 @@ public class FunctionsGraph {
     private static GraphDijkstra<Location, Double> dijkstraGraph = new GraphDijkstra();
 
 
-    public static GraphDijkstra populateGraph() {
-        dijkstraGraph = new GraphDijkstra<>(); // cria um novo grafo dijkstra
+    public static GraphDijkstra populateGraph(int n) {
+        dijkstraGraph = new GraphDijkstra<>();
         Iterable<Location> freightVertices = freightNetworkMatrix.vertices();
 
-        for (Location location : freightVertices) {
-            if (location.getClass() == Port.class) {
-                if (!dijkstraGraph.validVertex(location)) {
+        for (Location location : freightVertices) { // percorrer os vertices das locations
+            if (location.getClass() == Port.class) { // contabilizamos apenas os vertices que estão definidos como Portos
+                if (!dijkstraGraph.validVertex(location)) { // se não existir um vertice criado no grafo dijkstra, adiciona um
                     dijkstraGraph.addVertex(location);
                 }
-                Map<Integer, Double> edgeMap = freightNetworkMatrix.getVertexEdges(location);
-                for (Map.Entry<Integer, Double> edge : edgeMap.entrySet()) {
-                    System.out.println(edge);
+
+                Map<Integer, Double> edgeMap = freightNetworkMatrix.getVertexEdges(location); //os edges já são um map. Integer = ID , Double = distância
+                for (Map.Entry<Integer, Double> edge : edgeMap.entrySet()) { // map.entry são cada linha do map... para cada map.entry ...
+                    //System.out.println(edge); -> mostra os edges para cada location
                     Location toLocation = freightNetworkMatrix.getVertex(edge.getKey());
                     if (toLocation.getClass() == Port.class) {
 
@@ -44,7 +45,7 @@ public class FunctionsGraph {
                         dijkstraGraph.addEdge(location, toLocation, edge.getValue());
                     }
                 }
-                System.out.println("\n");
+                //System.out.println("\n");
             }
         }
 
@@ -56,22 +57,55 @@ public class FunctionsGraph {
 
         ArrayList<Location> vertices = dijkstraGraph.vertices();
         ArrayList<String> paths = new ArrayList<>();
+        Map<Integer, Integer> pathsMap = new HashMap<>();
         for (Location fromLocation : vertices) {
             for (Location toLocation : vertices) {
                 String path = dijkstraGraph.shortestPath(dijkstraGraph, fromLocation, toLocation, portComparator, operator, zero, portLinkedList);
                 if (path != null) {
                     String[] splitPath = path.split(",");
-                    System.out.println(splitPath[splitPath.length - 1]);
-                    System.out.println("From: " + fromLocation.getName() + " To: " + toLocation.getName() + " -> " + path);
-                    paths.add("From: " + fromLocation.getName() + " To: " + toLocation.getName() + " -> " + path);
+                    if (Double.parseDouble(splitPath[splitPath.length - 1]) != 0.0) {
+                        //System.out.println("From: " + fromLocation.getName() + " To: " + toLocation.getName() + " -> " + path);
+                        paths.add(path);
+                    }
                 }
             }
         }
 
-        // fazer o map com a contagem dos vertices nos caminhos. Deve retornar aquele que tiver maior numero de caminhos.
+        for (String path : paths) {
+            String[] splitPath = path.split(",");
+            for (int i = 0; i < splitPath.length - 1; i++) {
+                int location = Integer.parseInt(splitPath[i]);
+                //
+                // System.out.println(location);
+                if (pathsMap.containsKey(location)) {
+                    pathsMap.put(location, pathsMap.get(location) + 1);
+                } else {
+                    pathsMap.put(location, 1);
+                }
+            }
+        }
+
+        List<Map.Entry<Integer, Integer>> list = new LinkedList<>(pathsMap.entrySet());
+
+        Collections.sort(list, (o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+
+        Map<Integer, Integer> sortedPaths = new LinkedHashMap<Integer, Integer>();
+        int counter = 0;
+        for (Map.Entry<Integer, Integer> entry : list) {
+            sortedPaths.put(entry.getKey(), entry.getValue());
+            if (counter < n) { // o n de portos com mais shortest paths
+                System.out.println(dijkstraGraph.getVertex(entry.getKey()).getName() + " " + entry.getValue());
+            }
+            counter++;
+        }
+
+
 
         return dijkstraGraph;
     }
+
+    // fazer o map com a contagem dos vertices nos caminhos. Deve retornar aquele que tiver maior numero de caminhos.
+
 
     public static AdjacencyMatrixGraph<Location, Double> getFreightNetworkMatrix(int n) {
         // Add capitals
@@ -158,20 +192,18 @@ public class FunctionsGraph {
                         if (fromPort.equals(seadist.getFromPort()) && toPort.equals(seadist.getToPort())) {
                             dist = seadist.getSeaDistance();
                             freightNetworkMatrix.insertEdge(firstPort, secondPort, dist);
-                            System.out.println("First Port: " + firstPort.getName() + " Second Port: " + secondPort.getName() + " -> " + dist);
+                            //System.out.println("First Port: " + firstPort.getName() + " Second Port: " + secondPort.getName() + " -> " + dist);
                         } else if (toPort.equals(seadist.getFromPort()) && fromPort.equals(seadist.getToPort())) {
                             dist = seadist.getSeaDistance();
                             freightNetworkMatrix.insertEdge(secondPort, firstPort, dist);
-                            System.out.println("First Port: " + firstPort.getName() + " Second Port: " + secondPort.getName() + " -> " + dist);
+                            //System.out.println("First Port: " + firstPort.getName() + " Second Port: " + secondPort.getName() + " -> " + dist);
                         }
                     }
 
                 }
             }
         }
-
         return freightNetworkMatrix;
-
     }
 
     public static void loadPorts() {
@@ -225,5 +257,3 @@ public class FunctionsGraph {
         return colors[(int)Math.floor(Math.random()*(4+1)+0)];
     }
 }
-
-

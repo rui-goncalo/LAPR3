@@ -201,10 +201,8 @@ public class Menu {
 
             String[] options = {"Go Back\n", "Show all Ships", "Search by Ship", "Search Ship Pairs\n",
                     "Create Summary of Ships", "View Summaries by Ship", "Get TOP N Ships\n",
-                    "Get Nearest Port\n", "Print Freight Network Matrix\n", "Vessel Type",
-                    "Calculation Center of Mass","Position Containers","Energy Needed to Containers\n",
-                    "Shortest Maritime Path", "Shortest Land Path\n", "Calculate how much did the vessel sink\n",
-                    "I wish to know the most efficient circuit\n"};
+                    "Get Nearest Port\n", "Print Freight Network Matrix\n", "Get N ports with greater centrality\n", "Vessel Type", "Calculation Center of Mass","Position Containers","Energy Needed to Containers\n",
+                    "Shortest Maritime Path", "Shortest Land Path\n", "Calculate how much did the vessel sink\n"};
             printMenu("Manage Ships", options, true);
             choice = getInput("Please make a selection: ", sc);
 
@@ -282,27 +280,27 @@ public class Menu {
                 case 8:
                     int number = getInput("Insert N Ports: \n", sc);
                     System.out.println(FunctionsGraph.getFreightNetworkMatrix(number).toString());
-                    FunctionsGraph.populateGraph();
                     break;
                 case 9:
-                    vesselTypesMenu(sc);
+                    int n = getInput("Insert N Ports: \n", sc);
+                    FunctionsGraph.populateGraph(n);
+                    break;
                 case 10:
-                    menuCenterOfMass(sc);
+                    vesselTypesMenu(sc);
                 case 11:
-                    menuPosContainers(sc);
+                    menuCenterOfMass(sc);
                 case 12:
-                    menuEnergyNeeded(sc);
+                    menuPosContainers(sc);
                 case 13:
+                    menuEnergyNeeded(sc);
+                case 14:
                     freightCalcMaritimePaths(sc);
                     break;
-                case 14:
+                case 15:
                     freightCalcLandPaths(sc);
                     break;
-                case 15:
-                    calcVesselSink(sc);
-                    break;
                 case 16:
-                    mostEficientCircuit();
+                    calcVesselSink(sc);
                     break;
             }
 
@@ -983,13 +981,28 @@ public class Menu {
                     }
                     break;
                 case 18:
-                    //US406 - Procedure
+                    int mmsi406 = getInput("Insert MMSI: ", sc);
+                    String us406 = "{? = call fnc_voyages_occupation_rate("+ mmsi406 +")}";
+
+                    try (CallableStatement callableStatement = connection.prepareCall(us406)) {
+                        callableStatement.registerOutParameter(1, Types.VARCHAR);
+                        callableStatement.execute();
+                        System.out.println(callableStatement.getString(1));
+                    } catch (SQLException e) {
+                        System.out.println("Failed to create a statement: " + e);
+                    } finally {
+                        try {
+                            connection.close();
+                        } catch (SQLException e) {
+                            System.out.println("Failed to access database: " + e);
+                        }
+                    }
                     break;
                 case 19:
-                    //US407 - Procedure
-                    String us407 = "{? = call prc_week_in_advance()}";
+                    String us407 = "{? = call fnc_week_in_advance()}";
 
                     try (CallableStatement callableStatement = connection.prepareCall(us407)) {
+                        callableStatement.registerOutParameter(1, Types.VARCHAR);
                         callableStatement.execute();
                         System.out.println(callableStatement.getString(1));
                     } catch (SQLException e) {
