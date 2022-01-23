@@ -3,11 +3,6 @@ DROP PROCEDURE prc_voyages_occupation_rate;
 CREATE OR REPLACE PROCEDURE prc_voyages_occupation_rate(f_ship Ship.mmsi%type)
 IS
     v_threshold INTEGER;
-    v_trip INTEGER;
-    v_location VARCHAR(10);
-    v_initial VARCHAR(20);
-    v_final VARCHAR(20);
-    v_str VARCHAR(100);
     
 BEGIN
     v_threshold := 66;
