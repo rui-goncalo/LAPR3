@@ -201,7 +201,10 @@ public class Menu {
 
             String[] options = {"Go Back\n", "Show all Ships", "Search by Ship", "Search Ship Pairs\n",
                     "Create Summary of Ships", "View Summaries by Ship", "Get TOP N Ships\n",
-                    "Get Nearest Port\n", "Print Freight Network Matrix\n", "Vessel Type", "Calculation Center of Mass","Position Containers","Energy Needed to Containers\n", "Shortest Maritime Path", "Shortest Land Path\n", "Calculate how much did the vessel sink\n"};
+                    "Get Nearest Port\n", "Print Freight Network Matrix\n", "Vessel Type",
+                    "Calculation Center of Mass","Position Containers","Energy Needed to Containers\n",
+                    "Shortest Maritime Path", "Shortest Land Path\n", "Calculate how much did the vessel sink\n",
+                    "I wish to know the most efficient circuit\n"};
             printMenu("Manage Ships", options, true);
             choice = getInput("Please make a selection: ", sc);
 
@@ -297,6 +300,9 @@ public class Menu {
                     break;
                 case 15:
                     calcVesselSink(sc);
+                    break;
+                case 16:
+                    mostEficientCircuit();
                     break;
             }
 
@@ -1809,5 +1815,10 @@ public class Menu {
 
         return sc.nextDouble();
     }
+
+    public static void mostEficientCircuit(){
+        Circuit.mostEfficientCircuit(freightNetwork);
+    }
+
 }
 

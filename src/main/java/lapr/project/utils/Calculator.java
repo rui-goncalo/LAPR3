@@ -1,10 +1,16 @@
 package lapr.project.utils;
 
+import lapr.project.model.Port;
 import lapr.project.model.Ship;
 import lapr.project.model.ShipData;
+import lapr.project.structures.FreightAdjacencyMatrixGraph;
+import lapr.project.structures.Graph;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 public final class Calculator {
     
@@ -140,5 +146,39 @@ public final class Calculator {
         double displacedVol = placedMass / SEAWATER_DENSITY;
         double draftChange = displacedVol/shipArea;
         return draftChange;
+    }
+
+    public static <V, E> List<LinkedList<V>> allCycles(FreightAdjacencyMatrixGraph<V, E> g) {
+
+        ArrayList<LinkedList<V>> paths = new ArrayList<>();
+        LinkedList<V> path = new LinkedList<>();
+        for (V vOrig : g.vertices()) {
+            boolean[] visited = new boolean[g.numVertices()];
+            allPaths(g, vOrig, vOrig, visited, path, paths);
+
+        }
+        return paths;
+    }
+
+    public static <V, E> void allPaths(FreightAdjacencyMatrixGraph<V, E> g, V vOrig, V vDest, boolean[] visited,
+                                       LinkedList<V> path, ArrayList<LinkedList<V>> paths) {
+
+        path.push(vOrig);
+        visited[g.key(vOrig)] = true;
+        for (V vAdj : g.adjVertices(vOrig)) {
+            if (vAdj == vDest) {
+                path.push(vDest);
+                LinkedList<V> pathClone = (LinkedList<V>) path.clone();
+                Collections.reverse(pathClone);
+                paths.add(pathClone);
+
+                path.pop();
+            } else {
+                if (!visited[g.key(vAdj)]) {
+                    allPaths(g, vAdj, vDest, visited, path, paths);
+                }
+            }
+        }
+        path.pop();
     }
 }
