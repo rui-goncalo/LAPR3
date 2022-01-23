@@ -1,4 +1,6 @@
-package lapr.project.structures;
+package lapr.project.data;
+
+import lapr.project.structures.CommonGraph;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +19,7 @@ public class FreightAdjacencyMatrixGraph<V, E> extends CommonGraph<V,E> implemen
     public static final float RESIZE_FACTOR = 1.5F;
 
 
-    FreightEdge<V,E> [][] edgeMatrix;
+    FreightEdge<V,E>[][] edgeMatrix;
 
     /**
      * Resizes the matrix when a new vertex increases the length of ArrayList

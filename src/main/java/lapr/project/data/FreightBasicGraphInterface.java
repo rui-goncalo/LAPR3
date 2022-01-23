@@ -1,4 +1,4 @@
-package lapr.project.structures;
+package lapr.project.data;
 
 import java.util.ArrayList;
 import java.util.Collection;

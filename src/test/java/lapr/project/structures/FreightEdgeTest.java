@@ -1,6 +1,8 @@
 package lapr.project.structures;
 
 import java.util.Objects;
+
+import lapr.project.data.FreightEdge;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

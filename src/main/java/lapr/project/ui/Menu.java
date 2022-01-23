@@ -7,7 +7,7 @@ import lapr.project.model.*;
 import lapr.project.structures.AVL;
 import lapr.project.structures.KDTree;
 import lapr.project.utils.*;
-import lapr.project.structures.FreightAdjacencyMatrixGraph;
+import lapr.project.data.FreightAdjacencyMatrixGraph;
 
 import java.sql.*;
 import java.time.LocalDateTime;

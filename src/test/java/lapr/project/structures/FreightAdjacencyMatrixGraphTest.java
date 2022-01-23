@@ -4,6 +4,10 @@ package lapr.project.structures;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+
+import lapr.project.data.FreightAdjacencyMatrixGraph;
+import lapr.project.data.FreightBasicGraphInterface;
+import lapr.project.data.FreightEdge;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

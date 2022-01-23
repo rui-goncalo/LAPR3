@@ -1,6 +1,9 @@
 
 package lapr.project.structures;
 
+import lapr.project.data.FreightBasicGraphInterface;
+import lapr.project.data.FreightEdge;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
