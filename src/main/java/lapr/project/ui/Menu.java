@@ -964,7 +964,8 @@ public class Menu {
                     LocalDate v_initial_date = DateMenu.readDateSQL(scan, "Insert Initial Date:\n");
                     LocalDate v_final_date = DateMenu.readDateSQL(scan2, "Insert Final Date:");
 
-                    String us405 = "{? = call func_occupancy_rate_period(" + v_ship + " , " + v_initial_date + " , " + v_final_date + ")}";
+                    DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    String us405 = "{? = call func_occupancy_rate_period(" + v_ship + ", TO_DATE('" + v_initial_date.format(format) + "', 'DD/MM/YYYY'), TO_DATE('" + v_final_date.format(format) + "', 'DD/MM/YYYY'))}";
 
                     try (CallableStatement callableStatement = connection.prepareCall(us405)) {
                         callableStatement.registerOutParameter(1, Types.VARCHAR);
